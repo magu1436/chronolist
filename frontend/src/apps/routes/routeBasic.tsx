@@ -1,12 +1,15 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
-import GetAllResult from "@/feature/tester/components/todolist/getall";
+import ToDoListTestPage from "@/feature/tester/components/toDoListIndex";
+import TesterPage from "@/feature/tester";
 
 
 const routesBasic = createBrowserRouter(
     createRoutesFromElements(
         <>
-            <Route path="/test/todolist/getall" element={<GetAllResult />} />
+            <Route path="/" element={<TesterPage />} />
+            <Route path="/test" element={<TesterPage />} />
+            <Route path="/test/todolist" element={<ToDoListTestPage />} />
         </>
     )
 );
