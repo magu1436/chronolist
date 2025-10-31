@@ -3,6 +3,8 @@ import type { FC } from "react";
 import type { DueApi, ToDoTaskApi } from "@/types/todolist/api";
 import type { ToDoTask } from "@/types/todolist/todotask";
 import Due from "@/utils/todolist/due";
+import classNames from "classnames";
+import toToDoTask from "@/api/mapper/toDoListMapper";
 
 const GetAllResult = () => {
 
@@ -10,7 +12,7 @@ const GetAllResult = () => {
         id: 0,
         title: "test title",
         due: {
-            dueKind: "DATETIME",
+            dueKind: "NONE",
             date: "2025-10-31",
             time: "22:29",
         },
@@ -19,21 +21,22 @@ const GetAllResult = () => {
         memo: null,
     };
 
-    const task: ToDoTask = {
-        id: 0,
-        title: "test title",
-        due: Due.createFromDueApi(api.due),
-        priority: "low",
-        isCompleted: true,
-        memo: "test memo",
-    };
+    const task: ToDoTask = toToDoTask(api);
+
+    const tasks = [{api: api, task: task}];
 
     return (
         <>
-            <h1>ToDoTask by API</h1>
-            <TaskDisplay task={api}/>
-            <h1>ToDoTask on React</h1>
-            <TaskDisplay task={task} />
+            {tasks.map(t => {
+                return (
+                    <div className={classNames("m-2", "border", "border-primary", "border-3")}>
+                        <h1>ToDoTask by API</h1>
+                        <TaskDisplay task={t.api}/>
+                        <h1>ToDoTask on React</h1>
+                        <TaskDisplay task={t.task} />
+                    </div>
+                );
+            })}
         </>
     )
 }
