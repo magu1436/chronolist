@@ -1,9 +1,9 @@
 import type { DueKind, Priority } from "./statics"
 
 export type DueApi = {
-    due_kind: DueKind,
-    date: string,
-    time: string,
+    dueKind: DueKind,
+    date: string | null,
+    time: string | null,
 };
 
 export type ToDoTaskApi = {
@@ -12,5 +12,5 @@ export type ToDoTaskApi = {
     due: DueApi,
     priority: Priority,
     isCompleted: boolean,
-    memo: string,
+    memo: string | null,
 };
