@@ -3,7 +3,7 @@ import type { ToDoTask } from "@/types/todolist/todotask";
 import Due from "@/utils/todolist/due";
 
 
-const toToDoList = (apiObj: ToDoTaskApi): ToDoTask => {
+const toToDoTask = (apiObj: ToDoTaskApi): ToDoTask => {
     return {
         id: apiObj.id,
         title: apiObj.title,
@@ -14,4 +14,4 @@ const toToDoList = (apiObj: ToDoTaskApi): ToDoTask => {
     }
 };
 
-export default toToDoList;
+export default toToDoTask;
