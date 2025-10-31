@@ -18,14 +18,14 @@ class Due {
      * @returns 作成された `Due`
      */
     static createFromDueApi(due: DueApi) {
-        const dueKind = due.due_kind;
+        const dueKind = due.dueKind;
         let dueAt: Date | undefined = undefined;
 
         switch(dueKind){
             case "NONE":
                 break;
             case "DATE":
-                dueAt = new Date(due.time);
+                dueAt = new Date(dueKind);
                 break;
             case "DATETIME":
                 dueAt = new Date(`${due.date} ${due.time}`);

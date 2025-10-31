@@ -76,3 +76,5 @@ const TaskDisplay: FC<TaskDisplayProp> = ({task}) => {
 type TaskDisplayProp = {
     task: ToDoTask | ToDoTaskApi,
 }
+
+export default GetAllResult;
