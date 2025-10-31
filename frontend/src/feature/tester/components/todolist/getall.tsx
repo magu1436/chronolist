@@ -10,9 +10,9 @@ const GetAllResult = () => {
         id: 0,
         title: "test title",
         due: {
-            dueKind: "NONE",
-            date: null,
-            time: null,
+            dueKind: "DATETIME",
+            date: "2025-10-31",
+            time: "22:29",
         },
         priority: "low",
         isCompleted: false,

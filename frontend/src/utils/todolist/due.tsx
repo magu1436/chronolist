@@ -25,10 +25,13 @@ class Due {
             case "NONE":
                 break;
             case "DATE":
-                dueAt = new Date(dueKind);
+                if (!due.date) throw new Error(`Invalid 'date' value: ${due.date}`);
+                dueAt = new Date(due.date);
                 break;
             case "DATETIME":
-                dueAt = new Date(`${due.date} ${due.time}`);
+                if (!due.date) throw new Error(`Invalid 'date' value: ${due.date}`);
+                if (!due.time) throw new Error(`Invalid 'time' value: ${due.time}`);
+                dueAt = new Date(`${due.date}T${due.time}`);
                 break;
             default:
                 throw new Error(`Failed creating date. Recieved values "date: ${due.date}, time: ${due.time}"`);
