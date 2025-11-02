@@ -23,7 +23,7 @@ const RegisterResult = () => {
         });
     }, []);
 
-    const {data, isLoading, error} = useFetch<number>("todolist/register");
+    const {data, isLoading, error} = useFetch<number>("todolist/register", "POST", body);
 
     if (isLoading) return (
         <h1>Loading...</h1>

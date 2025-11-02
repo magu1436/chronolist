@@ -23,7 +23,11 @@ const UpdateResult = () => {
         };
     }, []);
 
-    const {isLoading, error} = useFetch("todolist/update");
+    const {isLoading, error} = useFetch(
+        "todolist/update",
+        "PUT",
+        body,
+    );
 
     if (isLoading) return (
         <h1>Loding...</h1>
