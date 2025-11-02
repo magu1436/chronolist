@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.magu1436.chronolist.todolist.entity.ToDoTask;
+
 @Mapper
 public interface ToDoMapper {
     /** ToDoTaskを全件取得 */
