@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Button } from "react-bootstrap";
 import GetAllResult from "./todolist/getall";
 import RegisterResult from "./todolist/register";
+import UpdateResult from "./todolist/update";
 
 
 const ToDoListTestPage = () => {
@@ -17,6 +18,11 @@ const ToDoListTestPage = () => {
             name: "タスク登録API",
             url: "api/todolist/register",
             node: <RegisterResult />,
+        },
+        {
+            name: "タスク更新API",
+            url: "api/todolist/update",
+            node: <UpdateResult />
         },
     ];
 

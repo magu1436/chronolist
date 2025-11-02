@@ -22,3 +22,5 @@ export type RegisterApi = {
     isCompleted: boolean,
     memo: string | null,
 }
+
+export type UpdateApi = GetAllApi;
