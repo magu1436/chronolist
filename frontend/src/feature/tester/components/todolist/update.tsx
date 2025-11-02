@@ -23,7 +23,7 @@ const UpdateResult = () => {
         };
     }, []);
 
-    const {isLoading, error} = useFetch("api/todolist/update");
+    const {isLoading, error} = useFetch("todolist/update");
 
     if (isLoading) return (
         <h1>Loding...</h1>

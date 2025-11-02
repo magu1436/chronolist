@@ -21,6 +21,11 @@ export type RegisterApi = {
     priority: Priority,
     isCompleted: boolean,
     memo: string | null,
-}
+};
 
 export type UpdateApi = GetAllApi;
+
+export type UpdateStatusApi = {
+    id: number,
+    isCompleted: boolean,
+};

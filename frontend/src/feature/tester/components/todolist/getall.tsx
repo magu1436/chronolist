@@ -43,7 +43,7 @@ const GetAllResult = () => {
             <div className="m-2">{error.stack}</div>
             <div className="m-2">{error.name}</div>
         </>
-    )
+    );
 
     return (
         <>

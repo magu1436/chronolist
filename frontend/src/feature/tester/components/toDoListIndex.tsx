@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import GetAllResult from "./todolist/getall";
 import RegisterResult from "./todolist/register";
 import UpdateResult from "./todolist/update";
+import UpdateStatusResult from "./todolist/updateStatus";
 
 
 const ToDoListTestPage = () => {
@@ -23,6 +24,11 @@ const ToDoListTestPage = () => {
             name: "タスク更新API",
             url: "api/todolist/update",
             node: <UpdateResult />
+        },
+        {
+            name: "タスク完了状況更新API",
+            url: "api/todolist/update/",
+            node: <UpdateStatusResult />,
         },
     ];
 
