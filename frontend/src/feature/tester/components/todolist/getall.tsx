@@ -1,29 +1,49 @@
-import type { FC } from "react";
+import { useEffect, useState, type FC } from "react";
 
 import type { DueApi, GetAllApi } from "@/types/todolist/api";
 import type { ToDoTask } from "@/types/todolist/todotask";
 import Due from "@/utils/todolist/due";
 import classNames from "classnames";
 import toToDoTask from "@/api/mapper/toDoListMapper";
+import useFetch from "@/utils/fetch";
 
 const GetAllResult = () => {
 
-    const api: GetAllApi = {
-        id: 0,
-        title: "test title",
-        due: {
-            dueKind: "NONE",
-            date: "2025-10-31",
-            time: "22:29",
-        },
-        priority: "low",
-        isCompleted: false,
-        memo: null,
+    type TasksType = {
+        api: GetAllApi,
+        task: ToDoTask,
     };
 
-    const task: ToDoTask = toToDoTask(api);
+    const { data, isLoading, error } = useFetch<GetAllApi[]>("/todolist/getAll");    
 
-    const tasks = [{api: api, task: task}];
+    const createTasks = (apiResult: GetAllApi[] | undefined): TasksType[] => {
+        if (!apiResult) return [];
+        return apiResult.map(api => {
+            return {
+                api: api,
+                task: toToDoTask(api),
+            }
+        });
+    }
+
+    const [tasks, setTasks] = useState<TasksType[]>(createTasks(data));
+
+    useEffect(() => {
+        setTasks(createTasks(data));
+    }, [data]);
+
+    if (isLoading) return (
+        <h1>Loading...</h1>
+    );
+
+    if (error) return (
+        <>
+            <h1>Some error happend!</h1>
+            <div className="m-2">{error.message}</div>
+            <div className="m-2">{error.stack}</div>
+            <div className="m-2">{error.name}</div>
+        </>
+    )
 
     return (
         <>
