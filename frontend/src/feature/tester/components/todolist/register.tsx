@@ -5,6 +5,10 @@ import { useMemo, type FC } from "react";
 
 const RegisterResult = () => {
 
+    /**
+     * 作成するテストデータ.  
+     * ここを変更することで好きなデータを登録可能.  
+     */
     const body: RegisterApi = useMemo(() => {
         return ({
             title: "new task title",
