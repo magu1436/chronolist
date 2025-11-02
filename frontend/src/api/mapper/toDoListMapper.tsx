@@ -1,9 +1,9 @@
-import type { ToDoTaskApi } from "@/types/todolist/api";
+import type { GetAllApi } from "@/types/todolist/api";
 import type { ToDoTask } from "@/types/todolist/todotask";
 import Due from "@/utils/todolist/due";
 
 
-const toToDoTask = (apiObj: ToDoTaskApi): ToDoTask => {
+const toToDoTask = (apiObj: GetAllApi): ToDoTask => {
     return {
         id: apiObj.id,
         title: apiObj.title,

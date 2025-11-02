@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import type { DueApi, ToDoTaskApi } from "@/types/todolist/api";
+import type { DueApi, GetAllApi } from "@/types/todolist/api";
 import type { ToDoTask } from "@/types/todolist/todotask";
 import Due from "@/utils/todolist/due";
 import classNames from "classnames";
@@ -8,7 +8,7 @@ import toToDoTask from "@/api/mapper/toDoListMapper";
 
 const GetAllResult = () => {
 
-    const api: ToDoTaskApi = {
+    const api: GetAllApi = {
         id: 0,
         title: "test title",
         due: {
@@ -77,7 +77,7 @@ const TaskDisplay: FC<TaskDisplayProp> = ({task}) => {
 };
 
 type TaskDisplayProp = {
-    task: ToDoTask | ToDoTaskApi,
+    task: ToDoTask | GetAllApi,
 }
 
 export default GetAllResult;

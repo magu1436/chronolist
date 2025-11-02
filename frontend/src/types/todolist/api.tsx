@@ -6,7 +6,7 @@ export type DueApi = {
     time: string | null,
 };
 
-export type ToDoTaskApi = {
+export type GetAllApi = {
     id: number,
     title: string,
     due: DueApi,
