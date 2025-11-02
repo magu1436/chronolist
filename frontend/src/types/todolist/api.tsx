@@ -14,3 +14,10 @@ export type GetAllApi = {
     isCompleted: boolean,
     memo: string | null,
 };
+
+export type RegisterApi = {
+    title: string,
+    due: DueApi,
+    priority: Priority,
+    memo: string | null,
+}
