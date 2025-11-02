@@ -19,5 +19,6 @@ export type RegisterApi = {
     title: string,
     due: DueApi,
     priority: Priority,
+    isCompleted: boolean,
     memo: string | null,
 }
