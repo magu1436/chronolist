@@ -13,6 +13,7 @@ class CalendarEvent {
     private _startDate?: Date;
     private _endDate?: Date;
     title: string;
+    color: string;
     memo?: string;
 
     constructor(
@@ -21,6 +22,7 @@ class CalendarEvent {
         startAt: Date,
         endAt: Date,
         title: string,
+        color: string,
         memo?: string | null,
     );
     constructor(
@@ -29,6 +31,7 @@ class CalendarEvent {
         startDate: Date,
         endDate: Date,
         title: string,
+        color: string,
         memo?: string | null,
     );
     constructor(
@@ -37,11 +40,13 @@ class CalendarEvent {
         startAtOrDate: Date,
         endAtOrDate: Date,
         title: string,
+        color: string,
         memo?: string | null,
     ){
         this._id = id;
         this._kind = kind;
         this.title = title;
+        this.color = color;
         this.memo = memo || undefined;
 
         switch (kind) {
@@ -131,8 +136,29 @@ class CalendarEvent {
             s,
             e,
             api.title,
+            api.color,
             api.memo || undefined
         );
+    }
+
+    /**
+     * `FullCalendar` で使用するイベントオブジェクトに変換した連想配列を生成するメソッド.
+     * @returns `FullCalendar` で使用するイベント形式にフォーマットした連想配列
+     */
+    toEvent(){
+        const s = this._startAt || this._startDate;
+        const e = this._endAt || this._endDate;
+        if (!s) throw new Error("Both 'startAt' and 'startDate' are undefined");
+        if (!e) throw new Error("Both 'endAt' and 'endDate' are undefined");
+        
+        return {
+            id: this.id,
+            title: this.title,
+            allDay: this.kind == "ALL_DAY",
+            startStr: s.toISOString(),
+            endStr: e.toISOString(),
+            backgroundColor: this.color,
+        }
     }
 }
 
