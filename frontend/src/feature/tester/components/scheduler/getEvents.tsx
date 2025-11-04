@@ -81,3 +81,5 @@ const CE: FC<CalendarEventApi> = ({
         </div>
     );
 };
+
+export default GetEventsResults;

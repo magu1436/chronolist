@@ -2,6 +2,7 @@ import { createBrowserRouter, createRoutesFromElements, Route } from "react-rout
 
 import ToDoListTestPage from "@/feature/tester/components/toDoListIndex";
 import TesterPage from "@/feature/tester";
+import SchedulerTestPage from "@/feature/tester/components/schedulerIndex";
 
 
 const routesBasic = createBrowserRouter(
@@ -10,6 +11,7 @@ const routesBasic = createBrowserRouter(
             <Route path="/" element={<TesterPage />} />
             <Route path="/test" element={<TesterPage />} />
             <Route path="/test/todolist" element={<ToDoListTestPage />} />
+            <Route path="/test/scheduler" element={<SchedulerTestPage />} />
         </>
     )
 );
