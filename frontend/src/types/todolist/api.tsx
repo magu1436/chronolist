@@ -1,15 +1,11 @@
 import type { DueKind, Priority } from "./statics"
 
-export type DueApi = {
-    dueKind: DueKind,
-    date: string | null,
-    time: string | null,
-};
-
 export type GetAllApi = {
     id: number,
     title: string,
-    due: DueApi,
+    dueKind: DueKind,
+    date: string | null,
+    time: string | null,
     priority: Priority,
     isCompleted: boolean,
     memo: string | null,
@@ -17,7 +13,9 @@ export type GetAllApi = {
 
 export type RegisterApi = {
     title: string,
-    due: DueApi,
+    dueKind: DueKind,
+    date: string | null,
+    time: string | null,
     priority: Priority,
     isCompleted: boolean,
     memo: string | null,
