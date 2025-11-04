@@ -133,8 +133,8 @@ class CalendarEvent {
         return new CalendarEvent(
             api.id,
             api.kind,
-            s,
-            e,
+            new Date(s),
+            new Date(e),
             api.title,
             api.color,
             api.memo || undefined
