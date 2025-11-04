@@ -1,8 +1,7 @@
 package com.magu1436.chronolist.todolist.entity;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,12 +15,14 @@ public class ToDoTask {
     /** タイトルの設定 */
     private String title;
     /** 期日の設定 */
-    @Embedded
-    private Due due;
+    private DueKind dueKind;
+    /** dateの設定 */
+    private LocalDate Date;
+    /** timeの設定 */
+    private LocalDate Time;
     /** 優先度の設定 
      * StringはPriorityクラスの定義後置き換え
     */
-    @Enumerated(EnumType.STRING)
     private Priority priority;
     /** メモの設定 */
     private String memo;
