@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import GetEventsResults from "./scheduler/getEvents";
 import RegisterResult from "./scheduler/register";
 import UpdateResult from "./scheduler/Update";
+import DeleteResult from "./scheduler/delete";
 
 
 const SchedulerTestPage = () => {
@@ -23,6 +24,11 @@ const SchedulerTestPage = () => {
             name: "予定更新API",
             url: "api/scheduler/update",
             node: <UpdateResult />,
+        },
+        {
+            name: "予定削除API",
+            url: "api/scheduler/delete/{id}",
+            node: <DeleteResult />
         },
     ], []);
 
