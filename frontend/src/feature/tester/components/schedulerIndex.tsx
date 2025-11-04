@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from "react"
 import { Button } from "react-bootstrap";
 import GetEventsResults from "./scheduler/getEvents";
 import RegisterResult from "./scheduler/register";
+import UpdateResult from "./scheduler/Update";
 
 
 const SchedulerTestPage = () => {
@@ -17,7 +18,12 @@ const SchedulerTestPage = () => {
             name: "予定登録API",
             url: "api/scheduler/register",
             node: <RegisterResult />
-        }
+        },
+        {
+            name: "予定更新API",
+            url: "api/scheduler/update",
+            node: <UpdateResult />,
+        },
     ], []);
 
     return (
