@@ -1,6 +1,7 @@
 package com.magu1436.chronolist.todolist.entity;
 
 import jakarta.persistence.Embedded;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class ToDoTask {
     /** 優先度の設定 
      * StringはPriorityクラスの定義後置き換え
     */
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Priority priority;
     /** メモの設定 */
     private String memo;
