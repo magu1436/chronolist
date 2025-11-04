@@ -1,8 +1,7 @@
 import { useEffect, useState, type FC } from "react";
 
-import type { DueApi, GetAllApi } from "@/types/todolist/api";
+import type { GetAllApi } from "@/types/todolist/api";
 import type { ToDoTask } from "@/types/todolist/todotask";
-import Due from "@/utils/todolist/due";
 import classNames from "classnames";
 import toToDoTask from "@/api/mapper/toDoListMapper";
 import useFetch from "@/utils/fetch";
@@ -14,7 +13,7 @@ const GetAllResult = () => {
         task: ToDoTask,
     };
 
-    const { data, isLoading, error } = useFetch<GetAllApi[]>("/todolist/getAll");    
+    const { data, isLoading, error } = useFetch<GetAllApi[]>("/todolist/getAll");
 
     const createTasks = (apiResult: GetAllApi[] | undefined): TasksType[] => {
         if (!apiResult) return [];
@@ -61,34 +60,16 @@ const GetAllResult = () => {
     )
 }
 
-const DueDisplay: FC<DueDisplayProps> = ({due}) => {
-    if ("date" in due) return (
-        <>
-            <div>dueKind: {due.dueKind}</div>
-            <div>date: {due.date}</div>
-            <div>time: {due.time}</div>
-        </>
-    ) 
-
-    return (
-        <>
-            <div>dueKind: {due.dueKind}</div>
-            <div>dueAt: {due.dueAt?.toISOString()}</div>
-        </>
-    )
-};
-
-type DueDisplayProps = {
-    due: Due | DueApi,
-};
 
 const TaskDisplay: FC<TaskDisplayProp> = ({task}) => {
-    const {id, due, title, priority, isCompleted, memo} = task;
+    const {id, dueKind, date, time,  title, priority, isCompleted, memo} = task;
     return (
         <>
             <div>id: {id}</div>
             <div>title: {title}</div>
-            <DueDisplay due={due} />
+            <div>dueKind: {dueKind}</div>
+            <div>date: {date}</div>
+            <div>time: {time}</div>
             <div>priority: {priority}</div>
             <div>isCompleted: {isCompleted}</div>
             <div>memo: {memo}</div>

@@ -12,12 +12,10 @@ const RegisterResult = () => {
     const body: RegisterApi = useMemo(() => {
         return ({
             title: "new task title",
-            due: {
-                dueKind: "DATE",
-                date: "2025-10-31",
-                time: null,
-            },
-            priority: "middle",
+            dueKind: "DATE",
+            date: "2025-10-31",
+            time: null,
+            priority: "MIDDLE",
             isCompleted: false,
             memo: "This is a test memo.",
         });
@@ -58,13 +56,13 @@ const RegisterResult = () => {
     )
 }
 
-const Body: FC<RegisterApi> = ({title, due, priority, isCompleted, memo}) => {
+const Body: FC<RegisterApi> = ({title, dueKind, date, time, priority, isCompleted, memo}) => {
     return (
         <>
             <div>title: {title}</div>
-            <div>dueKind: {due.dueKind}</div>
-            <div>date: {due.date || "null"}</div>
-            <div>time: {due.time || "null"}</div>
+            <div>dueKind: {dueKind}</div>
+            <div>date: {date || "null"}</div>
+            <div>time: {time || "null"}</div>
             <div>priority: {priority}</div>
             <div>isCompleted: {isCompleted}</div>
             <div>memo: {memo || "null"}</div>

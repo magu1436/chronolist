@@ -12,12 +12,10 @@ const UpdateResult = () => {
         return {
             id: 0,
             title: "An updated task",
-            due: {
-                dueKind: "DATE",
-                date: "2025-11-02",
-                time: null,
-            },
-            priority: "high",
+            dueKind: "DATE",
+            date: "2025-11-02",
+            time: null,
+            priority: "HIGH",
             isCompleted: false,
             memo: "This is a test memo.",
         };
@@ -57,9 +55,9 @@ const Body: FC<UpdateApi> = (prop) => {
             <h1>新しいToDoタスクデータ</h1>
             <div>id: {prop.id}</div>
             <div>title: {prop.title}</div>
-            <div>dueKind: {prop.due.dueKind}</div>
-            <div>date: {prop.due.date || "null"}</div>
-            <div>time: {prop.due.time || "null"}</div>
+            <div>dueKind: {prop.dueKind}</div>
+            <div>date: {prop.date || "null"}</div>
+            <div>time: {prop.time || "null"}</div>
             <div>priority: {prop.priority}</div>
             <div>isCompleted: {prop.isCompleted || "false"}</div>
             <div>memo: {prop.memo || "null"}</div>
