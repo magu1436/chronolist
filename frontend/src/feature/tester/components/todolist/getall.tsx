@@ -62,14 +62,14 @@ const GetAllResult = () => {
 
 
 const TaskDisplay: FC<TaskDisplayProp> = ({task}) => {
-    const {id, dueKind, date, time,  title, priority, isCompleted, memo} = task;
+    const {id, dueKind, dueDate, dueTime,  title, priority, isCompleted, memo} = task;
     return (
         <>
             <div>id: {id}</div>
             <div>title: {title}</div>
             <div>dueKind: {dueKind}</div>
-            <div>date: {date}</div>
-            <div>time: {time}</div>
+            <div>date: {dueDate}</div>
+            <div>time: {dueTime}</div>
             <div>priority: {priority}</div>
             <div>isCompleted: {isCompleted}</div>
             <div>memo: {memo}</div>

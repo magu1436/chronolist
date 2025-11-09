@@ -13,8 +13,8 @@ const RegisterResult = () => {
         return ({
             title: "new task title",
             dueKind: "DATE",
-            date: "2025-10-31",
-            time: null,
+            dueDate: "2025-10-31",
+            dueTime: null,
             priority: "MIDDLE",
             isCompleted: false,
             memo: "This is a test memo.",
@@ -56,13 +56,13 @@ const RegisterResult = () => {
     )
 }
 
-const Body: FC<RegisterApi> = ({title, dueKind, date, time, priority, isCompleted, memo}) => {
+const Body: FC<RegisterApi> = ({title, dueKind, dueDate, dueTime, priority, isCompleted, memo}) => {
     return (
         <>
             <div>title: {title}</div>
             <div>dueKind: {dueKind}</div>
-            <div>date: {date || "null"}</div>
-            <div>time: {time || "null"}</div>
+            <div>date: {dueDate || "null"}</div>
+            <div>time: {dueTime || "null"}</div>
             <div>priority: {priority}</div>
             <div>isCompleted: {isCompleted}</div>
             <div>memo: {memo || "null"}</div>
