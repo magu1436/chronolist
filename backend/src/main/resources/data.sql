@@ -15,10 +15,10 @@ VALUES
 -- todo_tasksテーブルへの初期データ登録
 INSERT INTO todo_tasks (title, priority, due_kind, due_date, due_time, memo)
 VALUES
-('spring bootの勉強', 'low', 'NONE', null, null, 'むずすぎ');
+('spring bootの勉強', 'LOW', 'NONE', null, null, 'むずすぎ');
 INSERT INTO todo_tasks (title, priority, due_kind, due_date, due_time, memo)
 VALUES
-('課題提出', 'middle', 'DATE', '2025-10-22', null, 'めんどくさ');
+('課題提出', 'MIDDLE', 'DATED', '2025-10-22', null, 'めんどくさ');
 INSERT INTO todo_tasks (title, priority, due_kind, due_date, due_time, memo)
 VALUES
-('卒研論文の提出', 'high', 'DATETIME', '2026-01-26', '13:30:00', '教授へ直接手渡しする');
+('卒研論文の提出', 'HIGH', 'DATETIME', '2026-01-26', '13:30:00', '教授へ直接手渡しする');
