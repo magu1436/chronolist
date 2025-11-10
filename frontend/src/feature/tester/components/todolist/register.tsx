@@ -12,7 +12,7 @@ const RegisterResult = () => {
     const body: RegisterApi = useMemo(() => {
         return ({
             title: "new task title",
-            dueKind: "DATE",
+            dueKind: "DATED",
             dueDate: "2025-10-31",
             dueTime: null,
             priority: "MIDDLE",

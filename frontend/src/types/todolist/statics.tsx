@@ -1,3 +1,3 @@
-export type DueKind = "NONE" | "DATE" | "DATETIME";
+export type DueKind = "NONE" | "DATED" | "DATETIME";
 
 export type Priority = "HIGH" | "MIDDLE" | "LOW";

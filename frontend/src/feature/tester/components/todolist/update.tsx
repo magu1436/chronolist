@@ -12,7 +12,7 @@ const UpdateResult = () => {
         return {
             id: 0,
             title: "An updated task",
-            dueKind: "DATE",
+            dueKind: "DATED",
             dueDate: "2025-11-02",
             dueTime: null,
             priority: "HIGH",
