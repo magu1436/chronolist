@@ -3,6 +3,8 @@ package com.magu1436.chronolist.todolist.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,8 @@ public class ToDoTask {
     /** メモの設定 */
     private String memo;
     /** 完了済みかどうかの設定 */
+    /** 更新するAPIにboolean型を読み込ませるためのアノテーション */
+    @JsonProperty("isCompleted")
     private boolean isCompleted;
     
 }
