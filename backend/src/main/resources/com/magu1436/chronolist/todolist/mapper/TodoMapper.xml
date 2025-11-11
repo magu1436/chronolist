@@ -41,7 +41,7 @@
     </insert>
 
     <update id="updateTask" parameterType="com.magu1436.chronolist.todolist.entity.ToDoTask">
-        UPDATE todo_tasks SET title=#{title}, priority=#{priority}, due_kind=#{due_kind}, due_date=#{due_date}, due_time=#{due_time}, is_completed=#{is_completed}, memo=#{memo}
+        UPDATE todo_tasks SET title=#{title}, priority=#{priority}, due_kind=#{dueKind}, due_date=#{dueDate}, due_time=#{dueTime}, is_completed=#{isCompleted}, memo=#{memo}
         WHERE id = #{id}
     </update>
 
