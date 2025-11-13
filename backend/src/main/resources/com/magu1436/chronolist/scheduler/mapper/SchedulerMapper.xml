@@ -66,3 +66,4 @@
     <delete id="deleteCalendarEvent" parameterType="int">
         DELETE FROM calendar_event WHERE id = #{id}
     </delete>
+</mapper>
