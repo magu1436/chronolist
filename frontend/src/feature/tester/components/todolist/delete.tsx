@@ -3,19 +3,19 @@ import useFetch from "@/utils/fetch";
 
 const DeleteResult = () => {
 
-    const targetTaskId = 0;
-
     const {isLoading, error} = useFetch(
-        `todolist/delete/${targetTaskId}`,
+        `todolist/delete`,
         "DELETE",
+        {
+            //id: 1,
+            ids: [2, 3]
+        }    
     );
 
     if (isLoading) return (<h1>Loading...</h1>);
 
     if (error) return (
         <>
-            <h1>URLに含めたID</h1>
-            <div>id: {targetTaskId}</div>
             <h1>Some error happend!</h1>
             <div className="m-2">{error.message}</div>
             <div className="m-2">{error.stack}</div>
@@ -25,8 +25,6 @@ const DeleteResult = () => {
 
     return (
         <>
-            <h1>URLに含めたID</h1>
-            <div>id: {targetTaskId}</div>
             <h1>Delete Complated!</h1>
         </>
     );
