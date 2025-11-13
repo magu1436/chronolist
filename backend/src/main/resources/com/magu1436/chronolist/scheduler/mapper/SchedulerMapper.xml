@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.magu1436.chronolist.scheduler.mapper.SchedulerMapper">
+    <select id="getSchedulesFromTo" resultType="com.magu1436.chronolist.scheduler.entity.Schedule">
+        SELECT id, kind, start_at, end_at, start_date, end_date, title
+        FROM schedule
+        WHERE (start_date &gt;= #{startDate}) OR (end_date &lt; #{endDate})
+    </select>
+
+    <select id="getScheduleById" resultType="com.magu1436.chronolist.scheduler.entity.Schedule">
+        SELECT id, kind, start_at, end_at, start_date, end_date, title
+        FROM schedule
+        WHERE id = #{id}
+    </select>
+
+    <select id="getSchedulesByDate" resultType="com.magu1436.chronolist.scheduler.entity.Schedule">
+        SELECT id, kind, start_at, end_at, start_date, end_date, title
+        FROM schedule
+        WHERE start_date &lt;= #{date} AND end_date &gt;= #{date}
+    </select>
+
+    <insert id="insertSchedule" useGeneratedKeys="true" keyProperty="id" parameterType="com.magu1436.chronolist.scheduler.entity.Schedule">
+        INSERT INTO schedule (kind, start_at, end_at, start_date, end_date, title)
+        VALUES
+        (#{kind}, #{startAt}, #{endAt}, #{startDate}, #{endDate}, #{title})
+    </insert>
+
+    <update id="updateSchedule" parameterType="com.magu1436.chronolist.scheduler.entity.Schedule">
+        UPDATE schedule SET kind = #{kind}, start_at = #{startAt}, end_at = #{endAt}, start_date = #{startDate}, end_date = #{endDate}, title = #{title}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteSchedule" parameterType="int">
+        DELETE FROM schedule WHERE id = #{id}
+    </delete>
+
+    <select id="getCalendarEventsFromTo" resultType="com.magu1436.chronolist.scheduler.entity.CalendarEvent">
+        SELECT
+            c.id, c.color, c.memo,
+            s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title
+        FROM calendar_event c
+        WHERE (start_date &gt;= #{startDate}) OR (end_date &lt; #{endDate})
+        INNER JOIN schedule s ON c.schedule_id = s.id
+    </select>
+
+    <select id="getCalendarEventById" resultType="com.magu1436.chronolist.scheduler.entity.CalendarEvent">
+        SELECT
+            c.id, c.color, c.memo,
+            s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title
+        FROM calendar_event c
+        WHERE id = #{id}
+        INNER JOIN schedule s ON c.schedule_id = s.id
+    </select>
+
+    <insert id="insertCalendarEvent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO calendar_event (schedule_id, color, memo)
+        VALUES
+        (#{scheduleId}, #{color}, #{memo})
+    </insert>
+
+    <update id="updateCalendarEvent">
+        UPDATE calendar_event SET schedule_id = #{scheduleId}, color = #{color}, memo = #{memo}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteCalendarEvent" parameterType="int">
+        DELETE FROM calendar_event WHERE id = #{id}
+    </delete>
