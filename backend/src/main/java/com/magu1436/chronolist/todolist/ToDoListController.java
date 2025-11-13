@@ -2,11 +2,13 @@ package com.magu1436.chronolist.todolist;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -94,6 +96,49 @@ public class ToDoListController {
         return ResponseEntity.status(204).build();
     }
 
+    /** タスク削除機能のAPI */
+    @DeleteMapping("delete")
+    public ResponseEntity<Void> delete(
+        /** Listで受け取ることができる形 */
+        @RequestBody Map<String, Object> body
+    ){
+        if(body.containsKey("id")){
+            Integer id = (Integer)body.get("id");
 
+            ToDoTask existing_id = mapper.getTaskById(id);
+            if (existing_id == null){
+                return ResponseEntity.status(404).build();
+            }
+            mapper.deleteTask(id);
+            
+        } else if(body.containsKey("ids")){
+            /** 値を受け取ったときの動き */
+            List<Integer> ids;
+            /** 変な方に変換しないためのチェック */
+            try {
+                ids = (List<Integer>)body.get("ids");
+            } catch (ClassCastException e) {
+                return ResponseEntity.status(400).build();
+            }
+            /** 渡されたidsのリストが空だった時 */
+            if(ids.isEmpty()){
+                return ResponseEntity.status(400).build();
+            }
+            /** 中身の値一つ一つで削除機能を行う */
+            for(Integer eachId : ids){
+                ToDoTask existing_eachid = mapper.getTaskById(eachId);
+                if (existing_eachid == null){
+                    return ResponseEntity.status(404).build();
+                }
+                mapper.deleteTask(eachId);
+                
+            }
+        /** なんも投げられてないときまたはids以外が投げられたときの処理 */
+        } else {
+            return ResponseEntity.status(400).build();
+        }    
+        return ResponseEntity.status(204).build();
+
+    }
 
 }
