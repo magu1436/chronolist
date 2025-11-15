@@ -49,9 +49,9 @@ public class ToDoListController {
     public ResponseEntity<Void> update(@RequestBody ToDoTask task){
 
         /** IDが存在しない場合に404を返す */
-        ToDoTask existing = mapper.getTaskById(task.getId());
-        if (existing == null){
-            return ResponseEntity.status(404).build();
+        ResponseEntity<Void> checkExist = check(task.getId());
+        if(checkExist != null){
+            return checkExist;
         }
 
         /** Enumに存在しない値が入れられたとき422をかえす */
@@ -82,8 +82,9 @@ public class ToDoListController {
     public ResponseEntity<Void> update_status(@RequestBody ToDoTask task) {
         /** IDが存在しない場合に404を返す */
         ToDoTask existing = mapper.getTaskById(task.getId());
-        if (existing == null){
-            return ResponseEntity.status(404).build();
+        ResponseEntity<Void> checkExist = check(task.getId());
+        if(checkExist != null){
+            return checkExist;
         }
 
         /** 受け取ったjsonのboolを入力 */
@@ -105,9 +106,9 @@ public class ToDoListController {
         if(body.containsKey("id")){
             Integer id = (Integer)body.get("id");
 
-            ToDoTask existing_id = mapper.getTaskById(id);
-            if (existing_id == null){
-                return ResponseEntity.status(404).build();
+            ResponseEntity<Void> checkExist = check(id);
+            if(checkExist != null){
+                return checkExist;
             }
             mapper.deleteTask(id);
             
@@ -126,12 +127,11 @@ public class ToDoListController {
             }
             /** 中身の値一つ一つで削除機能を行う */
             for(Integer eachId : ids){
-                ToDoTask existing_eachid = mapper.getTaskById(eachId);
-                if (existing_eachid == null){
-                    return ResponseEntity.status(404).build();
+                ResponseEntity<Void> checkExist = check(eachId);
+                if(checkExist != null){
+                    return checkExist;
                 }
                 mapper.deleteTask(eachId);
-                
             }
         /** なんも投げられてないときまたはids以外が投げられたときの処理 */
         } else {
@@ -139,6 +139,15 @@ public class ToDoListController {
         }    
         return ResponseEntity.status(204).build();
 
+    }
+
+    public ResponseEntity<Void> check(int id){
+        ToDoTask existing_id = mapper.getTaskById(id);
+        if(existing_id == null){
+            return ResponseEntity.status(404).build();
+        }
+        return null;
+        
     }
 
 }
