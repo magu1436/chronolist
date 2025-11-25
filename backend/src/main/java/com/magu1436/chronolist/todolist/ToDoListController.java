@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import com.magu1436.chronolist.todolist.entity.ToDoTask;
 import com.magu1436.chronolist.todolist.mapper.ToDoMapper;
@@ -33,7 +35,7 @@ public class ToDoListController {
     @GetMapping("getAll")
     public ResponseEntity<List<ToDoTask>> getall(){
         List<ToDoTask> tasks = mapper.getAllTasks();
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        return ResponseEntity.ok(tasks);
     }
 
     /**タスクを登録するAPIの定義 */
@@ -74,14 +76,15 @@ public class ToDoListController {
 
         /** タスクの更新を返す */
         mapper.updateTask(task);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /** タスク完了状況更新機能のAPI */
     @PutMapping("update/status")
-    public ResponseEntity<Void> update_status(@RequestBody ToDoTask task) {
-        /** IDが存在しない場合に404を返す */
+    public ResponseEntity<Void> update_Status(@RequestBody ToDoTask task) {
         ToDoTask existing = mapper.getTaskById(task.getId());
+
+        /** IDが存在しない場合に404を返す */
         ResponseEntity<Void> checkExist = check(task.getId());
         if(checkExist != null){
             return checkExist;
@@ -91,11 +94,11 @@ public class ToDoListController {
         existing.setCompleted(task.isCompleted());
         /** データベースの更新 */
         mapper.updateTask(existing);
-
-        System.out.println(existing.isCompleted());
         
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    //* existing を修正→existingTask or currentTask */
 
     /** タスク削除機能のAPI */
     @DeleteMapping("delete")
@@ -119,11 +122,11 @@ public class ToDoListController {
             try {
                 ids = (List<Integer>)body.get("ids");
             } catch (ClassCastException e) {
-                return ResponseEntity.status(400).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             /** 渡されたidsのリストが空だった時 */
             if(ids.isEmpty()){
-                return ResponseEntity.status(400).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             /** 中身の値一つ一つで削除機能を行う */
             for(Integer eachId : ids){
@@ -135,19 +138,22 @@ public class ToDoListController {
             }
         /** なんも投げられてないときまたはids以外が投げられたときの処理 */
         } else {
-            return ResponseEntity.status(400).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }    
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        // idとidsの共通化（id->idsのリスト化）をして共通処理
 
     }
 
-    public ResponseEntity<Void> check(int id){
-        ToDoTask existing_id = mapper.getTaskById(id);
-        if(existing_id == null){
-            return ResponseEntity.status(404).build();
+    private ResponseEntity<Void> check(int id){
+        ToDoTask existing_Tasks_Id = mapper.getTaskById(id);
+        if(existing_Tasks_Id == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return null;
-        
+        // メソッドの返り値値をboolにする→それに伴い本文を更新（1行減りそう）　
+        // クラス名の変更
     }
 
 }
