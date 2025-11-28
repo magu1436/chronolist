@@ -1,6 +1,7 @@
 package com.magu1436.chronolist.scheduler.controller;
 
 import java.util.List;
+import java.time.LocalDate;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -30,10 +31,10 @@ public class SchedulerController {
     private final SchedulerMapper mapper;
 
     /** 指定期間のカレンダーイベントをDBから取得するAPI */
-    @GetMapping("getEvents")
-    public ResponseEntity<List<CalendarEvent>> getEvent(@RequestBody DateRange daterange){
-        List<CalendarEvent> calendar_events = mapper.getCalendarEventsFromTo(daterange.getStart_date(), daterange.getEnd_date());
-        return new ResponseEntity<>(calendar_events, HttpStatus.OK);
+    @GetMapping("getEvents/{startDate}/{endDate}")
+    public ResponseEntity<List<CalendarEvent>> getEvent(@PathVariable LocalDate startDate, @PathVariable LocalDate endDate){
+        List<CalendarEvent> calendarEvent = mapper.getCalendarEventsFromTo(startDate, endDate);
+        return new ResponseEntity<>(calendarEvent, HttpStatus.OK);
     }
 
     /** 新しい予定及びカレンダーイベントを登録するAPI */
