@@ -38,7 +38,7 @@ public class SchedulerController {
 
     /** 新しい予定及びカレンダーイベントを登録するAPI */
     @PostMapping("register")
-    public int insertEvent(@RequestBody CalendarEvent calendarEvent) {
+    public ResponseEntity<Integer> insertEvent(@RequestBody CalendarEvent calendarEvent) {
         // 受け取ったCalendarEventを元にScheduleを生成
         Schedule schedule = Schedule.builder()
                                     .kind(calendarEvent.getKind())
@@ -58,7 +58,7 @@ public class SchedulerController {
         // 自動生成されたcalendar_eventのidを取得
         int calendarEventId = calendarEvent.getId();
         // 取得したcalendar_eventのidを返す
-        return calendarEventId;
+        return ResponseEntity.status(HttpStatus.CREATED).body(calendarEventId);
     }
 
     /** スケジュール及びカレンダーイベントを更新するAPI */
