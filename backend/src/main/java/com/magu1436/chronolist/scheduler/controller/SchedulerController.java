@@ -65,6 +65,11 @@ public class SchedulerController {
     /** スケジュール及びカレンダーイベントを更新するAPI */
     @PutMapping("update")
     public ResponseEntity<Void> updateEvent(@RequestBody CalendarEvent calendarEvent) {
+        // 受け取ったcalendarEventがDBに存在するか確認(存在しなかった場合は400レスポンスを返す)
+        if(!existsById(calendarEvent.getId())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         // 受け取ったCalendarEventを元にScheduleを生成
         Schedule schedule = Schedule.builder()
                                     .kind(calendarEvent.getKind())
@@ -83,6 +88,15 @@ public class SchedulerController {
         mapper.updateCalendarEvent(calendarEvent.getId(), scheduleId, calendarEvent.getColor(), calendarEvent.getMemo());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /** 指定したidのcalendarEventがDBに存在するか確認するメソッド */
+    private boolean existsById(int id){
+        CalendarEvent calendarEvent = mapper.getCalendarEventById(id);
+        if(calendarEvent != null){
+            return true;
+        }
+        return false;
     }
     
 
