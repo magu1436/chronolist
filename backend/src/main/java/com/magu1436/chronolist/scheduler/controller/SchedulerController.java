@@ -16,6 +16,9 @@ import com.magu1436.chronolist.scheduler.entity.Schedule;
 import com.magu1436.chronolist.scheduler.mapper.SchedulerMapper;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -35,31 +38,51 @@ public class SchedulerController {
 
     /** 新しい予定及びカレンダーイベントを登録するAPI */
     @PostMapping("register")
-    public int insertEvent(@RequestBody CalendarEvent calendar_event) {
+    public int insertEvent(@RequestBody CalendarEvent calendarEvent) {
         // 受け取ったCalendarEventを元にScheduleを生成
         Schedule schedule = Schedule.builder()
-                                    .kind(calendar_event.getKind())
-                                    .startAt(calendar_event.getStartAt())
-                                    .endAt(calendar_event.getEndAt())
-                                    .startDate(calendar_event.getStartDate())
-                                    .endDate(calendar_event.getEndDate())
-                                    .title(calendar_event.getTitle())
+                                    .kind(calendarEvent.getKind())
+                                    .startAt(calendarEvent.getStartAt())
+                                    .endAt(calendarEvent.getEndAt())
+                                    .startDate(calendarEvent.getStartDate())
+                                    .endDate(calendarEvent.getEndDate())
+                                    .title(calendarEvent.getTitle())
                                     .build();
         // 生成したScheduleをscheduleテーブルに登録
         mapper.insertSchedule(schedule);
         // 自動生成されたscheduleのidを取得
-        int schedule_id = schedule.getId();
+        int scheduleId = schedule.getId();
 
         // CalendarEventをcalendar_eventテーブルに登録
-        mapper.insertCalendarEvent(schedule_id, calendar_event.getColor(), calendar_event.getMemo());
+        mapper.insertCalendarEvent(scheduleId, calendarEvent.getColor(), calendarEvent.getMemo());
         // 自動生成されたcalendar_eventのidを取得
-        int calendar_event_id = calendar_event.getId();
+        int calendarEventId = calendarEvent.getId();
         // 取得したcalendar_eventのidを返す
-        return calendar_event_id;
+        return calendarEventId;
     }
 
     /** スケジュール及びカレンダーイベントを更新するAPI */
-    
+    @PutMapping("update")
+    public ResponseEntity<Void> updateEvent(@RequestBody CalendarEvent calendarEvent) {
+        // 受け取ったCalendarEventを元にScheduleを生成
+        Schedule schedule = Schedule.builder()
+                                    .kind(calendarEvent.getKind())
+                                    .startAt(calendarEvent.getStartAt())
+                                    .endAt(calendarEvent.getEndAt())
+                                    .startDate(calendarEvent.getStartDate())
+                                    .endDate(calendarEvent.getEndDate())
+                                    .title(calendarEvent.getTitle())
+                                    .build();
+        // 生成したScheduleのidを元にscheduleテーブルの更新
+        mapper.updateSchedule(schedule);
+        // scheduleのidを取得
+        int scheduleId = schedule.getId();
+
+        // CalendarEventをcalendar_eventテーブルに登録
+        mapper.updateCalendarEvent(calendarEvent.getId(), scheduleId, calendarEvent.getColor(), calendarEvent.getMemo());
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
     
 
     
