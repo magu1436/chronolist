@@ -185,6 +185,11 @@ public class ToDoListController {
 
     }
 
+    /**
+     * タスクの存在を確かめるメソッド
+     * @param id
+     * @return boolean
+     */
     private boolean checkTaskExisting(int id){
         ToDoTask existingTasksId = mapper.getTaskById(id);
         if(existingTasksId != null){
