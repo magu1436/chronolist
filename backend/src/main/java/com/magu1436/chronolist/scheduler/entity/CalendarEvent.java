@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/** 
+ * CalendarEventエンティティの情報を保持するクラス
+ * @author konoma1103
+ */
 @Data
 @NoArgsConstructor
 public class CalendarEvent {

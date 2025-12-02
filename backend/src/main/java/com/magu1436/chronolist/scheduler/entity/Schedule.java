@@ -7,6 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+/** 
+ * Scheduleエンティティの情報を保持するクラス
+ * @author konoma1103
+ */
 @Data
 @NoArgsConstructor
 public class Schedule {

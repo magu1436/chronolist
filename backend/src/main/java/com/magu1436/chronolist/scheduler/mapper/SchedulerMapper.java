@@ -8,6 +8,11 @@ import org.apache.ibatis.annotations.Mapper;
 import com.magu1436.chronolist.scheduler.entity.Schedule;
 import com.magu1436.chronolist.scheduler.entity.CalendarEvent;
 
+
+/** 
+ * schedulerアプリケーションのマッパー関数を定義するインターフェース
+ * @author konoma1103
+ */
 @Mapper
 public interface SchedulerMapper {
     /** 指定の区間が期日のスケジュールを全て取得 */
