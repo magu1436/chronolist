@@ -24,8 +24,6 @@ import lombok.RequiredArgsConstructor;
  * ToDoListのコントローラークラス
  * @author milk0924
  */
-
-
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("api/todolist/")
 @Controller
@@ -38,8 +36,8 @@ public class ToDoListController {
     private final ToDoMapper mapper;
 
     /**
-     * タスクを全取得するAPIの定義 
-     * タスクの取得要求に対して、すべてのタスクを取得して返す
+     * タスクを全取得するAPIの定義.
+     * タスクの取得要求に対して, すべてのタスクを取得して返す
      * @return ResponseEntity status.OKと取得したタスク一覧
      * @author milk0924
      */
@@ -50,10 +48,10 @@ public class ToDoListController {
     }
 
     /**
-     * タスクを登録するAPIの定義
-     * フロントから受け取ったタスクを登録して、登録したIDを返す
+     * タスクを登録するAPIの定義.
+     * フロントから受け取ったタスクを登録し, 登録したIDを返す.
      * @param task フロントから受け取った登録したいタスク
-     * @return ReponseEntity status.OKと登録したタスクのID
+     * @return status.OK と登録したタスクのID
      * @author milk0924
      */
     @PostMapping("register")
@@ -64,10 +62,10 @@ public class ToDoListController {
     }
 
     /** 
-     * データを更新するAPIの定義 
-     * 既存のタスクの内容をフロントから受け取った情報に置き換え
+     * データを更新するAPIの定義.
+     * 既存のタスクの内容をフロントから受け取った情報に置き換える.
      * @param task フロントから受け取った、更新したい部分を持つタスク
-     * @retutn ResponseEntity　status.CREATED
+     * @retutn status.CREATED
      * @author milk0924
      */
     @PutMapping("update")
@@ -89,10 +87,10 @@ public class ToDoListController {
     }
 
     /** 
-     * タスク完了状況更新機能のAPI 
-     * 指定のタスクの完了状況のみを更新する
-     * @param task フロントから受け取った、完了状況を変えたいタスク
-     * @return ResponseEntity Stutus.NO_CONTENT
+     * タスク完了状況更新機能のAPI.
+     * 指定のタスクの完了状況のみを更新する.
+     * @param task フロントから受け取った、完了状況を変更するタスク
+     * @return stutus.NO_CONTENT
      * @author milk0924
      */
     @PutMapping("update/status")
@@ -121,10 +119,10 @@ public class ToDoListController {
     }
 
     /** 
-     * タスク削除機能のAPI 
-     * フロントから受け取った削除したいタスクを削除する
-     * @param body id(削除したいタスク1つのInt)とids(削除したいタスク複数のList<Int>)
-     * @return ResponseEntity status.NO_CONTENT
+     * タスク削除機能のAPI.
+     * フロントから受け取った削除したいタスクを削除する.
+     * @param body id(削除したいタスク1つの{@code int})とids(削除したいタスク複数の{@code List<int>})のどちらかを持つマップオブジェクト
+     * @return status.NO_CONTENT
      * @author milk0924
      */
     @DeleteMapping("delete")
