@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import com.magu1436.chronolist.todolist.entity.ToDoTask;
 import com.magu1436.chronolist.todolist.mapper.ToDoMapper;
@@ -41,7 +39,7 @@ public class ToDoListController {
 
     /**
      * タスクを全取得するAPIの定義 
-     *  タスクの取得要求に対して、すべてのタスクを取得して返す
+     * タスクの取得要求に対して、すべてのタスクを取得して返す
      * @return ResponseEntity status.OKと取得したタスク一覧
      * @author milk0924
      */
@@ -53,8 +51,8 @@ public class ToDoListController {
 
     /**
      * タスクを登録するAPIの定義
-     *  フロントから受け取ったタスクを登録して、登録したIDを返す
-     * @param task　フロントから受け取った登録したいタスク
+     * フロントから受け取ったタスクを登録して、登録したIDを返す
+     * @param task フロントから受け取った登録したいタスク
      * @return ReponseEntity status.OKと登録したタスクのID
      * @author milk0924
      */
@@ -67,8 +65,8 @@ public class ToDoListController {
 
     /** 
      * データを更新するAPIの定義 
-     *  既存のタスクの内容をフロントから受け取った情報に置き換え
-     * @param task　フロントから受け取った、更新したい部分を持つタスク
+     * 既存のタスクの内容をフロントから受け取った情報に置き換え
+     * @param task フロントから受け取った、更新したい部分を持つタスク
      * @retutn ResponseEntity　status.CREATED
      * @author milk0924
      */
@@ -78,7 +76,7 @@ public class ToDoListController {
         /** 
          * IDが存在しない場合に404を返す 
          */
-        if(check_Task_Existing(task.getId())){
+        if(checkTaskExisting(task.getId())){
 
         /** 
          * タスクの更新を返す 
@@ -92,19 +90,19 @@ public class ToDoListController {
 
     /** 
      * タスク完了状況更新機能のAPI 
-     *  指定のタスクの完了状況のみを更新する
+     * 指定のタスクの完了状況のみを更新する
      * @param task フロントから受け取った、完了状況を変えたいタスク
      * @return ResponseEntity Stutus.NO_CONTENT
      * @author milk0924
      */
     @PutMapping("update/status")
-    public ResponseEntity<Void> update_Status(@RequestBody ToDoTask task) {
+    public ResponseEntity<Void> updateStatus(@RequestBody ToDoTask task) {
         ToDoTask existingTask = mapper.getTaskById(task.getId());
 
         /**
          *  IDが存在しない場合に404を返す
          */
-        if(check_Task_Existing(task.getId())){
+        if(checkTaskExisting(task.getId())){
 
             /**
              *  受け取ったjsonのboolを入力 
@@ -124,10 +122,9 @@ public class ToDoListController {
 
     /** 
      * タスク削除機能のAPI 
-     *  フロントから受け取った削除したいタスクを削除する
-     * @param Int　削除したいタスク1つのID
-     * @param List<Int> 削除したいタスク複数のID
-     * @return ResponseEntity　Status.NO_Content
+     * フロントから受け取った削除したいタスクを削除する
+     * @param body id(削除したいタスク1つのInt)とids(削除したいタスク複数のList<Int>)
+     * @return ResponseEntity status.NO_CONTENT
      * @author milk0924
      */
     @DeleteMapping("delete")
@@ -140,7 +137,7 @@ public class ToDoListController {
         if(body.containsKey("id")){
             Integer id = (Integer)body.get("id");
 
-            if(check_Task_Existing(id)){
+            if(checkTaskExisting(id)){
                 mapper.deleteTask(id);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -169,7 +166,7 @@ public class ToDoListController {
              * 中身の値一つ一つで削除機能を行う 
              */
             for(Integer eachId : ids){
-                if(check_Task_Existing(eachId)){
+                if(checkTaskExisting(eachId)){
                     mapper.deleteTask(eachId);
                 } else{
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -188,9 +185,9 @@ public class ToDoListController {
 
     }
 
-    private boolean check_Task_Existing(int id){
-        ToDoTask existing_Tasks_Id = mapper.getTaskById(id);
-        if(existing_Tasks_Id != null){
+    private boolean checkTaskExisting(int id){
+        ToDoTask existingTasksId = mapper.getTaskById(id);
+        if(existingTasksId != null){
             return true;
         }
         return false;
