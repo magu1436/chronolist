@@ -192,10 +192,7 @@ public class ToDoListController {
      */
     private boolean checkTaskExisting(int id){
         ToDoTask existingTasksId = mapper.getTaskById(id);
-        if(existingTasksId != null){
-            return true;
-        }
-        return false;
+        return existingTasksId != null;
     }
 
 }
