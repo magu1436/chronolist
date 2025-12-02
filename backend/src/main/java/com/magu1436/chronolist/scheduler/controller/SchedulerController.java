@@ -22,7 +22,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
-
+/** 
+ * schedulerアプリケーションのcontroller
+ * @author konoma1103
+ */
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("api/scheduler/")
 @Controller
@@ -31,14 +34,29 @@ public class SchedulerController {
 
     private final SchedulerMapper mapper;
 
-    /** 指定期間のカレンダーイベントをDBから取得するAPI */
+    /** 
+     * 特定期間のカレンダーイベント取得API
+     * DBに登録されているカレンダーイベントのうち,指定した期間のカレンダーイベントを返す
+     * @param startDate 指定期間の開始日
+     * @param endDate 指定期間の終了日
+     * @return 指定期間に一致したカレンダーイベントのリスト,
+     * 指定した期間に一致するカレンダーイベントが存在しなかったときは{@code null}
+     * をbodyに持ったResponseEntity
+     * @author konoma1103
+     */ 
     @GetMapping("getEvents/{startDate}/{endDate}")
     public ResponseEntity<List<CalendarEvent>> getEvent(@PathVariable LocalDate startDate, @PathVariable LocalDate endDate){
-        List<CalendarEvent> calendarEvent = mapper.getCalendarEventsFromTo(startDate, endDate);
-        return new ResponseEntity<>(calendarEvent, HttpStatus.OK);
+        List<CalendarEvent> calendarEvents = mapper.getCalendarEventsFromTo(startDate, endDate);
+        return ResponseEntity.ok(calendarEvents);
     }
 
-    /** 新しい予定及びカレンダーイベントを登録するAPI */
+    /**
+     * 予定登録API
+     * 新しいスケジュールおよびカレンダーイベントをDBに登録する
+     * @param calendarEvent DBに登録したいcalendarEventエンティティ. idはDB登録時に自動生成されるため持たない
+     * @return bodyに「登録したcalendarEventに自動で付与されたid」を持ったResponseEntity
+     * @author konoma1103
+     */
     @PostMapping("register")
     public ResponseEntity<Integer> insertEvent(@RequestBody CalendarEvent calendarEvent) {
         // 受け取ったCalendarEventを元にScheduleを生成
@@ -63,7 +81,13 @@ public class SchedulerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(calendarEventId);
     }
 
-    /** スケジュール及びカレンダーイベントを更新するAPI */
+    /**
+     * 予定更新API
+     * 受け取ったCalendarEventのidを元に,スケジュールおよびカレンダーイベントを更新する
+     * @param calendarEvent 更新したいcalendarEvent
+     * @return bodyが空のResponseEntity
+     * @author konoma1103
+     */
     @PutMapping("update")
     public ResponseEntity<Void> updateEvent(@RequestBody CalendarEvent calendarEvent) {
         // 受け取ったcalendarEventがDBに存在するか確認(存在しなかった場合は400レスポンスを返す)
@@ -91,7 +115,13 @@ public class SchedulerController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    /** 特定の予定及びカレンダーイベントを削除するAPI */
+    /**
+     * 予定削除API
+     * 受け取ったidに一致するスケジュールおよびカレンダーイベントをDBから削除する
+     * @param calendarEventId 削除したいカレンダーイベントのid
+     * @return bodyが空のResponseEntity
+     * @author konoma1103
+     */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable int calendarEventId){
         // 受け取ったcalendarEventがDBに存在するか確認(存在しなかった場合は400レスポンスを返す)
