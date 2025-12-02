@@ -22,6 +22,11 @@ import com.magu1436.chronolist.todolist.mapper.ToDoMapper;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * ToDoListのコントローラークラス
+ * @author milk0924
+ */
+
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("api/todolist/")
@@ -29,16 +34,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ToDoListController {
     
+    /**
+     * 使うマッパー
+     */
     private final ToDoMapper mapper;
 
-    /**タスクを全取得するAPIの定義 */
+    /**
+     * タスクを全取得するAPIの定義 
+     *  タスクの取得要求に対して、すべてのタスクを取得して返す
+     * @return ResponseEntity status.OKと取得したタスク一覧
+     * @author milk0924
+     */
     @GetMapping("getAll")
     public ResponseEntity<List<ToDoTask>> getall(){
         List<ToDoTask> tasks = mapper.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
-    /**タスクを登録するAPIの定義 */
+    /**
+     * タスクを登録するAPIの定義
+     *  フロントから受け取ったタスクを登録して、登録したIDを返す
+     * @param task　フロントから受け取った登録したいタスク
+     * @return ReponseEntity status.OKと登録したタスクのID
+     * @author milk0924
+     */
     @PostMapping("register")
     public ResponseEntity<Integer> register(@RequestBody ToDoTask task){
         mapper.insertTask(task);
@@ -46,97 +65,120 @@ public class ToDoListController {
         return ResponseEntity.ok(id);
     }
 
-    /** データを更新するAPIの定義 */
+    /** 
+     * データを更新するAPIの定義 
+     *  既存のタスクの内容をフロントから受け取った情報に置き換え
+     * @param task　フロントから受け取った、更新したい部分を持つタスク
+     * @retutn ResponseEntity　status.CREATED
+     * @author milk0924
+     */
     @PutMapping("update")
     public ResponseEntity<Void> update(@RequestBody ToDoTask task){
 
-        /** IDが存在しない場合に404を返す */
-        ResponseEntity<Void> checkExist = check(task.getId());
-        if(checkExist != null){
-            return checkExist;
-        }
+        /** 
+         * IDが存在しない場合に404を返す 
+         */
+        if(check_Task_Existing(task.getId())){
 
-        /** Enumに存在しない値が入れられたとき422をかえす */
-        /** dueKindに存在しない場合 */
-        /**try{
-        *    DueKind.valueOf(task.getDueKind().name());
-        *}
-        *catch(IllegalArgumentException e){
-        *    return ResponseEntity.status(422).build();
-        *}
-        */
-        /** Priorityに存在しない場合 */
-        /*try{
-        *    Priority.valueOf(task.getDueKind().name());
-        *}
-        *catch(IllegalArgumentException e){
-        *    return ResponseEntity.status(422).build();
-        *}
-        */
-
-        /** タスクの更新を返す */
+        /** 
+         * タスクの更新を返す 
+         */
         mapper.updateTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    /** タスク完了状況更新機能のAPI */
+    /** 
+     * タスク完了状況更新機能のAPI 
+     *  指定のタスクの完了状況のみを更新する
+     * @param task フロントから受け取った、完了状況を変えたいタスク
+     * @return ResponseEntity Stutus.NO_CONTENT
+     * @author milk0924
+     */
     @PutMapping("update/status")
     public ResponseEntity<Void> update_Status(@RequestBody ToDoTask task) {
-        ToDoTask existing = mapper.getTaskById(task.getId());
+        ToDoTask existingTask = mapper.getTaskById(task.getId());
 
-        /** IDが存在しない場合に404を返す */
-        ResponseEntity<Void> checkExist = check(task.getId());
-        if(checkExist != null){
-            return checkExist;
+        /**
+         *  IDが存在しない場合に404を返す
+         */
+        if(check_Task_Existing(task.getId())){
+
+            /**
+             *  受け取ったjsonのboolを入力 
+             */
+            existingTask.setCompleted(task.isCompleted());
+            /** 
+             * データベースの更新 
+             */
+            mapper.updateTask(existingTask);
+            
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        /** 受け取ったjsonのboolを入力 */
-        existing.setCompleted(task.isCompleted());
-        /** データベースの更新 */
-        mapper.updateTask(existing);
-        
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //* existing を修正→existingTask or currentTask */
-
-    /** タスク削除機能のAPI */
+    /** 
+     * タスク削除機能のAPI 
+     *  フロントから受け取った削除したいタスクを削除する
+     * @param Int　削除したいタスク1つのID
+     * @param List<Int> 削除したいタスク複数のID
+     * @return ResponseEntity　Status.NO_Content
+     * @author milk0924
+     */
     @DeleteMapping("delete")
     public ResponseEntity<Void> delete(
-        /** Listで受け取ることができる形 */
+        /** 
+         * Listで受け取ることができる形 
+         */
         @RequestBody Map<String, Object> body
     ){
         if(body.containsKey("id")){
             Integer id = (Integer)body.get("id");
 
-            ResponseEntity<Void> checkExist = check(id);
-            if(checkExist != null){
-                return checkExist;
+            if(check_Task_Existing(id)){
+                mapper.deleteTask(id);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            mapper.deleteTask(id);
             
         } else if(body.containsKey("ids")){
-            /** 値を受け取ったときの動き */
+            /** 
+             * 値を受け取ったときの動き 
+             */
             List<Integer> ids;
-            /** 変な方に変換しないためのチェック */
+            /** 
+             * 変な方に変換しないためのチェック 
+             */
             try {
                 ids = (List<Integer>)body.get("ids");
             } catch (ClassCastException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            /** 渡されたidsのリストが空だった時 */
+            /** 
+             * 渡されたidsのリストが空だった時 
+             */
             if(ids.isEmpty()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            /** 中身の値一つ一つで削除機能を行う */
+            /** 
+             * 中身の値一つ一つで削除機能を行う 
+             */
             for(Integer eachId : ids){
-                ResponseEntity<Void> checkExist = check(eachId);
-                if(checkExist != null){
-                    return checkExist;
+                if(check_Task_Existing(eachId)){
+                    mapper.deleteTask(eachId);
+                } else{
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
                 }
-                mapper.deleteTask(eachId);
+                ;
             }
-        /** なんも投げられてないときまたはids以外が投げられたときの処理 */
+        /** 
+         * なんも投げられてないときまたはids以外が投げられたときの処理 
+         */
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }    
@@ -146,14 +188,12 @@ public class ToDoListController {
 
     }
 
-    private ResponseEntity<Void> check(int id){
+    private boolean check_Task_Existing(int id){
         ToDoTask existing_Tasks_Id = mapper.getTaskById(id);
-        if(existing_Tasks_Id == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if(existing_Tasks_Id != null){
+            return true;
         }
-        return null;
-        // メソッドの返り値値をboolにする→それに伴い本文を更新（1行減りそう）　
-        // クラス名の変更
+        return false;
     }
 
 }
