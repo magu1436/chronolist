@@ -35,13 +35,13 @@ public class SchedulerController {
     private final SchedulerMapper mapper;
 
     /** 
-     * 特定期間のカレンダーイベント取得API
-     * DBに登録されているカレンダーイベントのうち,指定した期間のカレンダーイベントを返す
+     * 特定期間のカレンダーイベント取得API.
+     * DBに登録されているカレンダーイベントのうち, 指定した期間のカレンダーイベントを返す
      * @param startDate 指定期間の開始日
      * @param endDate 指定期間の終了日
-     * @return 指定期間に一致したカレンダーイベントのリスト,
-     * 指定した期間に一致するカレンダーイベントが存在しなかったときは{@code null}
-     * をbodyに持ったResponseEntity
+     * @return 指定期間に一致したカレンダーイベントのリスト, 
+     * 指定した期間に一致するカレンダーイベントが存在しなかったときは {@code null} 
+     * をbodyに持った {@code ResponseEntity} 
      * @author konoma1103
      */ 
     @GetMapping("getEvents/{startDate}/{endDate}")
@@ -51,10 +51,10 @@ public class SchedulerController {
     }
 
     /**
-     * 予定登録API
+     * 予定登録API.
      * 新しいスケジュールおよびカレンダーイベントをDBに登録する
-     * @param calendarEvent DBに登録したいcalendarEventエンティティ. idはDB登録時に自動生成されるため持たない
-     * @return bodyに「登録したcalendarEventに自動で付与されたid」を持ったResponseEntity
+     * @param calendarEvent DBに登録したい {@code calendarEvent} エンティティ. {@code id} はDB登録時に自動生成されるため持たない
+     * @return bodyに「登録した {@code calendarEvent} に自動で付与された {@code id} 」を持った {@code ResponseEntity} 
      * @author konoma1103
      */
     @PostMapping("register")
@@ -82,11 +82,11 @@ public class SchedulerController {
     }
 
     /**
-     * 予定更新API
-     * 受け取ったCalendarEventのidを元に,スケジュールおよびカレンダーイベントを更新する
-     * @param calendarEvent 更新したいcalendarEvent
-     * @return bodyが空のResponseEntity. 
-     * 受け取ったcalendarEventのidがDBに存在するときは201レスポンス,
+     * 予定更新API. 
+     * 受け取った {@code CalendarEvent} の {@code id} を元に, スケジュールおよびカレンダーイベントを更新する
+     * @param calendarEvent 更新したい {@code calendarEvent}
+     * @return bodyが空の {@code ResponseEntity}. 
+     * 受け取った {@code calendarEvent} の {@code id} がDBに存在するときは201レスポンス, 
      * 存在しないときは400レスポンスを返す
      * @author konoma1103
      */
@@ -118,11 +118,11 @@ public class SchedulerController {
     }
 
     /**
-     * 予定削除API
+     * 予定削除API. 
      * 受け取ったidに一致するスケジュールおよびカレンダーイベントをDBから削除する
-     * @param calendarEventId 削除したいカレンダーイベントのid
-     * @return bodyが空のResponseEntity
-     * 受け取ったcalendarEventIdがDBに存在するときは201レスポンス,
+     * @param calendarEventId 削除したいカレンダーイベントの {@code id}
+     * @return bodyが空の {@code ResponseEntity} 
+     * 受け取った {@code calendarEventId} がDBに存在するときは201レスポンス, 
      * 存在しないときは400レスポンスを返す
      * @author konoma1103
      */
