@@ -85,7 +85,9 @@ public class SchedulerController {
      * 予定更新API
      * 受け取ったCalendarEventのidを元に,スケジュールおよびカレンダーイベントを更新する
      * @param calendarEvent 更新したいcalendarEvent
-     * @return bodyが空のResponseEntity
+     * @return bodyが空のResponseEntity. 
+     * 受け取ったcalendarEventのidがDBに存在するときは201レスポンス,
+     * 存在しないときは400レスポンスを返す
      * @author konoma1103
      */
     @PutMapping("update")
@@ -120,6 +122,8 @@ public class SchedulerController {
      * 受け取ったidに一致するスケジュールおよびカレンダーイベントをDBから削除する
      * @param calendarEventId 削除したいカレンダーイベントのid
      * @return bodyが空のResponseEntity
+     * 受け取ったcalendarEventIdがDBに存在するときは201レスポンス,
+     * 存在しないときは400レスポンスを返す
      * @author konoma1103
      */
     @DeleteMapping("delete/{id}")
