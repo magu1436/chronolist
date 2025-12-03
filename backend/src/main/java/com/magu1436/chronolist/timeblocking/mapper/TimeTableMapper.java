@@ -28,7 +28,14 @@ public interface TimeTableMapper {
 
     /**
      * 新しい TimeTable をデータベースに登録する。
+     * 
+     * <p>
      * 登録時に発行された ID は、引数として渡した TimeTable オブジェクトに割り当てられる。
+     * </p>
+     * <p>
+     * {@code timeTable} に {@code timeBlocks} が設定されていても、
+     * <strong>それらは登録されずに無視されることに注意</strong>。
+     * </p>
      *
      * @param timeTable 登録する TimeTable
      */
@@ -39,9 +46,19 @@ public interface TimeTableMapper {
      * <p>
      * 更新対象は引数で受け取った TimeTable の {@code id} によって特定される。
      * </p>
+     * <p>
+     * {@code timeTable} に {@code timeBlocks} が設定されていても、
+     * <strong>それらは登録されずに無視されることに注意</strong>。
+     * </p>
      *
      * @param timeTable 更新内容を保持する {@link TimeTable}
      */
     void updateTimeTable(TimeTable timeTable);
+
+    /**
+     * 指定した ID の {@link TimeTable} を削除する。
+     *
+     * @param id 削除対象の TimeTable の ID
+     */
     void deleteTimeTable(int id);
 }

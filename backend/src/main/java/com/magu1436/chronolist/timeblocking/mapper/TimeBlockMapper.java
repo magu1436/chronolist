@@ -41,6 +41,9 @@ public interface TimeBlockMapper {
      * <p>
      * 登録時に生成された ID は、引数の {@link TimeBlock} に設定される。
      * </p>
+     * <p>
+     * {@code tasks} 登録も同時に行う。
+     * </p>
      *
      * @param timeBlock 登録する {@link TimeBlock}
      */
@@ -68,7 +71,8 @@ public interface TimeBlockMapper {
      * <p>
      * このメソッドはブロックに紐づく {@code tasks}（文字列リスト）のみを更新し、  
      * 他の属性（幅・開始時刻・色・ステータスなど）には変更を加えない。
-     * <br>
+     * </p>
+     * <p>
      * 仕様書において、TimeBlock の {@code tasks} は任意個の文字列を保持でき、
      * ブロック編集時に部分的に更新される想定である。
      * </p>
