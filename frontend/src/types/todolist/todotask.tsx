@@ -1,9 +1,9 @@
-import type { Priority } from "./statics";
+import type { DueKind, Priority } from "./statics";
 
 export interface ToDoTask {
     id: number,
     title: string,
-    dueKind: string | null,
+    dueKind: DueKind,
     dueDate: string | null,
     dueTime: string | null,
     priority: Priority,
