@@ -15,27 +15,18 @@ const ToDoTableBodyClassName = "todotable-body";
 const ToDoTable = () => {
     const {data, isLoading, error} = useFetch<GetAllApi[]>("todolist/getAll");
 
-    const tasks: ToDoTask[] = [];
+    const [tasks, setTasks] = useState<ToDoTask[]>([]);
 
     useEffect(() => {
         if (!data) return;
 
-        data.forEach(api => {
-            tasks.push(toToDoTask(api));
-        });
-    }, [isLoading]);
+        setTasks(data.map(toDoTask => toToDoTask(toDoTask)));
 
-    const [allCheckboxChecked, setAllCheckboxChecked] = useState<boolean>(false);
-    const allCheckboxCheckedHandler = (checked: boolean) => {
-        setAllCheckboxChecked(checked);
-        tasks.forEach(tasks => {
-            tasks.isCompleted = checked;
-        });
-    };
+    }, [isLoading]);
 
     return(
         <div className={ToDoTableClassName}>
-            <ToDoHeader checkboxChangeHandler={allCheckboxCheckedHandler} />
+            <ToDoHeader />
             <div className={classNames(ToDoTableBodyClassName, "d-flex", "flex-column", "overflow-y-scroll")}>
                 {tasks.map(task => (
                     <ToDoLabel key={task.id} toDoTask={task} />
@@ -43,7 +34,6 @@ const ToDoTable = () => {
             </div>
         </div>
     )
-
 
 }
 
