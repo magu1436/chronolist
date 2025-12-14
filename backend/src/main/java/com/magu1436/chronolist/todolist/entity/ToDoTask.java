@@ -1,6 +1,9 @@
 package com.magu1436.chronolist.todolist.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,9 +20,9 @@ public class ToDoTask {
     /** 期日の設定 */
     private DueKind dueKind;
     /** dateの設定 */
-    private LocalDate Date;
+    private LocalDate dueDate;
     /** timeの設定 */
-    private LocalDate Time;
+    private LocalTime dueTime;
     /** 優先度の設定 
      * StringはPriorityクラスの定義後置き換え
     */
@@ -27,6 +30,8 @@ public class ToDoTask {
     /** メモの設定 */
     private String memo;
     /** 完了済みかどうかの設定 */
+    /** 更新するAPIにboolean型を読み込ませるためのアノテーション */
+    @JsonProperty("isCompleted")
     private boolean isCompleted;
     
 }
