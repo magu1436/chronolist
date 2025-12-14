@@ -17,6 +17,8 @@ const ToDoLabel: FC<ToDoLabelProps> = ({toDoTask}) => {
         setIsCompleted(checked);
     };
 
+    console.log(toDoTask)
+
     return (
         <div className={classNames(ToDoLabelClassName, "d-flex")}>
             <div className={classNames(ToDoLabelCellClassName.checkbox, "p-2", "border")}>
@@ -25,13 +27,13 @@ const ToDoLabel: FC<ToDoLabelProps> = ({toDoTask}) => {
                     onChange={handleCheckboxChange}
                 />
             </div>
-            <div className={classNames(ToDoLabelCellClassName.title, "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.title, isCompleted && "text-decoration-line-through", "p-2", "border")}>
                 {toDoTask.title}
             </div>
-            <div className={classNames(ToDoLabelCellClassName.priority, "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.priority, isCompleted && "text-decoration-line-through", "p-2", "border")}>
                 <PriorityDisplayText priority={toDoTask.priority} />
             </div>
-            <div className={classNames(ToDoLabelCellClassName.due, "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.due, isCompleted && "text-decoration-line-through", "p-2", "border")}>
                 <DueDisplayText
                     dueKind={toDoTask.dueKind}
                     dueDate={toDoTask.dueDate}
