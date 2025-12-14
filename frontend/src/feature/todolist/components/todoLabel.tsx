@@ -1,6 +1,6 @@
 import { useState, type FC } from "react"
 import type { ToDoLabelProps } from "../type/props";
-import { ToDoLabelStatics } from "../statics/todolabel_statics";
+import { ToDoLabelCellClassName } from "../statics/todolabel_statics";
 import CheckBox from "@/components/checkbox";
 import classNames from "classnames";
 import DueDisplayText from "./due-display-text";
@@ -19,19 +19,19 @@ const ToDoLabel: FC<ToDoLabelProps> = ({toDoTask}) => {
 
     return (
         <div className={classNames(ToDoLabelClassName, "d-flex")}>
-            <div className={classNames(ToDoLabelStatics.checkbox, "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.checkbox, "p-2", "border")}>
                 <CheckBox
                     defaultChecked={isCompleted}
                     onChange={handleCheckboxChange}
                 />
             </div>
-            <div className={classNames(ToDoLabelStatics.title, "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.title, "p-2", "border")}>
                 {toDoTask.title}
             </div>
-            <div className={classNames(ToDoLabelStatics.priority, "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.priority, "p-2", "border")}>
                 <PriorityDisplayText priority={toDoTask.priority} />
             </div>
-            <div className={classNames(ToDoLabelStatics.due, "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.due, "p-2", "border")}>
                 <DueDisplayText
                     dueKind={toDoTask.dueKind}
                     dueDate={toDoTask.dueDate}

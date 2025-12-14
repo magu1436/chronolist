@@ -1,4 +1,4 @@
-export const ToDoLabelStatics = {
+export const ToDoLabelCellClassName = {
     checkbox: "todolabel-checkbox",
     title: "todolabel-title",
     priority: "todolabel-priority",
