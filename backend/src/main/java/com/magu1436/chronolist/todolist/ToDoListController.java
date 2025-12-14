@@ -169,7 +169,6 @@ public class ToDoListController {
                 } else{
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
                 }
-                ;
             }
         /** 
          * なんも投げられてないときまたはids以外が投げられたときの処理 
