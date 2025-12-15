@@ -1,4 +1,4 @@
-import { useState, type FC } from "react"
+import { useState, type FC } from "react";
 import type { ToDoLabelProps } from "../type/props";
 import { ToDoLabelCellClassName } from "../statics/todolabel_statics";
 import CheckBox from "@/components/checkbox";
@@ -10,14 +10,21 @@ import "@/feature/todolist/assets/todolabel.css";
 
 const ToDoLabelClassName = "todolabel";
 
-const ToDoLabel: FC<ToDoLabelProps> = ({toDoTask}) => {
+/**
+ * ToDoリストの1行を表示するコンポーネント。
+ * チェックボックス操作で完了状態を切り替える。
+ */
+const ToDoLabel: FC<ToDoLabelProps> = ({ toDoTask }) => {
     const [isCompleted, setIsCompleted] = useState<boolean>(toDoTask.isCompleted);
+
+    /**
+     * チェックボックスの変更に合わせて完了状態を更新する。
+     * @param checked チェック状態
+     */
     const handleCheckboxChange = (checked: boolean) => {
         toDoTask.isCompleted = checked;
         setIsCompleted(checked);
     };
-
-    console.log(toDoTask)
 
     return (
         <div className={classNames(ToDoLabelClassName, "d-flex")}>
@@ -41,7 +48,7 @@ const ToDoLabel: FC<ToDoLabelProps> = ({toDoTask}) => {
                 />
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ToDoLabel;
