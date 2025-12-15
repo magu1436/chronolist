@@ -3,9 +3,11 @@ import classNames from "classnames";
 import { ToDoLabelCellClassName } from "../statics/todolabel_statics";
 import { ToDoHeaderDisplayTexts } from "../statics/todoheader-statics";
 import type { FC } from "react";
-import CheckBox from "@/components/checkbox";
 
-const ToDoHeader = () => {
+/**
+ * ToDoリストのテーブルヘッダーを表示するコンポーネント。
+ */
+const ToDoHeader: FC = () => {
     return (
         <div className={classNames("d-flex")}>
             <div className={classNames(ToDoLabelCellClassName.checkbox, "p-2", "border")}>
@@ -21,7 +23,7 @@ const ToDoHeader = () => {
                 {ToDoHeaderDisplayTexts.due}
             </div>
         </div>
-    )
+    );
 };
 
 export default ToDoHeader;
