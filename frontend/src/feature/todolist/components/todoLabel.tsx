@@ -1,6 +1,6 @@
 import { useState, type FC } from "react";
 import type { ToDoLabelProps } from "../type/props";
-import { ToDoLabelCellClassName } from "../statics/todolabel_statics";
+import { ToDoLabelCellClassName } from "../statics/todolabel-statics";
 import CheckBox from "@/components/checkbox";
 import classNames from "classnames";
 import DueDisplayText from "./due-display-text";

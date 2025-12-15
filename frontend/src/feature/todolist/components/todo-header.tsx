@@ -1,6 +1,6 @@
 import classNames from "classnames";
 
-import { ToDoLabelCellClassName } from "../statics/todolabel_statics";
+import { ToDoLabelCellClassName } from "../statics/todolabel-statics";
 import { ToDoHeaderDisplayTexts } from "../statics/todoheader-statics";
 import type { FC } from "react";
 
