@@ -2,8 +2,6 @@ import classNames from "classnames";
 
 import { ToDoLabelCellClassName } from "../statics/todolabel_statics";
 import { ToDoHeaderDisplayTexts } from "../statics/todoheader-statics";
-import type { FC } from "react";
-import CheckBox from "@/components/checkbox";
 
 const ToDoHeader = () => {
     return (
