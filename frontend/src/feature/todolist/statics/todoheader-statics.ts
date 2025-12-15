@@ -1,3 +1,6 @@
+/**
+ * ToDoテーブルのヘッダーに表示する各列タイトルを定義した定数。
+ */
 export const ToDoHeaderDisplayTexts = {
     checkbox: "完了状況",
     title: "タイトル",
