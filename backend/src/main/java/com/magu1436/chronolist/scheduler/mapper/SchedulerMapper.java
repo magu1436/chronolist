@@ -27,7 +27,7 @@ public interface SchedulerMapper {
     /** 指定のidをもつカレンダーイベントを取得 */
     CalendarEvent getCalendarEventById(int id);
     /** カレンダーイベントの新規登録 */
-    int insertCalendarEvent(int scheduleId, String color, String memo);
+    int insertCalendarEvent(CalendarEvent calendarEvent);
     /** カレンダーイベントの更新 */
     void updateCalendarEvent(int id, int scheduleId, String color, String memo);
     /** 受け取ったidのカレンダーイベントを削除 */
