@@ -130,8 +130,17 @@ public class SchedulerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        
+        // 受け取ったcalendarEventのidを元に, DBからCalendarEventを取得
+        CalendarEvent calendarEvent = mapper.getCalendarEventById(calendarEventId);
+        // 取得したcalendarEventからscheduleIdを取得
+        int scheduleId = calendarEvent.getScheduleId();
+        // scheduleIdを元に, 対象となるscheduleをDBから削除
+        mapper.deleteSchedule(scheduleId);
 
+        // calendarEventIdを元に, 対象となるcalendarEventをDBから削除
+        mapper.deleteCalendarEvent(calendarEventId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
