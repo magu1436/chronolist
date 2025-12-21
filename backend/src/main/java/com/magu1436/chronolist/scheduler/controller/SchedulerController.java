@@ -97,6 +97,7 @@ public class SchedulerController {
 
         // 受け取ったCalendarEventを元にScheduleを生成
         Schedule schedule = Schedule.builder()
+                                    .id(calendarEvent.getScheduleId())
                                     .kind(calendarEvent.getKind())
                                     .startAt(calendarEvent.getStartAt())
                                     .endAt(calendarEvent.getEndAt())
@@ -106,11 +107,9 @@ public class SchedulerController {
                                     .build();
         // 生成したScheduleのidを元にscheduleテーブルの更新
         mapper.updateSchedule(schedule);
-        // scheduleのidを取得
-        int scheduleId = schedule.getId();
 
         // CalendarEventをcalendar_eventテーブルに登録
-        mapper.updateCalendarEvent(calendarEvent.getId(), scheduleId, calendarEvent.getColor(), calendarEvent.getMemo());
+        mapper.updateCalendarEvent(CalendarEvent calendarEvent);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
