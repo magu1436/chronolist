@@ -109,7 +109,7 @@ public class SchedulerController {
         mapper.updateSchedule(schedule);
 
         // CalendarEventをcalendar_eventテーブルに登録
-        mapper.updateCalendarEvent(CalendarEvent calendarEvent);
+        mapper.updateCalendarEvent(calendarEvent);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
