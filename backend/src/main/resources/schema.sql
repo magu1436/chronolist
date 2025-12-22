@@ -105,3 +105,11 @@ CREATE TABLE time_block_tasks (
     title VARCHAR(64) NOT NULL,
     FOREIGN KEY TimeBlock_id REFERENCES time_blocks(id)
 )
+
+-- template_blocksテーブルの作成
+CREATE TABLE template_blocks (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(64) NOT NULL,
+    width INT NOT NULL,
+    color VARCHAR(8) NOT NULL
+)
