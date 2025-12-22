@@ -76,6 +76,12 @@ CREATE TABLE todo_tasks (
 );
 
 
+-- time_tablesテーブルの作成
+CREATE TABLE time_tables (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL
+)
+
 -- time_blocksテーブルの作成
 CREATE TABLE time_blocks (
     id INT PRIMARY KEY AUTO_INCREMENT,
