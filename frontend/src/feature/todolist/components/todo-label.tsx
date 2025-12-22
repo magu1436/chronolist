@@ -1,10 +1,12 @@
-import { useState, type FC } from "react";
+import { useState, type FC, useContext, useCallback, useEffect } from "react";
+import classNames from "classnames";
+
 import type { ToDoLabelProps } from "../type/props";
 import { ToDoLabelCellClassName } from "../statics/todolabel-statics";
 import CheckBox from "@/components/checkbox";
-import classNames from "classnames";
 import DueDisplayText from "./due-display-text";
 import PriorityDisplayText from "./priority-display-text";
+import { SelectedToDoTaskContext } from "./selected-todotask-context";
 
 import "@/feature/todolist/assets/todolabel.css";
 
@@ -26,8 +28,20 @@ const ToDoLabel: FC<ToDoLabelProps> = ({ toDoTask }) => {
         setIsCompleted(checked);
     };
 
+    const [isSelected, setIsSelected] = useState<boolean>(false);
+    const selectedToDoTask = useContext(SelectedToDoTaskContext);
+
+    const handleLabelClick = useCallback(() => {
+        setIsSelected(true);
+        selectedToDoTask!.set(toDoTask);
+    }, []);
+
+    useEffect(() => {
+        setIsSelected(selectedToDoTask!.task?.id === toDoTask.id);
+    }, [selectedToDoTask]);
+
     return (
-        <div className={classNames(ToDoLabelClassName, "d-flex")}>
+        <div className={classNames(ToDoLabelClassName, isSelected && "selected-label", "d-flex")} onClick={ handleLabelClick }>
             <div className={classNames(ToDoLabelCellClassName.checkbox, "p-2", "border")}>
                 <CheckBox
                     defaultChecked={isCompleted}

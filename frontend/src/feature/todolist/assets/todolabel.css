@@ -13,3 +13,7 @@
 .todolabel-due {
     width: 30%;
 }
+
+.selected-label {
+    background-color: #00d9ff;
+}
