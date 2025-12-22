@@ -1,4 +1,4 @@
-import { useState, type FC, useContext, useCallback, useEffect } from "react";
+import { useState, type FC, useContext, useCallback } from "react";
 import classNames from "classnames";
 
 import type { ToDoLabelProps } from "../type/props";
