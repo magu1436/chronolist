@@ -74,3 +74,21 @@ CREATE TABLE todo_tasks (
             (due_kind = 'DATETIME' and due_date is NOT NULL and due_time is NOT NULL)
         )
 );
+
+
+-- time_blocksテーブルの作成
+CREATE TABLE time_blocks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    table_id INT,
+    title VARCHAR(64) NOT NULL,
+    status VARCHAR(8) NOT NULL,
+    schedule_id INT,
+    width INT NOT NULL,
+    start_at TIME,
+    color VARCHAR(8) NOT NULL,
+    FOREIGN KEY table_id REFERENCES time_tables(id),
+    FOREIGN KEY schedule_id REFERENCES schedule(id),
+
+    -- statusがとれる値の制約
+    CONSTRAINT chk_status CHECK (status IN ('PLACED', 'HOLD'))
+)
