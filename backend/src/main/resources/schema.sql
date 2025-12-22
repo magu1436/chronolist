@@ -98,3 +98,10 @@ CREATE TABLE time_blocks (
     -- statusがとれる値の制約
     CONSTRAINT chk_status CHECK (status IN ('PLACED', 'HOLD'))
 )
+
+-- time_block_tasksテーブルの作成
+CREATE TABLE time_block_tasks (
+    TimeBlock_id INT,
+    title VARCHAR(64) NOT NULL,
+    FOREIGN KEY TimeBlock_id REFERENCES time_blocks(id)
+)
