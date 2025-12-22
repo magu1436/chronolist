@@ -28,20 +28,17 @@ const ToDoLabel: FC<ToDoLabelProps> = ({ toDoTask }) => {
         setIsCompleted(checked);
     };
 
-    const [isSelected, setIsSelected] = useState<boolean>(false);
     const selectedToDoTask = useContext(SelectedToDoTaskContext);
 
+    /**
+     * このラベルがクリックされた際に, 選択中のタスクをこのラベルが持つタスクに更新する。
+     */
     const handleLabelClick = useCallback(() => {
-        setIsSelected(true);
         selectedToDoTask!.set(toDoTask);
     }, []);
 
-    useEffect(() => {
-        setIsSelected(selectedToDoTask!.task?.id === toDoTask.id);
-    }, [selectedToDoTask]);
-
     return (
-        <div className={classNames(ToDoLabelClassName, isSelected && "selected-label", "d-flex")} onClick={ handleLabelClick }>
+        <div className={classNames(ToDoLabelClassName, (toDoTask.id === selectedToDoTask?.task?.id) && "selected-label", "d-flex")} onClick={ handleLabelClick }>
             <div className={classNames(ToDoLabelCellClassName.checkbox, "p-2", "border")}>
                 <CheckBox
                     defaultChecked={isCompleted}
