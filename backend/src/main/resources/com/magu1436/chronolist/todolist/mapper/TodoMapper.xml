@@ -31,14 +31,17 @@
         WHERE is_completed = False
     </select>
 
-    <insert id="insertTask" parameterType="com.magu1436.chronolist.todolist.entity.ToDoTask">
+    <insert id="insertTask" 
+            parameterType="com.magu1436.chronolist.todolist.entity.ToDoTask" 
+            useGeneratedKeys="true" 
+            keyProperty="id">
         INSERT INTO todo_tasks (title, priority, due_kind, due_date, due_time, is_completed, memo)
         VALUES
-        (#{title}, #{priority}, #{due_kind}, #{due_date}, #{due_time}, #{is_completed}, #{memo})
+        (#{title}, #{priority}, #{dueKind}, #{dueDate}, #{dueTime}, #{isCompleted}, #{memo})
     </insert>
 
     <update id="updateTask" parameterType="com.magu1436.chronolist.todolist.entity.ToDoTask">
-        UPDATE todo_tasks SET title=#{title}, priority=#{priority}, due_kind=#{due_kind}, due_date=#{due_date}, due_time=#{due_time}, is_completed=#{is_completed}, memo=#{memo}
+        UPDATE todo_tasks SET title=#{title}, priority=#{priority}, due_kind=#{dueKind}, due_date=#{dueDate}, due_time=#{dueTime}, is_completed=#{isCompleted}, memo=#{memo}
         WHERE id = #{id}
     </update>
 

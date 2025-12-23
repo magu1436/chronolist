@@ -61,16 +61,55 @@ CREATE TABLE todo_tasks (
     memo TEXT,
 
     -- priorityがとれる値の制約
-    CONSTRAINT chk_priority CHECK (priority IN ('high', 'middle', 'low')),
+    CONSTRAINT chk_priority CHECK (priority IN ('HIGH', 'MIDDLE', 'LOW')),
     -- due_kindがとれる値の制約
-    CONSTRAINT chk_due_kind CHECK (due_kind IN ('NONE', 'DATE', 'DATETIME')),
+    CONSTRAINT chk_due_kind CHECK (due_kind IN ('NONE', 'DATED', 'DATETIME')),
     -- due_kindの値に基づいてdue_dateとdue_timeが値をとっているかの確認
     CONSTRAINT chk_due_date
         CHECK (
             (due_kind = 'NONE' and due_date = NULL and due_time = NULL)
             or
-            (due_kind = 'DATE' and due_date is NOT NULL and due_time = NULL)
+            (due_kind = 'DATED' and due_date is NOT NULL and due_time = NULL)
             or
             (due_kind = 'DATETIME' and due_date is NOT NULL and due_time is NOT NULL)
         )
 );
+
+
+-- time_tablesテーブルの作成
+CREATE TABLE time_tables (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL
+)
+
+-- time_blocksテーブルの作成
+CREATE TABLE time_blocks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    table_id INT,
+    title VARCHAR(64) NOT NULL,
+    status VARCHAR(8) NOT NULL,
+    schedule_id INT,
+    width INT NOT NULL,
+    start_at TIME,
+    color VARCHAR(8) NOT NULL,
+    FOREIGN KEY table_id REFERENCES time_tables(id),
+    FOREIGN KEY schedule_id REFERENCES schedule(id),
+
+    -- statusがとれる値の制約
+    CONSTRAINT chk_status CHECK (status IN ('PLACED', 'HOLD'))
+)
+
+-- time_block_tasksテーブルの作成
+CREATE TABLE time_block_tasks (
+    TimeBlock_id INT,
+    title VARCHAR(64) NOT NULL,
+    FOREIGN KEY TimeBlock_id REFERENCES time_blocks(id)
+)
+
+-- template_blocksテーブルの作成
+CREATE TABLE template_blocks (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(64) NOT NULL,
+    width INT NOT NULL,
+    color VARCHAR(8) NOT NULL
+)
