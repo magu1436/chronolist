@@ -9,9 +9,9 @@ version = '0.0.1-SNAPSHOT'
 description = '"Chronolist" project for Spring Boot'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(25)
-	}
+        toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+        }
 }
 
 configurations {

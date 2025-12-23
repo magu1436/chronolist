@@ -4,7 +4,9 @@
     <select id="getSchedulesFromTo" resultType="com.magu1436.chronolist.scheduler.entity.Schedule">
         SELECT id, kind, start_at, end_at, start_date, end_date, title
         FROM schedule
-        WHERE (start_date &gt;= #{startDate}) OR (end_date &lt; #{endDate})
+        WHERE
+            (kind = 'DATED' AND CAST(start_at AS DATE) BETWEEN #{startDate} AND #{endDate})
+            OR (kind = 'ALL_DAY' AND start_date &lt;= #{endDate} AND end_date &gt;= #{startDate})
     </select>
 
     <select id="getScheduleById" resultType="com.magu1436.chronolist.scheduler.entity.Schedule">
@@ -16,7 +18,9 @@
     <select id="getSchedulesByDate" resultType="com.magu1436.chronolist.scheduler.entity.Schedule">
         SELECT id, kind, start_at, end_at, start_date, end_date, title
         FROM schedule
-        WHERE start_date &lt;= #{date} AND end_date &gt;= #{date}
+        WHERE
+            (kind = 'DATED' AND CAST(start_at AS DATE) &lt;= #{date} AND CAST(end_at AS DATE) &gt;= #{date})
+            OR (kind = 'ALL_DAY' AND start_date &lt;= #{date} AND end_date &gt;= #{date})
     </select>
 
     <insert id="insertSchedule" useGeneratedKeys="true" keyProperty="id" parameterType="com.magu1436.chronolist.scheduler.entity.Schedule">
@@ -39,8 +43,10 @@
             c.id, c.schedule_id, c.color, c.memo,
             s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title
         FROM calendar_event c
-        WHERE (start_date &gt;= #{startDate}) OR (end_date &lt; #{endDate})
         INNER JOIN schedule s ON c.schedule_id = s.id
+        WHERE
+            (s.kind = 'DATED' AND CAST(s.start_at AS DATE) BETWEEN #{startDate} AND #{endDate})
+            OR (s.kind = 'ALL_DAY' AND s.start_date &lt;= #{endDate} AND s.end_date &gt;= #{startDate})
     </select>
 
     <select id="getCalendarEventById" resultType="com.magu1436.chronolist.scheduler.entity.CalendarEvent">
@@ -48,8 +54,8 @@
             c.id, c.schedule_id, c.color, c.memo,
             s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title
         FROM calendar_event c
-        WHERE id = #{id}
         INNER JOIN schedule s ON c.schedule_id = s.id
+        WHERE c.id = #{id}
     </select>
 
     <insert id="insertCalendarEvent" useGeneratedKeys="true" keyProperty="id">
