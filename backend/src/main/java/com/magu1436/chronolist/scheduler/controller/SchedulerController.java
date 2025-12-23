@@ -71,6 +71,10 @@ public class SchedulerController {
         // 生成したScheduleをscheduleテーブルに登録
         mapper.insertSchedule(schedule);
 
+        // scheduleからscheduleIdを取得
+        int scheduleId = schedule.getId();
+        // 取得したscheduleIdをcalendarEventにset
+        calendarEvent.setScheduleId(scheduleId);
         // CalendarEventをcalendar_eventテーブルに登録
         mapper.insertCalendarEvent(calendarEvent);
         // 自動生成されたcalendar_eventのidを取得
