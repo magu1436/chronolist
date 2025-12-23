@@ -36,7 +36,7 @@
 
     <select id="getCalendarEventsFromTo" resultType="com.magu1436.chronolist.scheduler.entity.CalendarEvent">
         SELECT
-            c.id, c.color, c.memo,
+            c.id, c.schedule_id, c.color, c.memo,
             s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title
         FROM calendar_event c
         WHERE (start_date &gt;= #{startDate}) OR (end_date &lt; #{endDate})
@@ -45,7 +45,7 @@
 
     <select id="getCalendarEventById" resultType="com.magu1436.chronolist.scheduler.entity.CalendarEvent">
         SELECT
-            c.id, c.color, c.memo,
+            c.id, c.schedule_id, c.color, c.memo,
             s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title
         FROM calendar_event c
         WHERE id = #{id}
