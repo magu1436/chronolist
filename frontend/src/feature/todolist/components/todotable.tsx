@@ -1,12 +1,9 @@
-import useFetch from "@/utils/fetch";
-import { useEffect, useState, type FC } from "react";
+import { useContext, type FC } from "react";
 import classNames from "classnames";
 
-import type { GetAllApi } from "@/types/todolist/api";
-import type { ToDoTask } from "@/types/todolist/todotask";
-import toToDoTask from "@/api/mapper/toDoListMapper";
 import ToDoHeader from "./todo-header";
 import ToDoLabel from "./todo-label";
+import AllToDoTasksContext from "./all-todotasks-context";
 
 
 const ToDoTableClassName = "todotable";
@@ -17,15 +14,7 @@ const ToDoTableBodyClassName = "todotable-body";
  * APIからタスクを取得し、一覧として描画する。
  */
 const ToDoTable: FC = () => {
-    const { data, isLoading } = useFetch<GetAllApi[]>("todolist/getAll");
-
-    const [tasks, setTasks] = useState<ToDoTask[]>([]);
-
-    useEffect(() => {
-        if (!data) return;
-
-        setTasks(data.map(toDoTask => toToDoTask(toDoTask)));
-    }, [isLoading]);
+    const tasks = useContext(AllToDoTasksContext);
 
     return (
         <div className={ToDoTableClassName}>
