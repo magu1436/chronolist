@@ -1,4 +1,4 @@
-import { useState, type FC, useContext, useCallback } from "react";
+import { useState, type FC, useContext, useCallback, useEffect } from "react";
 import classNames from "classnames";
 
 import type { ToDoLabelProps } from "../type/props";
@@ -9,6 +9,7 @@ import PriorityDisplayText from "./priority-display-text";
 import { SelectedToDoTaskContext } from "./selected-todotask-context";
 
 import "@/feature/todolist/assets/todolabel.css";
+import AllToDoTasksContext from "./all-todotasks-context";
 
 const ToDoLabelClassName = "todolabel";
 
@@ -17,41 +18,41 @@ const ToDoLabelClassName = "todolabel";
  * チェックボックス操作で完了状態を切り替える。
  */
 const ToDoLabel: FC<ToDoLabelProps> = ({ toDoTask }) => {
-    const [isCompleted, setIsCompleted] = useState<boolean>(toDoTask.isCompleted);
+    const { tasks, setTasks } = useContext(AllToDoTasksContext);
 
     /**
-     * チェックボックスの変更に合わせて完了状態を更新する。
+     * チェックボックスの変更に合わせてタスク情報を更新する
      * @param checked チェック状態
      */
     const handleCheckboxChange = (checked: boolean) => {
-        toDoTask.isCompleted = checked;
-        setIsCompleted(checked);
+        setTasks(tasks.map(task => task.id === toDoTask.id ? {...task, isCompleted: checked} : task));
     };
 
-    const selectedToDoTask = useContext(SelectedToDoTaskContext);
+    const { id: selectedTaskId, set } = useContext(SelectedToDoTaskContext);
 
     /**
      * このラベルがクリックされた際に, 選択中のタスクをこのラベルが持つタスクに更新する。
      */
     const handleLabelClick = useCallback(() => {
-        selectedToDoTask!.set(toDoTask);
+        if (!set) throw new Error("[chronolist]function 'set' is undefined.");
+        set(toDoTask.id);
     }, []);
 
     return (
-        <div className={classNames(ToDoLabelClassName, (toDoTask.id === selectedToDoTask?.task?.id) && "selected-label", "d-flex")} onClick={ handleLabelClick }>
+        <div className={classNames(ToDoLabelClassName, (toDoTask.id === selectedTaskId) && "selected-label", "d-flex")} onClick={ handleLabelClick }>
             <div className={classNames(ToDoLabelCellClassName.checkbox, "p-2", "border")}>
                 <CheckBox
-                    defaultChecked={isCompleted}
+                    defaultChecked={toDoTask.isCompleted}
                     onChange={handleCheckboxChange}
                 />
             </div>
-            <div className={classNames(ToDoLabelCellClassName.title, isCompleted && "text-decoration-line-through", "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.title, toDoTask.isCompleted && "text-decoration-line-through", "p-2", "border")}>
                 {toDoTask.title}
             </div>
-            <div className={classNames(ToDoLabelCellClassName.priority, isCompleted && "text-decoration-line-through", "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.priority, toDoTask.isCompleted && "text-decoration-line-through", "p-2", "border")}>
                 <PriorityDisplayText priority={toDoTask.priority} />
             </div>
-            <div className={classNames(ToDoLabelCellClassName.due, isCompleted && "text-decoration-line-through", "p-2", "border")}>
+            <div className={classNames(ToDoLabelCellClassName.due, toDoTask.isCompleted && "text-decoration-line-through", "p-2", "border")}>
                 <DueDisplayText
                     dueKind={toDoTask.dueKind}
                     dueDate={toDoTask.dueDate}
