@@ -1,0 +1,81 @@
+import classNames from "classnames";
+import { useContext } from "react";
+import { SelectedToDoTaskContext } from "../selected-todotask-context";
+import AllToDoTasksContext from "../all-todotasks-context";
+import { type DueKind, DueKindEnum } from "@/types/todolist/statics";
+import { DueDate, DueTime } from "../../entity/due-entities";
+import PullDown from "@/components/pulldown";
+import { convertDueKindToDisplayText } from "../../utils/to-display-text";
+
+
+// 期日要素固有のクラス名
+const TASK_DETAIL_DISPLAY_DUE_CLASS_TAG = "task-detail-display-due";
+// 期日要素が持つクラス群
+const TASK_DETAIL_DISPLAY_DUE_CLASS_NAMES = classNames(
+    TASK_DETAIL_DISPLAY_DUE_CLASS_TAG, 
+    "d-flex", "flex-column", "align-items-center",
+);
+
+const Due = () => {
+    const { id: selectedTaskId } = useContext(SelectedToDoTaskContext);
+    const { tasks, updateTask } = useContext(AllToDoTasksContext);
+    const selectedTask = tasks.find(task => task.id === selectedTaskId);
+
+    const handleSelect = (value: string) => {
+        if (!selectedTask) return;
+        const dueKind = value as DueKind;
+        switch (dueKind) {
+            case DueKindEnum.NONE:
+                updateTask({...selectedTask, dueKind, dueDate: null, dueTime: null});
+                return;
+            case DueKindEnum.DATED:
+                updateTask({...selectedTask, dueKind, dueDate: new DueDate(), dueTime: null});
+                return;
+            case DueKindEnum.DATETIME:
+                updateTask({...selectedTask, dueKind, dueDate: new DueDate(), dueTime: new DueTime()});
+                return;
+        }
+    };
+
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!selectedTask) return;
+        updateTask({...selectedTask, dueDate: new DueDate(event.target.value)});
+    };
+
+    const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!selectedTask) return;
+        updateTask({...selectedTask, dueTime: new DueTime(event.target.value)});
+    };
+
+    return (
+        <div className={TASK_DETAIL_DISPLAY_DUE_CLASS_NAMES} >
+            <div className={classNames("d-flex")} >
+                {"期日"}
+                <PullDown
+                    items={Object.values(DueKindEnum).map(convertDueKindToDisplayText)}
+                    values={Object.values(DueKindEnum)}
+                    onChange={handleSelect}
+                    defaultValue={selectedTask && selectedTask.dueKind}
+                />
+            </div>
+            <input
+                type="date"
+                defaultValue={selectedTask && selectedTask.dueDate ? selectedTask.dueDate.toString() : undefined}
+                className={classNames(
+                    [DueKindEnum.DATED, DueKindEnum.DATETIME].includes(String(selectedTask?.dueKind)) || "d-none",
+                )}
+                onChange={handleDateChange}
+            />
+            <input
+                type="time"
+                defaultValue={selectedTask && selectedTask.dueTime ? selectedTask.dueTime.toString() : undefined}
+                className={classNames(
+                    selectedTask?.dueKind === DueKindEnum.DATETIME || "d-none",
+                )}
+                onChange={handleTimeChange}
+            />
+        </div>
+    )
+};
+
+export default Due;
