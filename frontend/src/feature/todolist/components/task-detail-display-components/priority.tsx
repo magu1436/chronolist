@@ -22,7 +22,7 @@ const Priority = () => {
 
     const handleSelect = (value: string) => {
         if (!selectedTask) return;
-        updateTask({...selectedTask, priority: value as Priority_});
+        updateTask({...selectedTask, priority: value as Priority_}, true);
     };
 
     return (

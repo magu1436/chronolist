@@ -26,25 +26,25 @@ const Due = () => {
         const dueKind = value as DueKind;
         switch (dueKind) {
             case DueKindEnum.NONE:
-                updateTask({...selectedTask, dueKind, dueDate: null, dueTime: null});
+                updateTask({...selectedTask, dueKind, dueDate: null, dueTime: null}, true);
                 return;
             case DueKindEnum.DATED:
-                updateTask({...selectedTask, dueKind, dueDate: new DueDate(), dueTime: null});
+                updateTask({...selectedTask, dueKind, dueDate: new DueDate(), dueTime: null}, true);
                 return;
             case DueKindEnum.DATETIME:
-                updateTask({...selectedTask, dueKind, dueDate: new DueDate(), dueTime: new DueTime()});
+                updateTask({...selectedTask, dueKind, dueDate: new DueDate(), dueTime: new DueTime()}, true);
                 return;
         }
     };
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!selectedTask) return;
-        updateTask({...selectedTask, dueDate: new DueDate(event.target.value)});
+        updateTask({...selectedTask, dueDate: new DueDate(event.target.value)}, true);
     };
 
     const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!selectedTask) return;
-        updateTask({...selectedTask, dueTime: new DueTime(event.target.value)});
+        updateTask({...selectedTask, dueTime: new DueTime(event.target.value)}, true);
     };
 
     return (

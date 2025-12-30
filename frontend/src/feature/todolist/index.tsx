@@ -8,13 +8,18 @@ import useFetch from "@/utils/fetch";
 import type { GetAllApi } from "@/types/todolist/api";
 import toToDoTask from "@/api/mapper/toDoListMapper";
 import AllToDoTasksContext from "./components/all-todotasks-context";
+import { updateTask as updateTaskApi } from "./api/update-api";
 
 const ToDoListPage = () => {
 
     
     const [allTasks, setAllTasks] = useState<ToDoTask[]>([]);
-    const updateTask = (updatedTask: ToDoTask) => {
+    const updateTask = (updatedTask: ToDoTask, callApi?: boolean) => {
         setAllTasks(allTasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+        if (callApi) {
+            updateTaskApi(updatedTask)
+            console.log("updated!")
+        }
     };
     
     const { data, isLoading, error } = useFetch<GetAllApi[]>(

@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { SelectedToDoTaskContext } from "../selected-todotask-context"
 import CheckBox from "@/components/checkbox";
 import AllToDoTasksContext from "../all-todotasks-context";
+import { updateStatus } from "../../api/update-api";
 
 
 const TASK_DETAIL_DISPLAY_IS_COMPLETED_CLASS_NAME_TAG = "task-detail-display-is-completed";
@@ -20,7 +21,8 @@ const IsCompleted = () => {
 
     const handleCheckboxChange = (checked: boolean) => {
         if (!selectedTask) return;
-        updateTask({...selectedTask, isCompleted: checked});
+        updateTask({...selectedTask, isCompleted: checked}, false);
+        updateStatus(selectedTask.id, checked);
     }
 
     return (

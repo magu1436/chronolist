@@ -10,6 +10,7 @@ import { SelectedToDoTaskContext } from "./selected-todotask-context";
 
 import "@/feature/todolist/assets/todolabel.css";
 import AllToDoTasksContext from "./all-todotasks-context";
+import { updateStatus } from "../api/update-api";
 
 const ToDoLabelClassName = "todolabel";
 
@@ -18,14 +19,15 @@ const ToDoLabelClassName = "todolabel";
  * チェックボックス操作で完了状態を切り替える。
  */
 const ToDoLabel: FC<ToDoLabelProps> = ({ toDoTask }) => {
-    const { tasks, setTasks } = useContext(AllToDoTasksContext);
+    const { updateTask } = useContext(AllToDoTasksContext);
 
     /**
      * チェックボックスの変更に合わせてタスク情報を更新する
      * @param checked チェック状態
      */
     const handleCheckboxChange = (checked: boolean) => {
-        setTasks(tasks.map(task => task.id === toDoTask.id ? {...task, isCompleted: checked} : task));
+        updateTask({ ...toDoTask, isCompleted: checked }, false);
+        updateStatus(toDoTask.id, checked);
     };
 
     const { id: selectedTaskId, set } = useContext(SelectedToDoTaskContext);

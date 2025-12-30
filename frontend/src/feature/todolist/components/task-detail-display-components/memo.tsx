@@ -43,7 +43,7 @@ const Memo = () => {
         if (newMemo === oldMemo) return;
 
         setMemo(newMemo);
-        updateTask({...selectedTask, memo: newMemo})
+        updateTask({...selectedTask, memo: newMemo}, true);
     }, [selectedTask]);
 
     const formId = `memo-form-${selectedTaskId}`;
