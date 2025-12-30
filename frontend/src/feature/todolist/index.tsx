@@ -16,10 +16,7 @@ const ToDoListPage = () => {
     const [allTasks, setAllTasks] = useState<ToDoTask[]>([]);
     const updateTask = (updatedTask: ToDoTask, callApi?: boolean) => {
         setAllTasks(allTasks.map(task => task.id === updatedTask.id ? updatedTask : task));
-        if (callApi) {
-            updateTaskApi(updatedTask)
-            console.log("updated!")
-        }
+        if (callApi) updateTaskApi(updatedTask);
     };
     
     const { data, isLoading, error } = useFetch<GetAllApi[]>(
