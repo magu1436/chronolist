@@ -93,6 +93,8 @@ export class DueTime {
     }
 
     toString(): string{
-        return `${this.hour}:${this.minute}`;
+        const h = this.hour < 10 ? `0${this.hour}` : `${this.hour}`;
+        const m = this.minute < 10 ? `0${this.minute}` : `${this.minute}`;
+        return `${h}:${m}`
     }
 }
