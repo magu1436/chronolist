@@ -5,10 +5,11 @@ export class DueDate {
     date: number;
 
     /**
-     * コンストラクタ
+     * コンストラクタ  
+     * 指定がない場合は今日の日付を設定する
      * @param date 日付
      */
-    constructor(date: string | Date);
+    constructor(date?: string | Date);
     /**
      * コンストラクタ
      * @param year 年
@@ -16,9 +17,11 @@ export class DueDate {
      * @param date 日
      */
     constructor(year: number, month: number, date: number);
-    constructor(year_or_date: number | string | Date, month?: number, day?: number) {
+    constructor(year_or_date?: number | string | Date, month?: number, day?: number) {
         let date: Date;
-        if (typeof year_or_date === "string"){
+        if (!year_or_date) {
+            date = new Date();
+        } else if (typeof year_or_date === "string"){
             date = new Date(year_or_date);
         } else if (year_or_date instanceof Date) {
             date = year_or_date;
@@ -64,9 +67,14 @@ export class DueTime {
     hour: number;
     minute: number;
 
-    constructor(time: string);
+    /**
+     * コンストラクタ  
+     * 指定がない場合は 00:00 を設定する
+     * @param time 時刻
+     */
+    constructor(time?: string);
     constructor(hour: number, minute: number, second: number);
-    constructor(hour_or_time: number | string, minute?: number) {
+    constructor(hour_or_time: number | string = "00:00", minute?: number) {
         if (typeof hour_or_time === "string"){
             const [hour, minute, ] = hour_or_time.split(":").map(Number);
             this.hour = hour;
