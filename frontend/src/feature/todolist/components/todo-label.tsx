@@ -1,4 +1,4 @@
-import { useState, type FC, useContext, useCallback, useEffect } from "react";
+import { type FC, useContext, useCallback } from "react";
 import classNames from "classnames";
 
 import type { ToDoLabelProps } from "../type/props";
@@ -55,8 +55,8 @@ const ToDoLabel: FC<ToDoLabelProps> = ({ toDoTask }) => {
             <div className={classNames(ToDoLabelCellClassName.due, toDoTask.isCompleted && "text-decoration-line-through", "p-2", "border")}>
                 <DueDisplayText
                     dueKind={toDoTask.dueKind}
-                    dueDate={toDoTask.dueDate}
-                    dueTime={toDoTask.dueTime}
+                    dueDate={toDoTask.dueDate?.toDisplayString() || null}
+                    dueTime={toDoTask.dueTime?.toString() || null}
                 />
             </div>
         </div>
