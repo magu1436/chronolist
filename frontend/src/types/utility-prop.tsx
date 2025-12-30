@@ -34,7 +34,6 @@ export interface PullDownProps {
 
 export interface ModalProps {
     title: string;
-    body: ReactNode | ReactNode[];
     isOpen?: boolean;
     id?: string;
     className?: string;
@@ -43,4 +42,5 @@ export interface ModalProps {
     cancelButtonlabel?: string;
     onCancel?: () => void;
     onClose?: () => void;
+    children?: ReactNode | ReactNode[];
 }

@@ -7,7 +7,6 @@ const MODAL_CLASS_TAG = "chronolist-modal";
 
 export const ChronolistModal: FC<ModalProps> = ({
     title,
-    body,
     isOpen,
     id,
     className,
@@ -16,6 +15,7 @@ export const ChronolistModal: FC<ModalProps> = ({
     cancelButtonlabel,
     onCancel,
     onClose,
+    children
 }) => {
     return (
         <Modal
@@ -27,7 +27,7 @@ export const ChronolistModal: FC<ModalProps> = ({
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{body}</Modal.Body>
+            <Modal.Body>{children}</Modal.Body>
             <Modal.Footer>
                 {cancelButtonlabel && (() => <Button variant="secondary" onClick={onCancel}>{cancelButtonlabel}</Button>)()}
                 {acceptButtonlabel && (() => <Button variant="primary" onClick={onAccept}>{acceptButtonlabel}</Button>)()}
