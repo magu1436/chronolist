@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 
 
 export interface PullDownProps {
@@ -29,4 +30,17 @@ export interface PullDownProps {
      * 指定がない場合、自動でUUIDが生成される。
      */
     formLabel?: string;
+}
+
+export interface ModalProps {
+    title: string;
+    body: ReactNode | ReactNode[];
+    isOpen?: boolean;
+    id?: string;
+    className?: string;
+    acceptButtonlabel?: string;
+    onAccept?: () => void;
+    cancelButtonlabel?: string;
+    onCancel?: () => void;
+    onClose?: () => void;
 }
