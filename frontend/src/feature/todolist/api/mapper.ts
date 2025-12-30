@@ -22,5 +22,6 @@ export const toToDoTaskApiFormat = (toDoTask: ToDoTask): ToDoTaskApiFormat => {
  * @returns APIで登録する形式にフォーマットしたオブジェクト
  */
 export const toInsertApiFormat = (toDoTask: ToDoTask): InsertApiFormat => {
-    return toToDoTaskApiFormat(toDoTask);
+    const { id, ...rest } = toToDoTaskApiFormat(toDoTask);
+    return rest;
 };
