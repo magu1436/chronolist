@@ -1,8 +1,8 @@
 import { memo, useContext, type FC } from "react";
 import classNames from "classnames";
 
-import ToDoHeader from "./todo-header";
-import ToDoLabel from "./todo-label";
+import ToDoHeader from "./todotable-components/todo-header";
+import ToDoLabel from "./todotable-components/todo-label";
 import AllToDoTasksContext from "./all-todotasks-context";
 
 

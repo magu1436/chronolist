@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { DueDisplayTextProps } from "../type/props";
+import type { DueDisplayTextProps } from "@/feature/todolist/type/props";
 import classNames from "classnames";
 
 /**
