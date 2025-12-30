@@ -11,6 +11,7 @@ import toToDoTask from "@/api/mapper/toDoListMapper";
 import { updateTask as updateTaskApi } from "./api/update-api";
 import classNames from "classnames";
 import Buttons from "./components/buttons";
+import RegisterModal from "./components/modals/register-modal";
 
 
 const ToDoListPage = () => {
@@ -34,16 +35,19 @@ const ToDoListPage = () => {
 
     const [ selectedTaskId, setSelectedTaskId ] = useState<number | null>(null);
 
+    const [ showRegisterModal, setShowRegisterModal ] = useState(false);
+
     return (
         <SelectedToDoTaskContext value={{ id: selectedTaskId, set: setSelectedTaskId }}>
             <AllToDoTasksContext value={{ tasks: allTasks, setTasks: setAllTasks, updateTask}}>
                 <div className="d-flex">
                     <div className={classNames("d-flex", "flex-column")}>
-                        <Buttons onRegisterButtonClicked={() => {}} onDeleteButtonClicked={() => {}}/>
+                        <Buttons onRegisterButtonClicked={() => {setShowRegisterModal(true);}} onDeleteButtonClicked={() => {}}/>
                         <ToDoTable />
                     </div>
                     <TaskDetailDisplay />
                 </div>
+                <RegisterModal show={showRegisterModal} setShow={setShowRegisterModal} />
             </AllToDoTasksContext>
         </SelectedToDoTaskContext>
     )
