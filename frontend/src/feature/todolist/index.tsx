@@ -9,6 +9,8 @@ import useFetch from "@/utils/fetch";
 import type { GetAllApi } from "@/types/todolist/api";
 import toToDoTask from "@/api/mapper/toDoListMapper";
 import { updateTask as updateTaskApi } from "./api/update-api";
+import classNames from "classnames";
+import Buttons from "./components/buttons";
 
 
 const ToDoListPage = () => {
@@ -36,7 +38,10 @@ const ToDoListPage = () => {
         <SelectedToDoTaskContext value={{ id: selectedTaskId, set: setSelectedTaskId }}>
             <AllToDoTasksContext value={{ tasks: allTasks, setTasks: setAllTasks, updateTask}}>
                 <div className="d-flex">
-                    <ToDoTable />
+                    <div className={classNames("d-flex", "flex-column")}>
+                        <Buttons onRegisterButtonClicked={() => {}} onDeleteButtonClicked={() => {}}/>
+                        <ToDoTable />
+                    </div>
                     <TaskDetailDisplay />
                 </div>
             </AllToDoTasksContext>
