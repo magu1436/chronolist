@@ -1,5 +1,5 @@
-import type { DueKind } from "@/types/todolist/statics";
-import type { ToDoTask } from "@/types/todolist/todotask";
+import type { DueKind } from "@/feature/todolist/types/statics";
+import type { ToDoTask } from "@/feature/todolist/types/todotask";
 
 /**
  * ToDoラベルコンポーネントに渡されるタスク情報のプロパティ型。

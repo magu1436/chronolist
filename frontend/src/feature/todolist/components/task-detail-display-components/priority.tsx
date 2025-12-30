@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import { SelectedToDoTaskContext } from "../selected-todotask-context"
 import PullDown from "@/components/pulldown";
-import { PriorityEnum, type Priority as Priority_ } from "@/types/todolist/statics";
+import { PriorityEnum, type Priority as Priority_ } from "@/feature/todolist/types/statics";
 import { convertPriorityToDisplayText } from "../../utils/to-display-text";
 import AllToDoTasksContext from "../all-todotasks-context";
 

@@ -1,6 +1,6 @@
-import type { Priority } from "@/types/todolist/statics";
 import type { FC } from "react";
 
+import type { Priority } from "@/feature/todolist/types/statics";
 import { convertPriorityToDisplayText } from "@/feature/todolist/utils/to-display-text";
 
 /**

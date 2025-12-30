@@ -1,11 +1,12 @@
 import classNames from "classnames";
 import { useContext } from "react";
+
 import { SelectedToDoTaskContext } from "../selected-todotask-context";
 import AllToDoTasksContext from "../all-todotasks-context";
-import { type DueKind, DueKindEnum } from "@/types/todolist/statics";
-import { DueDate, DueTime } from "../../entity/due-entities";
+import { type DueKind, DueKindEnum } from "@/feature/todolist/types/statics";
+import { DueDate, DueTime } from "@/feature/todolist/entity/due-entities";
+import { convertDueKindToDisplayText } from "@/feature/todolist/utils/to-display-text";
 import PullDown from "@/components/pulldown";
-import { convertDueKindToDisplayText } from "../../utils/to-display-text";
 
 
 // 期日要素固有のクラス名

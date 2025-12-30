@@ -1,7 +1,7 @@
 import { type FC, useContext, useCallback } from "react";
 import classNames from "classnames";
 
-import type { ToDoLabelProps } from "@/feature/todolist/type/props";
+import type { ToDoLabelProps } from "@/feature/todolist/types/props";
 import { ToDoLabelCellClassName } from "@/feature/todolist/statics/todolabel-statics";
 import CheckBox from "@/components/checkbox";
 import PriorityDisplayText from "./priority-display-text";
@@ -11,6 +11,7 @@ import { SelectedToDoTaskContext } from "../selected-todotask-context";
 import AllToDoTasksContext from "../all-todotasks-context";
 
 import "@/feature/todolist/assets/todolabel.css";
+
 
 const ToDoLabelClassName = "todolabel";
 

@@ -1,5 +1,5 @@
-import type { ToDoTask } from "@/types/todolist/todotask";
-import type { InsertApiFormat, ToDoTaskApiFormat } from "../type/api";
+import type { ToDoTask } from "@/feature/todolist/types/todotask";
+import type { InsertApiFormat, ToDoTaskApiFormat } from "../types/api";
 
 
 /**

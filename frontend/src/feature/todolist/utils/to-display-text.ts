@@ -1,4 +1,4 @@
-import type { DueKind, Priority } from "@/types/todolist/statics";
+import type { DueKind, Priority } from "@/feature/todolist/types/statics";
 
 /**
  * 優先度を表示するための文字列に変換する。  

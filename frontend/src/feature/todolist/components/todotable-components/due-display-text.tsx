@@ -1,6 +1,7 @@
 import type { FC } from "react";
-import type { DueDisplayTextProps } from "@/feature/todolist/type/props";
 import classNames from "classnames";
+
+import type { DueDisplayTextProps } from "@/feature/todolist/types/props";
 
 /**
  * 期限表示用のテキストを描画するコンポーネント。

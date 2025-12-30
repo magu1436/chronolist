@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import type { ToDoTask } from "@/types/todolist/todotask";
+import type { ToDoTask } from "@/feature/todolist/types/todotask";
 
 const AllToDoTasksContext = createContext<{
     tasks: ToDoTask[],

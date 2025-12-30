@@ -1,4 +1,4 @@
-import type { DueKind, Priority } from "@/types/todolist/statics";
+import type { DueKind, Priority } from "@/feature/todolist/types/statics";
 
 export type ToDoTaskApiFormat = {
     id: number,

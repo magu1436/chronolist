@@ -1,7 +1,9 @@
-import { useCallback, useContext, useEffect, useState } from "react"
-import { SelectedToDoTaskContext } from "../selected-todotask-context"
-import AllToDoTasksContext from "../all-todotasks-context";
+import { useCallback, useContext, useEffect, useState } from "react";
 import classNames from "classnames";
+
+import { SelectedToDoTaskContext } from "../selected-todotask-context";
+import AllToDoTasksContext from "../all-todotasks-context";
+
 
 // メモ要素の固有クラス名
 const TASK_DETAIL_DISPLAY_MEMO_CLASS_TAG = "task-detail-display-memo";

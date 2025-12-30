@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 
-import type { ToDoTask } from "@/types/todolist/todotask";
+import type { ToDoTask } from "@/feature/todolist/types/todotask";
 import { SelectedToDoTaskContext } from "./components/selected-todotask-context";
+import AllToDoTasksContext from "./components/all-todotasks-context";
 import ToDoTable from "./components/todotable";
 import TaskDetailDisplay from "./components/task-detail-display";
 import useFetch from "@/utils/fetch";
 import type { GetAllApi } from "@/types/todolist/api";
 import toToDoTask from "@/api/mapper/toDoListMapper";
-import AllToDoTasksContext from "./components/all-todotasks-context";
 import { updateTask as updateTaskApi } from "./api/update-api";
+
 
 const ToDoListPage = () => {
 

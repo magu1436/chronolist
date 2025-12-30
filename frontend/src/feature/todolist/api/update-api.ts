@@ -1,5 +1,5 @@
 import { customizedFetch } from "@/hooks/fetch"
-import type { ToDoTask } from "@/types/todolist/todotask";
+import type { ToDoTask } from "@/feature/todolist/types/todotask";
 import { toToDoTaskApiFormat } from "./mapper";
 
 /**
