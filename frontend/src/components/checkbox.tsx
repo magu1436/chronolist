@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FC } from "react"
+import { useEffect, useState, type ChangeEvent, type FC } from "react"
 
 
 type CheckBoxProps = {
@@ -20,6 +20,10 @@ const CheckBox: FC<CheckBoxProps> = ({
         setIsChecked(newChecked);
         onChange?.(newChecked);
     };
+
+    useEffect(() => {
+        setIsChecked(defaultChecked);
+    }, [defaultChecked]);
 
     return (
         <input
