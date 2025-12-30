@@ -51,7 +51,9 @@ export class DueDate {
     }
 
     toString(): string{
-        return `${this.year}-${this.month}-${this.date}`
+        const month = this.month < 10 ? `0${this.month}` : `${this.month}`;
+        const date = this.date < 10 ? `0${this.date}` : `${this.date}`;
+        return `${this.year}-${month}-${date}`
     }
 
     /**
