@@ -1,6 +1,4 @@
-import type { ToDoTask } from "@/types/todolist/todotask";
 import { createContext } from "react";
 
 
-
-export const SelectedToDoTaskContext = createContext<{ task: ToDoTask | null, set: (task: ToDoTask) => void } | null>(null);
+export const SelectedToDoTaskContext = createContext<{ id: number | null, set: ((taskId: number | null) => void) | null }>({ id: null, set: () => null });
