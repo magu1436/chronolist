@@ -3,6 +3,7 @@ import classNames from "classnames";
 
 import { SelectedToDoTaskContext } from "../selected-todotask-context";
 import AllToDoTasksContext from "../all-todotasks-context";
+import CommonTaskDetailDisplayClassNames from "./common-class-names";
 
 
 // メモ要素の固有クラス名
@@ -10,6 +11,7 @@ const TASK_DETAIL_DISPLAY_MEMO_CLASS_TAG = "task-detail-display-memo";
 // メモ要素が持つクラス群
 const TASK_DETAIL_DISPLAY_MEMO_CLASS_NAMES = classNames(
     TASK_DETAIL_DISPLAY_MEMO_CLASS_TAG,
+    CommonTaskDetailDisplayClassNames,
     "d-flex", "flex-column",
 );
 

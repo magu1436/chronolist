@@ -12,7 +12,8 @@ const TASK_DETAIL_DISPLAY_PRIORITY_CLASS_NAME_TAG = "task-detail-display-priorit
 // 優先度要素が持つクラス群
 const TASK_DETAIL_DISPLAY_PRIORITY_CLASS_NAMES = classNames(
     TASK_DETAIL_DISPLAY_PRIORITY_CLASS_NAME_TAG,
-    "d-flex", "align-items-center",
+    "mx-1", 
+    "d-flex",
 );
 
 const Priority = () => {
@@ -27,7 +28,7 @@ const Priority = () => {
 
     return (
         <div className={TASK_DETAIL_DISPLAY_PRIORITY_CLASS_NAMES}>
-            {"優先度"}
+            <label htmlFor="priority">優先度</label>
             <PullDown
                 items={Object.values(PriorityEnum).map(priority => convertPriorityToDisplayText(priority))}
                 values={Object.values(PriorityEnum)}

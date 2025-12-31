@@ -12,12 +12,9 @@ const DueDisplayText: FC<DueDisplayTextProps> = ({
     dueDate,
     dueTime,
 }) => {
-    if (dueKind === "NONE") return "--:--";
-
-    if (dueKind === "DATED") return (dueDate);
-
     return (
         <div className={classNames("d-flex", "flex-column", "align-items-center")}>
+            {dueKind === "NONE" && "--:--"}
             <div>{dueDate}</div>
             <div>{dueTime}</div>
         </div>

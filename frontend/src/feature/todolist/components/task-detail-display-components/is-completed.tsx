@@ -10,7 +10,8 @@ import { updateStatus } from "../../api/update-api";
 const TASK_DETAIL_DISPLAY_IS_COMPLETED_CLASS_NAME_TAG = "task-detail-display-is-completed";
 const TASK_DETAIL_DISPLAY_IS_COMPLETED_CLASS_NAMES = classNames(
     TASK_DETAIL_DISPLAY_IS_COMPLETED_CLASS_NAME_TAG,
-    "d-flex", "align-items-center"
+    "mx-1",
+    "d-flex", "align-items-center", "justify-content-center",
 );
 
 const IsCompleted = () => {
@@ -27,7 +28,7 @@ const IsCompleted = () => {
 
     return (
         <div className={TASK_DETAIL_DISPLAY_IS_COMPLETED_CLASS_NAMES}>
-            {"完了"}
+            <label htmlFor="isCompleted">完了</label>
             <CheckBox defaultChecked={selectedTask && selectedTask.isCompleted} onChange={handleCheckboxChange} />  
         </div>
     )

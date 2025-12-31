@@ -7,6 +7,10 @@ import AllToDoTasksContext from "./all-todotasks-context";
 
 
 const ToDoTableClassName = "todotable";
+const TODOTABLE_CLASS_NAMES = classNames(
+    ToDoTableClassName, "flex-fill", "p-2",
+);
+
 const ToDoTableBodyClassName = "todotable-body";
 
 const MemoizedToDoLabel = memo(ToDoLabel);
@@ -19,11 +23,10 @@ const ToDoTable: FC = () => {
     const { tasks } = useContext(AllToDoTasksContext);
 
     return (
-        <div className={ToDoTableClassName}>
+        <div className={TODOTABLE_CLASS_NAMES}>
             <ToDoHeader />
             <div className={classNames(ToDoTableBodyClassName, "d-flex", "flex-column", "overflow-y-scroll")}>
                 {tasks.map(task => (
-                    // <ToDoLabel key={task.id} toDoTask={task} />
                     <MemoizedToDoLabel key={task.id} toDoTask={task} />
                 ))}
             </div>

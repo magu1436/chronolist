@@ -61,7 +61,7 @@ export class DueDate {
      * @returns フォーマットされた文字列
      */
     toDisplayString(): string{
-        return `${this.year}/${this.month}/${this.date}`;
+        return this.toString().replace(/-/g, "/");
     }
 }
 

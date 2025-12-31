@@ -14,6 +14,10 @@ import Buttons from "./components/buttons";
 import RegisterModal from "./components/modals/register-modal";
 import DeleteModal from "./components/modals/delete-modal";
 
+import "@/feature/todolist/assets/todolist-page.css";
+
+
+const TODOLIST_PAGE_ID = "todolist-page";
 
 const ToDoListPage = () => {
 
@@ -42,8 +46,8 @@ const ToDoListPage = () => {
     return (
         <SelectedToDoTaskContext value={{ id: selectedTaskId, set: setSelectedTaskId }}>
             <AllToDoTasksContext value={{ tasks: allTasks, setTasks: setAllTasks, updateTask}}>
-                <div className="d-flex">
-                    <div className={classNames("d-flex", "flex-column")}>
+                <div id={TODOLIST_PAGE_ID} className={classNames("flex-fill", "d-flex", "p-2", "align-items-stretch")}>
+                    <div className={classNames("flex-fill", "d-flex", "flex-column", "p-2", "border", "border-dark",)}>
                         <Buttons onRegisterButtonClicked={() => {setShowRegisterModal(true);}} onDeleteButtonClicked={() => {setShowDeleteModal(true)}}/>
                         <ToDoTable />
                     </div>
