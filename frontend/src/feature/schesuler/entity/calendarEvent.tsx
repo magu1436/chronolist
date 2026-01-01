@@ -7,6 +7,7 @@ import type { ScheduleKind } from "../types/statics";
  */
 class CalendarEvent {
     private _id: number;
+    private _scheduleId?: number;
     private _kind: ScheduleKind;
     private _startAt?: Date;
     private _endAt?: Date;
@@ -23,6 +24,7 @@ class CalendarEvent {
         endAt: Date,
         title: string,
         color: string,
+        scheduleId?: number,
         memo?: string | null,
     );
     constructor(
@@ -32,6 +34,7 @@ class CalendarEvent {
         endDate: Date,
         title: string,
         color: string,
+        scheduleId?: number,
         memo?: string | null,
     );
     constructor(
@@ -41,12 +44,14 @@ class CalendarEvent {
         endAtOrDate: Date,
         title: string,
         color: string,
+        scheduleId?: number,
         memo?: string | null,
     ){
         this._id = id;
         this._kind = kind;
         this.title = title;
         this.color = color;
+        this._scheduleId = scheduleId;
         this.memo = memo || undefined;
 
         switch (kind) {
@@ -65,6 +70,10 @@ class CalendarEvent {
 
     get id(){
         return this._id;
+    }
+
+    get scheduleId(){
+        return this._scheduleId;
     }
 
     get kind(){
@@ -137,7 +146,8 @@ class CalendarEvent {
             new Date(e),
             api.title,
             api.color,
-            api.memo || undefined
+            api.scheduleId || undefined,
+            api.memo || undefined,
         );
     }
 
