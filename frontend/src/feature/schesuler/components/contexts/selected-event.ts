@@ -1,13 +1,11 @@
 import { createContext } from "react";
 
-import CalendarEvent from "@/feature/schesuler/entity/calendar-event";
-
 const SelectedCalendarEventContext = createContext<{
-    event: CalendarEvent | null,
-    setEvent: (event: CalendarEvent | null) => void
+    eventId: number | null,
+    setEventId: (eventId: number | null) => void
 }>({
-    event: null,
-    setEvent: () => { }
+    eventId: null,
+    setEventId: () => { }
 });
 
 export default SelectedCalendarEventContext;
