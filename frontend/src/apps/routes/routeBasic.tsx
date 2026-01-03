@@ -5,12 +5,13 @@ import TesterPage from "@/feature/tester";
 import SchedulerTestPage from "@/feature/tester/components/schedulerIndex";
 import ToDoListPage from "@/feature/todolist";
 import SchedulerPage from "@/feature/schesuler";
+import HomePage from "@/feature/home";
 
 
 const routesBasic = createBrowserRouter(
     createRoutesFromElements(
         <>
-            <Route path="/" element={<TesterPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/test" element={<TesterPage />} />
             <Route path="/test/todolist" element={<ToDoListTestPage />} />
             <Route path="/test/scheduler" element={<SchedulerTestPage />} />
