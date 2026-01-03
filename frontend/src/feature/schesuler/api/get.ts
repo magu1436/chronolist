@@ -1,4 +1,4 @@
-import { createNextDate } from "@/utils/date";
+import { nextDate } from "@/utils/date";
 import CalendarEvent from "../entity/calendar-event"
 
 
@@ -7,6 +7,6 @@ export const getCalendarEvents = (start: string | Date, end: string | Date): Cal
     // テスト用のロジックを作成
     return ([
         new CalendarEvent(0, "ALL_DAY", new Date(), new Date(), "test", "red"),
-        new CalendarEvent(1, "DATED", new Date(), createNextDate(new Date()), "test", "blue"),
+        new CalendarEvent(1, "DATED", new Date(), nextDate(new Date()), "test", "blue"),
     ]);
 };

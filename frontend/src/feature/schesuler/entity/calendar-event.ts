@@ -1,4 +1,4 @@
-import { createNextDate } from "@/utils/date";
+import { nextDate } from "@/utils/date";
 import type { CalendarEventApi } from "../types/api";
 import type { ScheduleKind } from "../types/statics";
 
@@ -158,7 +158,7 @@ class CalendarEvent {
             allDay: this.kind == "ALL_DAY",
             start: s,
             // Fullcalendarの終了日時は、指定日の翌日を指定する仕様
-            end: createNextDate(e),
+            end: nextDate(e),
             borderColor: this.color,
             textColor: this.color,
             backgroundColor: "#EEEEEE",
