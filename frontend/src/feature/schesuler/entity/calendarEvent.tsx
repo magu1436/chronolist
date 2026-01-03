@@ -145,7 +145,7 @@ class CalendarEvent {
      * `FullCalendar` で使用するイベントオブジェクトに変換した連想配列を生成するメソッド.
      * @returns `FullCalendar` で使用するイベント形式にフォーマットした連想配列
      */
-    toEvent(){
+    toEventLabel(){
         const s = this._startAt || this._startDate;
         const e = this._endAt || this._endDate;
         if (!s) throw new Error("Both 'startAt' and 'startDate' are undefined");
@@ -156,8 +156,10 @@ class CalendarEvent {
             title: this.title,
             allDay: this.kind == "ALL_DAY",
             startStr: s.toISOString(),
-            endStr: e.toISOString(),
-            backgroundColor: this.color,
+            // Fullcalendarの終了日時は、指定日の翌日を指定する仕様
+            endStr: (new Date(e.getDate() + 1)).toISOString(),
+            bordarColor: this.color,
+            textColor: this.color,
         }
     }
 }
