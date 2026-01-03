@@ -64,12 +64,13 @@ const Calendar = () => {
                 center: "",
                 end: "",
             }}
-            datesSet={handleDatesSet}
-            businessHours={true}
-            eventClick={handleEventClick}
-            events={events.map(e => e.toEventLabel())}
-            eventContent={handleEventContent}
             locale={"ja"}
+            businessHours={true}
+            dayMaxEvents={true}
+            events={events.map(e => e.toEventLabel())}
+            datesSet={handleDatesSet}
+            eventClick={handleEventClick}
+            eventContent={handleEventContent}
         />
     );
 }
