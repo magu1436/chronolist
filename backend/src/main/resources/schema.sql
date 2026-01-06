@@ -101,9 +101,9 @@ CREATE TABLE time_blocks (
 
 -- time_block_tasksテーブルの作成
 CREATE TABLE time_block_tasks (
-    TimeBlock_id INT,
+    time_block_id INT,
     title VARCHAR(64) NOT NULL,
-    FOREIGN KEY TimeBlock_id REFERENCES time_blocks(id)
+    FOREIGN KEY time_block_id REFERENCES time_blocks(id)
 );
 
 -- template_blocksテーブルの作成
