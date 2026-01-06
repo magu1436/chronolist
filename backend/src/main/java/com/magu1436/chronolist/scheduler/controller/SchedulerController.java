@@ -45,7 +45,7 @@ public class SchedulerController {
      * @author konoma1103
      */ 
     @GetMapping("getEvents/{startDate}/{endDate}")
-    public ResponseEntity<List<CalendarEvent>> getEvent(@PathVariable LocalDate startDate, @PathVariable LocalDate endDate){
+    public ResponseEntity<List<CalendarEvent>> getEvent(@PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate){
         List<CalendarEvent> calendarEvents = mapper.getCalendarEventsFromTo(startDate, endDate);
         return ResponseEntity.ok(calendarEvents);
     }

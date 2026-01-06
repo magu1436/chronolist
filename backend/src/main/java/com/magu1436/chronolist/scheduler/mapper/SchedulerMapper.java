@@ -4,6 +4,7 @@ import java.util.List;
 import java.time.LocalDate;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.magu1436.chronolist.scheduler.entity.Schedule;
 import com.magu1436.chronolist.scheduler.entity.CalendarEvent;
@@ -11,7 +12,7 @@ import com.magu1436.chronolist.scheduler.entity.CalendarEvent;
 @Mapper
 public interface SchedulerMapper {
     /** 指定の区間が期日のスケジュールを全て取得 */
-    List<Schedule> getSchedulesFromTo(LocalDate startDate, LocalDate endDate);
+    List<Schedule> getSchedulesFromTo(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     /** 指定のidをもつスケジュールを取得 */
     Schedule getScheduleById(int id);
     /** 指定の日にあるスケジュールを全て取得 */
@@ -23,7 +24,7 @@ public interface SchedulerMapper {
     /** 受け取ったidのスケジュールを削除 */
     void deleteSchedule(int id);
     /** 指定の区間が期日のカレンダーイベントを全て取得 */
-    List<CalendarEvent> getCalendarEventsFromTo(LocalDate startDate, LocalDate endDate);
+    List<CalendarEvent> getCalendarEventsFromTo(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     /** 指定のidをもつカレンダーイベントを取得 */
     CalendarEvent getCalendarEventById(int id);
     /** カレンダーイベントの新規登録 */
