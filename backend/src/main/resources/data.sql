@@ -43,13 +43,13 @@ VALUES
 (2, '会議', 'PLACED', 1, 2, '12:00:00', 'RED');
 
 -- time_block_tasksテーブルへの初期データ登録
-INSERT INTO time_block_tasks (TimeBlock_id, title)
+INSERT INTO time_block_tasks (time_block_id, title)
 VALUES
 (1, 'データベース分野の復習');
-INSERT INTO time_block_tasks (TimeBlock_id, title)
+INSERT INTO time_block_tasks (time_block_id, title)
 VALUES
 (1, 'ネットワーク分野の勉強');
-INSERT INTO time_block_tasks (TimeBlock_id, title)
+INSERT INTO time_block_tasks (time_block_id, title)
 VALUES
 (1, '科目Bの勉強');
 
