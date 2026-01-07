@@ -48,8 +48,8 @@
             c.id, c.schedule_id, c.color, c.memo,
             s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title
         FROM calendar_event c
-        WHERE id = #{id}
         INNER JOIN schedule s ON c.schedule_id = s.id
+        WHERE c.id = #{id}        
     </select>
 
     <insert id="insertCalendarEvent" useGeneratedKeys="true" keyProperty="id">
