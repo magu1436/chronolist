@@ -1,13 +1,14 @@
 package com.magu1436.chronolist.timeblocking;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
@@ -15,12 +16,13 @@ import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -42,14 +44,16 @@ public class TimeBlockingController {
      * 指定の日付のタイムテーブルを取得して返す
      * @param LocalDate 
      * @return 成功時:Status.OKと該当のタイムテーブル
-     * @return 見つからなかった場合:Status.NOTFOUND
+     * @return 見つからなかった場合:Status.NOT_FOUND
      * @author milk0924
      */
     @GetMapping("timeTable/getByDate")
-    public ResponseEntity<TimeTable> getByDate(@RequestParam LocalDate date){
+    public ResponseEntity<TimeTable> getByDate(@RequestBody LocalDate date){
         TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(date);
 
-        if(taskGotByDate == null){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        if(taskGotByDate == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
         return ResponseEntity.ok(taskGotByDate);
     }
@@ -62,7 +66,7 @@ public class TimeBlockingController {
      * @author milk0924 
      */
     @PostMapping("timeTable/createAt")
-    public ResponseEntity<Integer> createAt(@RequestParam TimeTable timeTable){
+    public ResponseEntity<Integer> createAt(@RequestBody TimeTable timeTable){
         timeTableMapper.insertTimeTable(timeTable);
         Integer idFromCreatedTimeTable = timeTable.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeTable);
@@ -92,39 +96,31 @@ public class TimeBlockingController {
      */
     @PutMapping("timeBlock/update")
     public ResponseEntity<Void> update(@RequestBody TimeBlock timeBlock){
-        Integer idFromCurrentTimeBlock = timeBlock.getId();
-
-        if(idFromCurrentTimeBlock == null){
+        if(checkIdExisting(timeBlock.getId())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        
+
+        timeBlockMapper.updateTimeBlock(timeBlock);
         return ResponseEntity.ok().build();
     }
-    /**
-     * 返ってくるのがVoidのため，判別が難しそう？
-     */
 
     /**
      * ブロックステータス更新
      * 受け取ったIDに対応するタイムブロックのステータスを更新する
      * @param TimeBlock
      * @return 成功時:Status.OK
-     * @return 対応するIDが見つからなかった時:Status.NOT_Found
+     * @return 対応するIDが見つからなかった時:Status.NOT_FOUND
      * @author milk0924
      */
     @PutMapping("timeBlock/update/status")
     public ResponseEntity<Void> statusUpdate(@RequestBody TimeBlock timeBlock){
-        Integer idFromCurrentTimeBlock = timeBlock.getId();
-
-        if(idFromCurrentTimeBlock == null){
+        if(checkIdExisting(timeBlock.getId())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        timeBlockMapper.updateTimeBlock(timeBlock);
         return ResponseEntity.ok().build();
     }
-
-    /**
-     * 上記と同じ問題を抱える
-     */
 
     /**
      * ブロック開始時刻更新
@@ -134,10 +130,114 @@ public class TimeBlockingController {
      * @return 対応するIDが見つからなかった時:Status.NOT_FOUND
      * @author milk0924
      */
+    @PutMapping("timeBlock/update/startAt")
+    public ResponseEntity<Void> startAtUpdate(@RequestBody TimeBlock timeBlock){
+        if(checkIdExisting(timeBlock.getId())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        timeBlockMapper.updateTimeBlock(timeBlock);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * ブロック削除
+     * 受け取ったIDのブロックをデータベースから削除する．
+     * また，紐づけられたタスクデータもデータベースから削除する．
+     * さらに，relatedScheduleを持っていた場合，該当のScheduleをデータベースから削除する．
+     * @param TimeBlock
+     * @return 成功時：Status.NO_CONTENT
+     * @return 対応するIDが見つからなかった時：Status.NOT_FOUND
+     * @author milk0924
+     */
+    @DeleteMapping("timeBlock/delete")
+    public ResponseEntity<Void> delete(@RequestBody TimeBlock timeBlock){
+        if(checkIdExisting(timeBlock.getId())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        timeBlockMapper.deleteTimeBlock(timeBlock.getId());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /**
+     * 全テンプレートブロック取得
+     * データベースに保存されたテンプレートブロックを取得し，返却する．
+     * @param null
+     * @return 成功時：すべてのテンプレートブロック
+     * @return 成功時：Status.OK
+     * @author milk0924
+     */
+    @GetMapping("templateBlock/getAll")
+    public ResponseEntity<List<TemplateBlock>> returnTemplateBlock(){
+        List<TemplateBlock> allTemplateBlock = templateBlockMapper.getAllTemplateBlocks();
+        return ResponseEntity.ok(allTemplateBlock);
+    }
+
+    /**
+     * テンプレートブロック登録
+     * 受け取ったデータを持つ新しいテンプレートブロックをデータベースに保存する
+     * @param TemplateBlock
+     * @return 成功時：Status.Created
+     * @return 成功時：割り当てられたID(Integer id)
+     * @author milk0924
+     */
+    @PutMapping("templateBlock/register")
+    public ResponseEntity<Integer> registerNewTemplateBlock(@RequestBody TemplateBlock templateBlock){
+        templateBlockMapper.insertTemplateBlock(templateBlock);
+        return ResponseEntity.status(HttpStatus.CREATED).body(templateBlock.getId());
+    }
+
+    /**
+     * テンプレートブロック更新
+     * 受けとったIDのテンプレートブロックの情報を受け取ったデータに変更してデータベースに反映する．
+     * @param TemplateBlock
+     * @return 成功時：Status.NO_CONTENT
+     * @return 対応するIDが見つからなかった時：Status.NOT_FOUND
+     * @author milk0924
+     */
+    @PutMapping("templateBlock/update")
+    public ResponseEntity<Void> updateTemplateBlock(@RequestBody TemplateBlock templateBlock){
+        if(checkIdExisting(templateBlock.getId())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        templateBlockMapper.updateTemplateBlock(templateBlock);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /**
+     * テンプレートブロック削除ID
+     * テンプレートブロックデータベースから削除する
+     * @param TemplateBlock
+     * @return 成功時：Status.NO_CONTENT
+     * @return 対応するIDが見つからなかった時：Status.NOT_FOUND
+     * @author milk0924
+     */
+    @DeleteMapping("templateBlock/delete")
+    public ResponseEntity<Void> deleteTemplateBlock(@RequestBody TemplateBlock templateBlock){
+        if(checkIdExisting(templateBlock.getId())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        templateBlockMapper.deleteTemplateBlock(templateBlock.getId());
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
     /**
-     * 上記と同じ問題を抱える
+     * TimeBlockの存在をIDによって確かめるメソッド
+     * @param id
+     * @return boolean
+     */
+    private boolean checkIdExisting(Integer id){
+        TimeBlock taskGotById = timeBlockMapper.getTimeBlockById(id);
+        return taskGotById != null;
+    }
+
+    /** 1.メソッドの論理関係が逆，ついでに名前も慣習にのっとったexistsTimeBlockByIdに変更
+     *  2．TemplateBlock部分にメソッドを適用している→TimeBlock用のメソッドだから新しくTemplateBlock用に存在確認メソッドを作る必要あり
+     *  3.Typoについてもう一度確認する
      */
     
 }
