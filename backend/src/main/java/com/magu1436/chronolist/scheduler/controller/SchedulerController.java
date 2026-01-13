@@ -89,14 +89,14 @@ public class SchedulerController {
      * @param calendarEvent 更新したい {@code calendarEvent}
      * @return bodyが空の {@code ResponseEntity}. 
      * 受け取った {@code calendarEvent} の {@code id} がDBに存在するときは201レスポンス, 
-     * 存在しないときは400レスポンスを返す
+     * 存在しないときは404レスポンスを返す
      * @author konoma1103
      */
     @PutMapping("update")
     public ResponseEntity<Void> updateEvent(@RequestBody CalendarEvent calendarEvent) {
         // 受け取ったcalendarEventがDBに存在するか確認(存在しなかった場合は400レスポンスを返す)
         if(!existsById(calendarEvent.getId())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         // 受け取ったCalendarEventを元にScheduleを生成
@@ -124,14 +124,14 @@ public class SchedulerController {
      * @param calendarEventId 削除したいカレンダーイベントの {@code id}
      * @return bodyが空の {@code ResponseEntity} 
      * 受け取った {@code calendarEventId} がDBに存在するときは201レスポンス, 
-     * 存在しないときは400レスポンスを返す
+     * 存在しないときは404レスポンスを返す
      * @author konoma1103
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable("id") int calendarEventId){
         // 受け取ったcalendarEventがDBに存在するか確認(存在しなかった場合は400レスポンスを返す)
         if(!existsById(calendarEventId)){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         // 受け取ったcalendarEventのidを元に, DBからCalendarEventを取得
