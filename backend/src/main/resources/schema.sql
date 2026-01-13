@@ -103,7 +103,9 @@ CREATE TABLE time_blocks (
 CREATE TABLE time_block_tasks (
     TimeBlock_id INT,
     title VARCHAR(64) NOT NULL,
-    FOREIGN KEY TimeBlock_id REFERENCES time_blocks(id)
+    FOREIGN KEY TimeBlock_id
+        REFERENCES time_blocks(id)
+        ON DELETE CASCADE
 )
 
 -- template_blocksテーブルの作成
