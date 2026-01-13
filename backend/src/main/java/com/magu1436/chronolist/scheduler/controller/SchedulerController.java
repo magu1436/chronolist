@@ -115,7 +115,7 @@ public class SchedulerController {
         // CalendarEventをcalendar_eventテーブルに登録
         mapper.updateCalendarEvent(calendarEvent);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
