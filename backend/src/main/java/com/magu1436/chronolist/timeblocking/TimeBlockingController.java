@@ -118,6 +118,7 @@ public class TimeBlockingController {
     public ResponseEntity<Void> statusUpdate(@RequestBody TimeBlock timeBlock){
         if(ExistsTimeBlockById(timeBlock.getId())){
             TimeBlock updatedTimeBlock = timeBlockMapper.getTimeBlockById(timeBlock.getId());
+            updatedTimeBlock.setStatus(timeBlock.getStatus());
             timeBlockMapper.updateTimeBlock(updatedTimeBlock);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -137,13 +138,14 @@ public class TimeBlockingController {
     public ResponseEntity<Void> startAtUpdate(@RequestBody TimeBlock timeBlock){
         if(ExistsTimeBlockById(timeBlock.getId())){
             TimeBlock updatedTimeBlock = timeBlockMapper.getTimeBlockById(timeBlock.getId());
+            updatedTimeBlock.setStartAt(timeBlock.getStartAt());
             timeBlockMapper.updateTimeBlock(updatedTimeBlock);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-    // あってる？
+
 
     /**
      * ブロック削除
