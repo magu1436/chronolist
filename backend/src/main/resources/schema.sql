@@ -92,8 +92,12 @@ CREATE TABLE time_blocks (
     width INT NOT NULL,
     start_at TIME,
     color VARCHAR(8) NOT NULL,
-    FOREIGN KEY table_id REFERENCES time_tables(id),
-    FOREIGN KEY schedule_id REFERENCES schedule(id),
+    FOREIGN KEY table_id
+        REFERENCES time_tables(id),
+        ON DELETE CASCADE
+    FOREIGN KEY schedule_id 
+        REFERENCES schedule(id),
+        ON DELETE CASCADE
 
     -- statusがとれる値の制約
     CONSTRAINT chk_status CHECK (status IN ('PLACED', 'HOLD'))
