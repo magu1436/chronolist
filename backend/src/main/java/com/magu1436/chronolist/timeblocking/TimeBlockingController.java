@@ -209,7 +209,7 @@ public class TimeBlockingController {
      */
     @PutMapping("templateBlock/update")
     public ResponseEntity<Void> updateTemplateBlock(@RequestBody TemplateBlock templateBlock){
-        if(ExistsTemplateBlock(templateBlock.getId())){
+        if(ExistsTemplateBlockById(templateBlock.getId())){
             templateBlockMapper.updateTemplateBlock(templateBlock);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -227,7 +227,7 @@ public class TimeBlockingController {
      */
     @DeleteMapping("templateBlock/delete")
     public ResponseEntity<Void> deleteTemplateBlock(@RequestBody TemplateBlock templateBlock){
-        if(ExistsTemplateBlock(templateBlock.getId())){
+        if(ExistsTemplateBlockById(templateBlock.getId())){
             templateBlockMapper.deleteTemplateBlock(templateBlock.getId());
             return  ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -251,7 +251,7 @@ public class TimeBlockingController {
      * @param id
      * @return boolean
      */
-    private boolean ExistsTemplateBlock(Integer id){
+    private boolean ExistsTemplateBlockById(Integer id){
         TemplateBlock templateBlockGotById = templateBlockMapper.getTemplateBlockById(id);
         return templateBlockGotById != null;
     }
