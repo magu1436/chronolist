@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
-
-
 @RequestMapping("api/timeblocking/")
 @Controller
 @RequiredArgsConstructor
@@ -41,11 +39,19 @@ public class TimeBlockingController {
     private final SchedulerMapper schedulerMapper;
 
     /**
-     * タイムテーブル取得API
-     * 指定の日付のタイムテーブルを取得して返す
-     * @param LocalDate 
-     * @return 成功時:Status.OKと該当のタイムテーブル
-     * @return 見つからなかった場合:Status.NOT_FOUND
+     * 指定の日付のタイムテーブルを取得して返す.
+     * <p>このメソッドは,Json形式のデータを受け取り,そのデータに紐づけられた{@code TimeTable}を返す.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * date: DateString
+     * }</pre>
+     * @param  date 参照する日付情報.
+     * <ul>
+     * <li>{@code date}:yyyy-mm-ddで渡される.
+     * </ul>
+     * @return 該当の{@code TimeTable}とHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 200 OK}を返す.
+     * @throws ResponseStatusException 指定された日付から取得したタイムテーブルが{@code Null}だったとき.({@code 404 Not Found})
      * @author milk0924
      */
     @GetMapping("timeTable/getByDate")
@@ -60,10 +66,18 @@ public class TimeBlockingController {
     }
 
     /** 
-     * タイムテーブル作成
-     * 新しいタイムテーブルを作成し,データベースに登録する
-     * @param TimeTable
-     * @return 成功時:Status.CREATEDと登録したタイムテーブルのID
+     * 新しいタイムテーブルを作成し,DBに登録した際に割り当てられたIDを返却する.
+     * <p>このメソッドは,Json形式のデータを受け取り,そのデータをDBに登録し,登録されたときにそのタイムテーブルに登録されたIDを返却する.</p>
+     * <h3>リクエストJsonの形</h3>
+     * <pre> {
+     * date: DateString
+     * }</pre>
+     * @param timeTable 渡された日付を元に作成されたタイムテーブル
+     * <ul>
+     * <li> {@code timeTable} DB登録時に渡されたIDと日付をもつ.TimeBlockの情報に関しては無視される.詳細は{@link TimeTable}を参照.
+     * </ul>
+     * @return 登録の際に渡された{@code ID(int)}とHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 201 Created}を返す.
      * @author milk0924 
      */
     @PostMapping("timeTable/createAt")
@@ -74,10 +88,24 @@ public class TimeBlockingController {
     }
     
     /**
-     * ブロック登録
-     * 新しくブロックをデータベースに保存し,登録する
-     * @param TimeBlock
-     * @return 成功時:Status.CREATEDと登録したタイムブロックのID
+     * 新しく{@code TimeBlock}をDBに保存し,保存時に割り当てられたIDを返却する.
+     * <p>このメソッドは,Json形式のデータを受け取り,そのデータを{@code TimeTable}に登録する.返却されるIDは登録された{@code TimeTable}とは無関係.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * timeTableId: int,
+	 * title: String,
+	 * status: TimeBlockStatus,
+	 * width: int,
+	 * startAt: TimeString,
+	 * tasks: List<String>,
+	 * color: String
+     * }</pre>
+     * @param timeBlock Jsonの内容が入れられた{@code TimeBlock}.{@code int id}は登録のときに自動で渡される.詳細は{@link TimeBlock}.
+     * <ul>
+     * <li> {@code TimeBlock}:{@code TimeTableId}はこのタイムブロックを保存するタイムテーブルのIDが渡される. </li>
+     * </ul>
+     * @return 登録の際に割り当てられた{@code ID(int id)}とHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 201 Created}を返す.
      * @author milk0924
      */
     @PostMapping("timeBlock/register")
@@ -88,11 +116,26 @@ public class TimeBlockingController {
     }
 
     /**
-     * ブロック更新
-     * データベースに保存されている,ブロックのデータを更新する
-     * @param TimeBlock
-     * @return 成功時:Status.NO_CONTENT
-     * @return 対応するIDのデータが見つからなかった時:Status.NOT_FOUND
+     * データベースで保存されている{@code TimeBlock}のデータを更新する
+     * <p>このメソッドはJsonの内容を受け取り,ブロックに関する全てのデータを受け取り更新する事ができる.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * id: int,
+	 * timeTableId: int,
+	 * status: TimeBlockStatus,
+	 * width: int,
+	 * startAt: TimeString,
+	 * tasks: List<String>,
+	 * color: String
+     * }</pre>
+     * @param timeBlock Jsonの内容が入れられた{@code TimeBlock}.詳細は{@link TimeBlock}.
+     * <ul>
+     * <li> {@code TimeBlock}:{@code TimeTableId}はこのタイムブロックを保存するタイムテーブルのIDが渡される. </li>
+     * <li> {@code TimeBlock}:(titeleとrelatedscheduleについて)参照:{@link TimeBlock}</li>
+     * </ul>
+     * @return 対応するHTTPStatusを返す.
+     * 正常終了時は{@code 200 Ok}を返す.
+     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
      * @author milk0924
      */
     @PutMapping("timeBlock/update")
@@ -107,11 +150,20 @@ public class TimeBlockingController {
     }
 
     /**
-     * ブロックステータス更新
-     * 受け取ったIDに対応するタイムブロックのステータスを更新する
-     * @param TimeBlock
-     * @return 成功時:Status.NO_CONTENT
-     * @return 対応するIDが見つからなかった時:Status.NOT_FOUND
+     * 対象のブロックステータスのみを更新してDBに反映する.
+     * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code status:TimeBlockStatus}のみを渡されたJsonのデータに更新する.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * id: int,
+	 * status: TimeBlockStatus
+     * }</pre>
+     * @param timmeBlock Jsonの値が保存されている{@code timeBlock}.
+     * <ul>
+     * <li> {@code timeBlock}:Jsonで渡される以外の情報は持っていない. 参照:{@link TimeBlock}</li>
+     * </ul>
+     * @return 対応するHTTPStatusを返す.
+     * 正常終了時は{@code 200 Ok}を返す.
+     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
      * @author milk0924
      */
     @PutMapping("timeBlock/update/status")
@@ -127,11 +179,20 @@ public class TimeBlockingController {
     }
    
     /**
-     * ブロック開始時刻更新
-     * ブロックの開始時刻のみを更新する．ブロックの移動のたびに呼ばれる．
-     * @param TimeBlock
-     * @return 成功時:Status.NO_CONTENT
-     * @return 対応するIDが見つからなかった時:Status.NOT_FOUND
+     * ブロックの開始時刻のみを更新してデータベースに反映する.
+     * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code startAt: TimeString}のみを渡されたJsonのデータに更新する.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * id: int,
+	 * startAt: TimeString
+     * }</pre>
+     * @param timeBlock Jsonの値が保存されている{@code timeBlock}.
+     * <ul>
+     * <li> {@code timeBlock}:Jsonで渡される以外の情報は持っていない. 参照:{@link TimeBlock}</li>
+     * </ul>
+     * @return 対応するHTTPStatusを返す.
+     * 正常終了時は{@code 200 Ok}を返す.
+     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
      * @author milk0924
      */
     @PutMapping("timeBlock/update/startAt")
@@ -148,13 +209,16 @@ public class TimeBlockingController {
 
 
     /**
-     * ブロック削除
-     * 受け取ったIDのブロックをデータベースから削除する．
-     * また，紐づけられたタスクデータもデータベースから削除する．
-     * さらに，relatedScheduleを持っていた場合，該当のScheduleをデータベースから削除する．
-     * @param TimeBlock
-     * @return 成功時：Status.NO_CONTENT
-     * @return 対応するIDが見つからなかった時：Status.NOT_FOUND
+     * {@code TimeBlock}をDBから削除する.
+     * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code TimeBlock}を削除する.また,そのブロックに紐づけられたタスクデータ,{@code relatedschedule}がある場合はそれらも削除される.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * id: int
+     * }</pre>
+     * @param timeBlock Jsonの値が保存されている{@code timeBlock}.
+     * @return 対応するHTTPStatusを返す.
+     * 正常終了時は{@code 204 No Content}を返す.
+     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
      * @author milk0924
      */
     @DeleteMapping("timeBlock/delete")
@@ -172,11 +236,10 @@ public class TimeBlockingController {
     }
 
     /**
-     * 全テンプレートブロック取得
-     * データベースに保存されたテンプレートブロックを取得し，返却する．
-     * @param null
-     * @return 成功時：すべてのテンプレートブロック
-     * @return 成功時：Status.OK
+     * DBに登録されているテンプレートブロックをすべて返却する
+     * <p>このメソッドは,DBに保存されているテンプレートブロックを取得し返却する.テンプレートブロックが存在しない場合でも,空のリストを返却する.</p>
+     * @return すべてのテンプレートブロックとHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 200 Ok}を返す.
      * @author milk0924
      */
     @GetMapping("templateBlock/getAll")
@@ -186,11 +249,20 @@ public class TimeBlockingController {
     }
 
     /**
-     * テンプレートブロック登録
-     * 受け取ったデータを持つ新しいテンプレートブロックをデータベースに保存する
-     * @param TemplateBlock
-     * @return 成功時：Status.Created
-     * @return 成功時：割り当てられたID
+     * 受け取ったデータを持つ新しいテンプレートブロックをDBに保存する.
+     * <p>このメソッドはJsonの内容を受け取り,その内容を保存した新しいテンプレートブロックをDBに保存する.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * title: String,
+	 * width: int,
+	 * color: String
+     * }</pre>
+     * @param templateBlock Jsonの内容が保存された{@code templateBlock}.詳細は{@link TemplateBlock}.
+     * <ul>
+     * <li> {@code TempleBlock}:Jsonに保存されている情報以外は持たない.IDはDBに保存されたときに自動的に割り当てられる.</li>
+     * </ul>
+     * @return DB登録時に割り当てられたIDとHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 201 Created}を返す.
      * @author milk0924
      */
     @PutMapping("templateBlock/register")
@@ -200,11 +272,19 @@ public class TimeBlockingController {
     }
 
     /**
-     * テンプレートブロック更新
-     * 受けとったIDのテンプレートブロックの情報を受け取ったデータに変更してデータベースに反映する．
-     * @param TemplateBlock
-     * @return 成功時：Status.NO_CONTENT
-     * @return 対応するIDが見つからなかった時：Status.NOT_FOUND
+     * テンプレートブロックの情報を更新し,そのデータをDBに反映する.
+     * <p>このメソッドはJsonの内容を受け取り,その内容を指定のIDに対応するテンプレートブロックに反映する.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * id: int,
+	 * title: String,
+	 * width: int,
+	 * color: String
+     * }</pre>
+     * @param templateBlock Jsonの内容が保存された{@code TemplateBlock}.詳細は{@link TemplateBlock}.
+     * @return 対応するHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 204 No Content}を返します
+     * @throws ResponseStatusException 指定するIDのテンプレートブロックが見つからなかったとき{@code 404 Not Found}
      * @author milk0924
      */
     @PutMapping("templateBlock/update")
@@ -218,11 +298,15 @@ public class TimeBlockingController {
     }
 
     /**
-     * テンプレートブロック削除ID
-     * テンプレートブロックデータベースから削除する
-     * @param TemplateBlock
-     * @return 成功時：Status.NO_CONTENT
-     * @return 対応するIDが見つからなかった時：Status.NOT_FOUND
+     * テンプレートブロックをDBから削除する
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * id: int
+     * }</pre>
+     * @param templateBlock Jsonの内容が保存された{@code TemplateBlock}.詳細は{@link TemplateBlock}.>
+     * @return 対応するHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 204 No Content}を返します
+     * @throws ResponseStatusException 指定するIDのテンプレートブロックが見つからなかったとき{@code 404 Not Found}
      * @author milk0924
      */
     @DeleteMapping("templateBlock/delete")
@@ -255,10 +339,5 @@ public class TimeBlockingController {
         TemplateBlock templateBlockGotById = templateBlockMapper.getTemplateBlockById(id);
         return templateBlockGotById != null;
     }
-
-    /** 
-     *  3.docコメント書き直し．慣例とか例とかいろいろ確認する
-     **/
-    
 }
 
