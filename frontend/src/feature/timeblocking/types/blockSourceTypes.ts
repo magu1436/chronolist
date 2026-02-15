@@ -1,3 +1,4 @@
+import type { ScheduleSource } from "@/feature/schesuler/types/scheduleSourceType"
 import type { TimeBlockStatus } from "./statics"
 
 
@@ -6,7 +7,7 @@ export type TimeBlockSource = {
     timeTableId: number,
     title: string,
     status: TimeBlockStatus,
-    relatedSchedle: Schedule,
+    relatedSchedle: ScheduleSource | null,
     width: number,
     startAt: Date | null,
     tasks: string[],
