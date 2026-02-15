@@ -1,3 +1,4 @@
+import { DueDate, DueTime } from "@/feature/todolist/entity/due-entities";
 import type { GetAllApi } from "@/types/todolist/api";
 import type { ToDoTask } from "@/types/todolist/todotask";
 
@@ -7,8 +8,8 @@ const toToDoTask = (apiObj: GetAllApi): ToDoTask => {
         id: apiObj.id,
         title: apiObj.title,
         dueKind: apiObj.dueKind,
-        dueDate: apiObj.dueDate,
-        dueTime: apiObj.dueTime,
+        dueDate: apiObj.dueDate ? new DueDate(apiObj.dueDate) : null,
+        dueTime: apiObj.dueTime ? new DueTime(apiObj.dueTime) : null,
         priority: apiObj.priority,
         isCompleted: apiObj.isCompleted,
         memo: apiObj.memo || undefined,

@@ -1,3 +1,4 @@
+import { nextDate } from "@/utils/date";
 import type { CalendarEventApi } from "../types/api";
 import type { ScheduleKind } from "../types/statics";
 
@@ -152,15 +153,16 @@ class CalendarEvent {
         if (!e) throw new Error("Both 'endAt' and 'endDate' are undefined");
         
         return {
-            id: this.id,
+            id: String(this.id),
             title: this.title,
             allDay: this.kind == "ALL_DAY",
-            startStr: s.toISOString(),
+            start: s,
             // Fullcalendarの終了日時は、指定日の翌日を指定する仕様
-            endStr: (new Date(e.getDate() + 1)).toISOString(),
-            bordarColor: this.color,
+            end: nextDate(e),
+            borderColor: this.color,
             textColor: this.color,
-        }
+            backgroundColor: "#EEEEEE",
+        };
     }
 }
 

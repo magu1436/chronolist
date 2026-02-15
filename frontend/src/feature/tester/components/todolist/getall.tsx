@@ -68,8 +68,8 @@ const TaskDisplay: FC<TaskDisplayProp> = ({task}) => {
             <div>id: {id}</div>
             <div>title: {title}</div>
             <div>dueKind: {dueKind}</div>
-            <div>date: {dueDate}</div>
-            <div>time: {dueTime}</div>
+            <div>date: {dueDate?.toString()}</div>
+            <div>time: {dueTime?.toString()}</div>
             <div>priority: {priority}</div>
             <div>isCompleted: {isCompleted}</div>
             <div>memo: {memo}</div>
