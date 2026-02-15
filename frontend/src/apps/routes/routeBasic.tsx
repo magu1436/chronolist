@@ -6,6 +6,7 @@ import SchedulerTestPage from "@/feature/tester/components/schedulerIndex";
 import ToDoListPage from "@/feature/todolist";
 import SchedulerPage from "@/feature/schesuler";
 import HomePage from "@/feature/home";
+import TimeBlockingPage from "@/feature/timeblocking";
 
 
 const routesBasic = createBrowserRouter(
@@ -17,6 +18,7 @@ const routesBasic = createBrowserRouter(
             <Route path="/test/scheduler" element={<SchedulerTestPage />} />
             <Route path="/todolist" element={<ToDoListPage />} />
             <Route path="/scheduler" element={<SchedulerPage />} />
+            <Route path="/timeblocking" element={<TimeBlockingPage />} />
         </>
     )
 );
