@@ -11,6 +11,7 @@ const HomePage = () => {
         <div className={classNames("d-flex", "flex-column", "align-items-center")}>
             <Button className="m-1" onClick={() => {nav("/todolist")}}>ToDoリスト</Button>
             <Button className="m-1" onClick={() => {nav("/scheduler")}}>スケジューラ</Button>
+            <Button className="m-1" onClick={() => {nav("/timeblocking")}}>タイムブロッキング</Button>
             <Button className="m-1" onClick={() => {nav("/test")}}>テスター</Button>
         </div>
     )
