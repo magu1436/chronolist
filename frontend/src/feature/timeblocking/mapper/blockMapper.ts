@@ -1,6 +1,7 @@
 import { toScheduleSource } from "@/feature/schesuler/mapper/scheduleMapper";
 import type { TemplateBlockApi, TimeBlockApi } from "../types/api";
 import type { TemplateBlockSource, TimeBlockSource } from "../types/blockSourceTypes";
+import { Time } from "@/utils/time";
 
 
 /**
@@ -17,7 +18,7 @@ export const toTimeBlockSource = (api: TimeBlockApi): TimeBlockSource => {
         status: api.status,
         relatedSchedle: api.relatedSchedle && toScheduleSource(api.relatedSchedle),
         width: api.width,
-        startAt: api.startAt ? new Date(api.startAt) : null,
+        startAt: api.startAt ? new Time(api.startAt) : null,
         tasks: api.tasks,
         color: api.color,
     };
