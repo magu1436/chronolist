@@ -51,7 +51,7 @@ export class Time {
             return;
         }
         // 合計時間（分）で与えられた場合、60分ごとにhourに割り当てて、余りをminuteに割り当てる
-        if (typeof firstArg === "number") {
+        if (typeof firstArg === "number" && minute === undefined) {
             const time = new Time(Math.floor(firstArg / 60), firstArg % 60);
             this._hour = time.hour;
             this._minute = time.minute;
