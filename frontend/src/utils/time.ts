@@ -43,41 +43,41 @@ export class Time {
      */
     constructor(hour: number, minute: number);
     constructor(firstArg?: number | Time | string | Date, minute?: number) {
-        // 引数に何も受け取らなかった場合は現在時刻のTimeオブジェクトを生成
+        let minutes: number | undefined = undefined;
+        // 引数に何も受け取らなかった場合は現在時刻を参照
         if (firstArg === undefined) {
-            const now = new Time(new Date());
-            this._hour = now.hour;
-            this._minute = now.minute;
-            return;
+            minutes = (new Time(new Date())).toMinutes();
         }
-        // 合計時間（分）で与えられた場合、60分ごとにhourに割り当てて、余りをminuteに割り当てる
+        // 合計時間（分）で与えられた場合の処理
         if (typeof firstArg === "number" && minute === undefined) {
-            const time = new Time(Math.floor(firstArg / 60), firstArg % 60);
-            this._hour = time.hour;
-            this._minute = time.minute;
-            return;
+            minutes = firstArg;
         }
+        // Time オブジェクトを受け取った場合の処理
         if (firstArg instanceof Time) {
-            this._hour = firstArg._hour;
-            this._minute = firstArg._minute;
-            return;
+            minutes = firstArg.toMinutes();
         }
+        // `HH:mm` の形式の文字列を受け取った場合
+        // 時＋分 形式の生成を経由
         if (typeof firstArg === "string") {
             const [hour, minute] = firstArg.split(":").map(Number);
-            const time = new Time(hour, minute);
-            this._hour = time.hour;
-            this._minute = time.minute;
-            return;
+            minutes = (new Time(hour, minute)).toMinutes();
         }
         // Date オブジェクトを受け取った場合は、Dateオブジェクトから時刻を抽出
+        // 時＋分 形式の生成を経由
         if (firstArg instanceof Date) {
-            const time = new Time(firstArg.getHours(), firstArg.getMinutes());
-            this._hour = time.hour;
-            this._minute = time.minute;
-            return;
+            minutes = (new Time(firstArg.getHours(), firstArg.getMinutes())).toMinutes();
         }
-        this._hour = firstArg;
-        this._minute = minute || 0;
+        // 時＋分 で与えられた場合の処理
+        // 最もベースとなる定義方法で, 他の定義のほとんどはここを経由して初期化する
+        if (typeof firstArg === "number" && typeof minute === "number") {
+            minutes = firstArg * 60 + minute;
+        }
+
+        // 引数に不正な型の値が与えられた場合のエラーチェック処理
+        if (minutes === undefined) throw new Error("Invalid argument type.");
+
+        this._hour = Math.floor(minutes / 60);
+        this._minute = minutes % 60;
     }
 
     /**
