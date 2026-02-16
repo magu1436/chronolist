@@ -1,6 +1,8 @@
 import { DndContext } from "@dnd-kit/core";
 
 import TimeBlock from "./components/TimeBlock"
+import TimeTable from "./components/TimeTable";
+import { Box } from "@mui/material";
 
 
 const TimeBlockingPage = () => {
@@ -20,6 +22,7 @@ const TimeBlockingPage = () => {
                 color: "red",
                 title: "test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10 test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10 test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10",
             }} />
+            <Box sx={{height: "50vh", width: "50vw"}}><TimeTable /></Box>
         </DndContext>
     )
 }
