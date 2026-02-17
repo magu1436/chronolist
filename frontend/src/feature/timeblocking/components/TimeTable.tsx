@@ -1,4 +1,6 @@
 import type { FC } from "react";
+import { useDroppable } from "@dnd-kit/core";
+
 import type { TimeTableSource } from "../types/timeTableSource";
 import { Box, Stack, Typography } from "@mui/material";
 import { Time } from "@/utils/time";
@@ -77,19 +79,34 @@ const Legend = () => {
     )
 }
 
-const Table = () => {
+const Table: FC<{source: TimeTableSource}> = ({source}) => {
+    const {
+        id,
+        date,
+        blocks,
+    } = source;
+
+    const {
+        setNodeRef,
+        isOver,
+    } = useDroppable({
+        id,
+    });
+
     return (
-        <Box sx={{
-            height: TABLE_HEIGHT,
-            border: GRID_SIZE,
-            width: "100%",
-            // background: `${GRID_SIZE}px linear-gradient(to top, #fff ${scaleMarkHeight()}px, #000 ${scaleMarkHeight()}px)`,
-            backgroundImage: `repeating-linear-gradient(180deg, white 0 ${scaleMarkHeight() - GRID_SIZE}px, black ${scaleMarkHeight() - GRID_SIZE}px ${scaleMarkHeight()}px)`
-        }}></Box>
+        <Box
+            ref={setNodeRef} 
+            sx={{
+                height: TABLE_HEIGHT,
+                border: GRID_SIZE,
+                width: "100%",
+                backgroundImage: `repeating-linear-gradient(180deg, white 0 ${scaleMarkHeight() - GRID_SIZE}px, black ${scaleMarkHeight() - GRID_SIZE}px ${scaleMarkHeight()}px)`
+            }}
+        ></Box>
     )
 }
 
-const TimeTable = () => {
+const TimeTable: FC<{source: TimeTableSource}> = ({source}) => {
     return (
         <Box
             sx={{
@@ -104,7 +121,7 @@ const TimeTable = () => {
                 alignItems={"flex-start"}
             >
                 <Legend />
-                <Table />
+                <Table source={source} />
             </Stack>
         </Box>
     )
