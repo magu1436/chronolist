@@ -4,6 +4,7 @@ import { useDroppable } from "@dnd-kit/core";
 import type { TimeTableSource } from "../types/timeTableSource";
 import { Box, Stack, Typography } from "@mui/material";
 import { Time } from "@/utils/time";
+import { TIMETABLE_ID } from "../static/droppableId";
 
 // 目盛りグリッド線の太さ
 const GRID_SIZE: number = 1;
@@ -80,17 +81,12 @@ const Legend = () => {
 }
 
 const Table: FC<{source: TimeTableSource}> = ({source}) => {
-    const {
-        id,
-        date,
-        blocks,
-    } = source;
 
     const {
         setNodeRef,
         isOver,
     } = useDroppable({
-        id,
+        id: TIMETABLE_ID,
     });
 
     return (
