@@ -1,45 +1,24 @@
-import type { FC } from "react";
+import { useContext, type FC } from "react";
 import { useDroppable } from "@dnd-kit/core";
+import { Box, Stack, Typography } from "@mui/material";
 
 import type { TimeTableSource } from "../types/timeTableSource";
-import { Box, Stack, Typography } from "@mui/material";
 import { Time } from "@/utils/time";
 import { TIMETABLE_ID } from "../static/droppableId";
+import TimeTableConfigure from "../contexts/TimeTableConfigure";
 
-// 目盛りグリッド線の太さ
-const GRID_SIZE: number = 1;
-// テーブルの高さ
-const TABLE_HEIGHT: number = 2000;
-// 目盛り幅（分）
-const SLOT_MINUTES: number = 30;
-
-const START_TIME = new Time(0, 0);
-const END_TIME = START_TIME.add(24 * 60);
-
-// 目盛りの値を示す部分の高さ
-let _scaleMarkHeight: number | undefined;
-
-
-const scaleMarkHeight = () => {
-    if (_scaleMarkHeight) {
-        return _scaleMarkHeight;
-    }
-    const smh = 24 * 60 / SLOT_MINUTES;
-    if (!Number.isInteger(smh)) {
-        throw new Error("scaleMarkHeight is invalid.");
-    }
-    _scaleMarkHeight = TABLE_HEIGHT / smh;
-    return _scaleMarkHeight;
-}
 
 const HourScaleMark: FC<{ label: string }> = ({ label }) => {
+
+    const { gridSize, slotHeight } = useContext(TimeTableConfigure);
+
     return (
         <>
             <Typography
                 variant="body2"
                 sx={{
-                    borderTop: GRID_SIZE,
-                    height: scaleMarkHeight(),
+                    borderTop: gridSize,
+                    height: slotHeight,
                 }}>
                     {label}
                 </Typography>
@@ -47,20 +26,25 @@ const HourScaleMark: FC<{ label: string }> = ({ label }) => {
     );
 };
 
+
 const SmallScaleMark: FC<{label: string}> = ({label}) => {
+
+    const { gridSize, slotHeight } = useContext(TimeTableConfigure);
+
     return (
         <>
             <Typography
                 variant="caption"
                 sx={{
-                    borderTop: GRID_SIZE,
-                    height: scaleMarkHeight(),
+                    borderTop: gridSize,
+                    height: slotHeight,
                 }}>
                     {label}
                 </Typography>
         </>
     );
 }
+
 
 function* scaleRange(start: Time, end: Time, step: number) {
     for (let i = start.toMinutes(); i <= end.toMinutes(); i += step) {
@@ -72,15 +56,31 @@ function* scaleRange(start: Time, end: Time, step: number) {
     }
 }
 
+
 const Legend = () => {
+
+    const {
+        startTime,
+        slotMinutes,
+    } = useContext(TimeTableConfigure);
+    const endTime = startTime.add(24 * 60);
+
     return (
         <Stack alignItems={"flex-end"}>
-            {Array.from(scaleRange(START_TIME, END_TIME, SLOT_MINUTES))}
+            {Array.from(scaleRange(startTime, endTime, slotMinutes))}
         </Stack>
     )
 }
 
+
 const Table: FC<{source: TimeTableSource}> = ({source}) => {
+
+    const {
+        gridSize,
+        tableHeight,
+        tableWidth,
+        slotHeight,
+    } = useContext(TimeTableConfigure);
 
     const {
         setNodeRef,
@@ -93,14 +93,15 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         <Box
             ref={setNodeRef} 
             sx={{
-                height: TABLE_HEIGHT,
-                border: GRID_SIZE,
-                width: "100%",
-                backgroundImage: `repeating-linear-gradient(180deg, white 0 ${scaleMarkHeight() - GRID_SIZE}px, black ${scaleMarkHeight() - GRID_SIZE}px ${scaleMarkHeight()}px)`
+                height: tableHeight,
+                border: gridSize,
+                width: tableWidth,
+                backgroundImage: `repeating-linear-gradient(180deg, white 0 ${slotHeight - gridSize}px, black ${slotHeight - gridSize}px ${slotHeight}px)`
             }}
         ></Box>
     )
 }
+
 
 const TimeTable: FC<{source: TimeTableSource}> = ({source}) => {
     return (
@@ -122,5 +123,6 @@ const TimeTable: FC<{source: TimeTableSource}> = ({source}) => {
         </Box>
     )
 }
+
 
 export default TimeTable;
