@@ -1,8 +1,9 @@
-import type { FC } from "react";
+import { useContext, type FC } from "react";
 import { Paper, Typography } from "@mui/material";
 import { useDraggable } from "@dnd-kit/core";
 
 import { type TimeBlockSource } from "../types/blockSourceTypes";
+import TimeTableConfigure from "../contexts/TimeTableConfigure";
 
 
 const TimeBlock: FC<{ source: TimeBlockSource}> = ({source}) => {
@@ -17,6 +18,10 @@ const TimeBlock: FC<{ source: TimeBlockSource}> = ({source}) => {
         id: source.id,
     });
 
+    const {
+        slotHeight,
+    } = useContext(TimeTableConfigure);
+
     return (
         <Paper
             ref={setNodeRef}
@@ -26,6 +31,7 @@ const TimeBlock: FC<{ source: TimeBlockSource}> = ({source}) => {
                 bgcolor: source.color,
                 color: "white",
                 width: "auto",
+                height: `${slotHeight * source.width}px`,
                 display: "inline-flex",
                 maxWidth: "100%",
                 overflowWrap: "anywhere",
