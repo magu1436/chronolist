@@ -20,7 +20,13 @@ const TimeBlock: FC<{ source: TimeBlockSource}> = ({source}) => {
 
     const {
         slotHeight,
+        slotMinutes,
     } = useContext(TimeTableConfigure);
+
+    let top;
+    if (source.status === "PLACED" && source.startAt) {
+        top = source.startAt.toMinutes() * (slotHeight / slotMinutes);
+    }
 
     return (
         <Paper
@@ -31,13 +37,15 @@ const TimeBlock: FC<{ source: TimeBlockSource}> = ({source}) => {
                 bgcolor: source.color,
                 color: "white",
                 width: "auto",
-                height: `${slotHeight * source.width}px`,
+                height: `${Math.floor(source.width * (slotHeight / slotMinutes))}px`,
                 display: "inline-flex",
                 maxWidth: "100%",
                 overflowWrap: "anywhere",
                 margin: "2px",
                 padding: "5px",
                 transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
+                position: source.status === "PLACED" ? "absolute" : "unset",
+                top,
             }}
         >
             <Typography variant="h6">{source.title}</Typography>
