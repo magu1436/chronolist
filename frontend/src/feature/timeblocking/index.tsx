@@ -2,7 +2,7 @@ import { DndContext, pointerWithin } from "@dnd-kit/core";
 
 import TimeBlock from "./components/TimeBlock"
 import TimeTable from "./components/TimeTable";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import type { TimeTableSource } from "./types/timeTableSource";
 import TimeTableConfigure from "./contexts/TimeTableConfigure";
 import { Time } from "@/utils/time";
@@ -32,18 +32,20 @@ const TimeBlockingPage = () => {
             onDragEnd={(event) => {console.log(event)}}
         >
             <TimeTableConfigure value={tableConfig}>
-                <TimeBlock source={{
-                    id: 1,
-                    timeTableId: 1,
-                    status: "HOLD",
-                    relatedSchedle: null,
-                    width: 1,
-                    startAt: null,
-                    tasks: [],
-                    color: "red",
-                    title: "test block 1 test block 2 test block 3 test block 4",
-                }} />
-                <Box sx={{height: "50vh", width: "50vw"}}><TimeTable source={timeTableSource} /></Box>
+                <Stack direction={"row"}>
+                    <Box sx={{height: "100vh", width: "50vw"}}><TimeTable source={timeTableSource} /></Box>
+                    <TimeBlock source={{
+                        id: 1,
+                        timeTableId: 1,
+                        status: "HOLD",
+                        relatedSchedle: null,
+                        width: 120,
+                        startAt: null,
+                        tasks: [],
+                        color: "red",
+                        title: "test block 1 test block 2 test block 3 test block 4",
+                    }} />
+                </Stack>
             </TimeTableConfigure>
         </DndContext>
     )

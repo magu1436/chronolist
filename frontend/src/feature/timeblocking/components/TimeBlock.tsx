@@ -16,6 +16,7 @@ const TimeBlock: FC<{ source: TimeBlockSource}> = ({source}) => {
         isDragging,
     } = useDraggable({
         id: source.id,
+        data: source,
     });
 
     const {
@@ -46,6 +47,7 @@ const TimeBlock: FC<{ source: TimeBlockSource}> = ({source}) => {
                 transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
                 position: source.status === "PLACED" ? "absolute" : "unset",
                 top,
+                zIndex: 1,
             }}
         >
             <Typography variant="h6">{source.title}</Typography>
