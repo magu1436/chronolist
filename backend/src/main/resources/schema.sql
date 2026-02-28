@@ -74,3 +74,14 @@ CREATE TABLE todo_tasks (
             (due_kind = 'DATETIME' and due_date is NOT NULL and due_time is NOT NULL)
         )
 );
+
+
+-- Userテーブルの作成
+CREATE TABLE user (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(60) NOT NULL,
+    role VARCHAR(8) NOT NULL,
+    -- roleがとれる値の制約
+    CONSTRAINT chk_role CHECK (role IN ('GENERAL', 'ADMIN'))
+);
