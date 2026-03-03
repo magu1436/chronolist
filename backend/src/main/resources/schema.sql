@@ -77,7 +77,7 @@ CREATE TABLE todo_tasks (
 
 
 -- Userテーブルの作成
-CREATE TABLE user (
+CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(60) NOT NULL,
