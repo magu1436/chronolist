@@ -6,18 +6,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+
+import com.magu1436.chronolist.login.entity.Users;
+import com.magu1436.chronolist.login.mapper.LoginMapper;
 
 @Service
 @RequiredArgsConstructor
 public class LoginUserDatailsServiceImpl implements UserDetailsService{
 
-    private final AuthenticationMapper AuthenticationMapper;
+    private final LoginMapper loginMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException{
 
-        Authentication authentication = authenticationMapper.selectByUsername(username);
+        Users authentication = loginMapper.getUsersByUsername(username);
 
         if (authentication != null){
             return new LoginUser(authentication.getUsername(),
