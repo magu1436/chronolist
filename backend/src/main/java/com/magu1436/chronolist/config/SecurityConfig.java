@@ -23,7 +23,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 // 各ページへのアクセス許可設定
-                .requestMatchers( "/login", "/public/**", "/error").permitAll()
+                .requestMatchers( "/login", "/public/**", "/error", "/").permitAll()
                 .requestMatchers("/general/**").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
