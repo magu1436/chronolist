@@ -1,5 +1,5 @@
 import { useContext, useCallback, useState, type FC } from "react";
-import { useDroppable, useDndMonitor, type DragOverEvent, type DragMoveEvent } from "@dnd-kit/core";
+import { useDroppable, useDndMonitor } from "@dnd-kit/core";
 import { Box, Stack, Typography } from "@mui/material";
 
 import type { TimeTableSource } from "../types/timeTableSource";
@@ -11,6 +11,9 @@ import TimeBlock from "./TimeBlock";
 import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
 
 
+/**
+ * 一時間あたり目盛りを描画するコンポーネント.  
+ */
 const HourScaleMark: FC<{ label: string }> = ({ label }) => {
 
     const { gridSize, slotHeight } = useContext(TimeTableConfigure);
@@ -30,6 +33,12 @@ const HourScaleMark: FC<{ label: string }> = ({ label }) => {
 };
 
 
+/**
+ * 小刻み目盛りを描画するコンポーネント.  
+ * 
+ * 時間表の小刻み目盛りを描画する.  
+ * {@link HourScaleMark} よりも小さい目盛りを描画する.  
+ */
 const SmallScaleMark: FC<{label: string}> = ({label}) => {
 
     const { gridSize, slotHeight } = useContext(TimeTableConfigure);
@@ -60,6 +69,13 @@ function* scaleRange(start: Time, end: Time, step: number) {
 }
 
 
+
+/**
+ * 時間表の小刻み目盛りの凡例を描画するコンポーネント.
+ * 
+ * 一時間単位の目盛りは {@link HourScaleMark} を使用して描画され,  
+ * そうでないスロットごとの目盛りは {@link SmallScaleMark} を使用して描画される.
+ */
 const Legend = () => {
 
     const {
@@ -76,10 +92,21 @@ const Legend = () => {
 }
 
 
+/**
+ * タイムテーブルを描画するコンポーネント.
+ *   
+ * {@link TimeBlockSource} に基づいてタイムテーブルを描画する.  
+ * {@link useDroppable} を使用してドラッグ先として利用可能なコンポーネントとして  
+ * 実装されており, {@link TimeBlock} を設置できる.  
+ */
 const Table: FC<{source: TimeTableSource}> = ({source}) => {
 
-    const [blocksOnTable, setBlocksOnTable] = useState<TimeBlockSource[]>(source.blocks);
+    // テーブル上のブロックのリストのステート
+    // ブロックを並列に描画するロジックの生成時に使用する可能性があるため残しておく
+    const [ blocksOnTable, setBlocksOnTable ] = useState<TimeBlockSource[]>(source.blocks);
+    
     const [ prevPointTime, setPrevPointTime ] = useState<Time | null>(null);
+    const [ prevBlockSource, setPrevBlockSource ] = useState<TimeBlockSource | null>(null);
 
     const {
         gridSize,
@@ -91,7 +118,6 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
 
     const {
         setNodeRef,
-        isOver,
         rect,
     } = useDroppable({
         id: TIMETABLE_ID,
@@ -102,56 +128,50 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         return time;
     }, []);
 
-    const previewBlockSource = useCallback((event: DragOverEvent | DragMoveEvent) => {
-
-        if (!rect.current?.top || !event.active.rect.current?.translated) {
-            throw new Error("Invalid event");
-        };
-        const originalSource: TimeBlockSource = event.active.data.current as TimeBlockSource;
-
-        const prevSource: TimeBlockSource = {
+    const createPrevBlockSorce = useCallback((startAt: Time, originalSource: TimeBlockSource): TimeBlockSource => {
+        console.log(`original: ${originalSource}`);
+        return {
+            ...originalSource,
             id: PREVIEW_BLOCK_ID,
             timeTableId: source.id,
-            title: originalSource.title,
             status: "PLACED",
-            relatedSchedle: null,
-            width: originalSource.width,
-            startAt: prevPointTime,
-            tasks: [],
-            color: originalSource.color,
+            startAt,
         };
-
-        return prevSource;
     }, []);
 
     const removePrevBlock = useCallback(() => {
-        setBlocksOnTable(blocksOnTable.filter(block => block.id !== PREVIEW_BLOCK_ID));
         setPrevPointTime(null);
+        setPrevBlockSource(null);
+        console.log("prevBlock removed");
     }, []);
 
     useDndMonitor({
         onDragMove(event) {
-            // console.log("--start: Drag Move----------------------------")
+            // エラー処理
             if (prevPointTime === null) {
                 console.log("prevPointTime is null");
                 return;
             };
-            if (!rect?.current?.top || !event.active?.rect?.current?.translated) {
+            if (!rect?.current?.top || !event.active?.rect?.current?.translated || !event.active.data.current) {
                 console.log("Invalid event");
                 return;
             };
+
             const cursorTime = pointToTime(event.active.rect.current.translated.top - rect.current.top);
-            console.log(`cursorTime: ${cursorTime}`);
-            if (prevPointTime.toMinutes() === cursorTime.toMinutes()) return;
             
-            setPrevPointTime(cursorTime);
-            removePrevBlock();
-            setBlocksOnTable([...blocksOnTable, previewBlockSource(event)]);
+            // カーソル操作時, そのカーソルに対応した時刻を出力するテスト用のコード
+            // テスト時に便利なため残しておく
+            // console.log(`cursorTime: ${cursorTime}`);
+            
+            // カーソル移動時でも, 同じ時刻の範囲ならば何もしない(負荷軽減)
+            if (prevPointTime.toMinutes() === cursorTime.toMinutes()) return;
+
+            // プレビューブロックの作成
+            setPrevBlockSource(createPrevBlockSorce(cursorTime, event.active.data.current.source));
         },
         onDragOver(event) {
-            console.log("--start: Drag over----------------------------")
             if (event.over) {
-                if (!rect?.current?.top || !event.active?.rect?.current?.translated) {
+                if (!rect?.current?.top || !event.active?.rect?.current?.translated || !event.active.data.current) {
                     console.log("Invalid event");
                     return;
                 };
@@ -160,9 +180,8 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             }
             removePrevBlock();
             console.log("point time become null");
-            setPrevPointTime(null);
         },
-        onDragEnd(event) {
+        onDragEnd() {
             removePrevBlock();
         },
         onDragCancel() {
@@ -183,6 +202,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             }}
         >
             {blocksOnTable.map(block => <TimeBlock key={block.id} source={block} />)}
+            {prevBlockSource && <TimeBlock source={prevBlockSource} />}
         </Box>
     )
 }
