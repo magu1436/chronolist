@@ -9,6 +9,7 @@ import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import type { TimeBlockSource } from "../types/blockSourceTypes";
 import TimeBlock from "./TimeBlock";
 import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
+import BlocksAtField from "../contexts/BlocksAtField";
 
 
 /**
@@ -117,8 +118,15 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
     } = useContext(TimeTableConfigure);
 
     const {
+        blocksAtField,
+        setBlocksAtField,
+    } = useContext(BlocksAtField);
+
+    const {
         setNodeRef,
         rect,
+        active,
+        isOver,
     } = useDroppable({
         id: TIMETABLE_ID,
     });
@@ -182,10 +190,15 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             console.log("point time become null");
         },
         onDragEnd() {
+            if (isOver && active?.data.current && prevBlockSource) {
+                const movedBlockId = active.data.current.source.id;
+                setBlocksAtField(blocksAtField.filter(block => block.id !== movedBlockId));
+                setBlocksOnTable([...blocksOnTable, {...prevBlockSource, id: movedBlockId}]);
+            }
             removePrevBlock();
         },
         onDragCancel() {
-            console.log("--start: Drag Cancel----------------------------")
+            console.log("Dragging Cancelled");
             removePrevBlock();
         },
     });
