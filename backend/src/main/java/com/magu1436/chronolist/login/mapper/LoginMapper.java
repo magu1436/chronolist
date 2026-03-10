@@ -6,5 +6,5 @@ import com.magu1436.chronolist.login.entity.Users;
 
 @Mapper
 public interface LoginMapper {
-    Users getUsersByUsername(String username);
+    Users getUsersByUserId(String userId);
 }

@@ -24,6 +24,6 @@ VALUES
 ('卒研論文の提出', 'HIGH', 'DATETIME', '2026-01-26', '13:30:00', '教授へ直接手渡しする');
 
 -- usersテーブルへの初期データ登録
-INSERT INTO users (username, password, role)
+INSERT INTO users (user_id, password, role)
 VALUES
 ('admin', 'password', 'GENERAL');

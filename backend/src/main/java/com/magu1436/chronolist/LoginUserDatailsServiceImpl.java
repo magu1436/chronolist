@@ -21,10 +21,10 @@ public class LoginUserDatailsServiceImpl implements UserDetailsService{
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException{
 
-        Users authentication = loginMapper.getUsersByUsername(username);
+        Users authentication = loginMapper.getUsersByUserId(username);
 
         if (authentication != null){
-            return new LoginUser(authentication.getUsername(),
+            return new LoginUser(authentication.getUserId(),
                                     authentication.getPassword(),
                                     Collections.emptyList());
         } else {

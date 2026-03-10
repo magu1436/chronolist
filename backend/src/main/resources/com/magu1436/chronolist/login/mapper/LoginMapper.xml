@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magu1436.chronolist.login.mapper.LoginMapper">
-    <select id="getUsersByUsername" resultType="com.magu1436.chronolist.login.entity.Users">
-        SELECT username, password, role
+    <select id="getUsersByUserId" resultType="com.magu1436.chronolist.login.entity.Users">
+        SELECT user_id, password, role
         FROM users
-        WHERE username = #{username}
+        WHERE user_id = #{userId}
     </select>
 </mapper>

@@ -79,7 +79,7 @@ CREATE TABLE todo_tasks (
 -- Userテーブルの作成
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    user_id VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(60) NOT NULL,
     role VARCHAR(8) NOT NULL,
     -- roleがとれる値の制約
