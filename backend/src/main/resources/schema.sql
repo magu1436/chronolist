@@ -21,11 +21,11 @@ CREATE TABLE schedule (
     
     CONSTRAINT chk_kind_timed
         CHECK (
-            -- 「通常予定」のときにstart_atとend_atが必ず値をもつための制約. また開始時刻より終了時刻が後になるための制約
-            (kind = 'DATED' and start_at is NOT NULL and end_at is NOT NULL and start_at < end_at)
+            -- 「通常予定」のときにstart_atとend_atが必ず値をもつための制約. また開始時刻と終了時刻が同じか, 終了時刻が後になるための制約
+            (kind = 'DATED' and start_at is NOT NULL and end_at is NOT NULL and start_at <= end_at)
             or
-            -- 「終日予定」のときにstart_dateとend_dateが必ず値をもつための制約. また開始日より終了日が後になるための制約
-            (kind = 'ALL_DAY' and start_date is not NULL and end_date is not NULL and start_date < end_date)
+            -- 「終日予定」のときにstart_dateとend_dateが必ず値をもつための制約. また開始日と終了日が同じか, 終了日が後になるための制約
+            (kind = 'ALL_DAY' and start_date is not NULL and end_date is not NULL and start_date <= end_date)
         ),
 
     CONSTRAINT chk_exclusive

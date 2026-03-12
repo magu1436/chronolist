@@ -2,6 +2,7 @@ import type { ScheduleKind } from "./statics"
 
 export type CalendarEventApi = {
     id: number,
+    scheduleId: number | null,
     kind: ScheduleKind,
     startAt: string | null,
     endAt: string | null,

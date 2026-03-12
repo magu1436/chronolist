@@ -10,7 +10,8 @@ const UpdateResult = () => {
      * 送信データ
      */
     const body: CalendarEventApi = {
-        id: 0,
+        id: 1,
+        scheduleId: 1,
         title: "updated title",
         kind: "ALL_DAY",
         startAt: null,
@@ -46,6 +47,7 @@ const UpdateResult = () => {
 
 const Body: FC<CalendarEventApi> = ({
     id,
+    scheduleId,
     kind,
     startAt,
     endAt,
@@ -59,6 +61,7 @@ const Body: FC<CalendarEventApi> = ({
         <>
             <h1>Submitted Data</h1>
             <div>id: {id}</div>
+            <div>scheduleId: {scheduleId || "null"}</div>
             <div>kind: {kind}</div>
             <div>startAt: {startAt || "null"}</div>
             <div>endAt: {endAt || "null"}</div>
