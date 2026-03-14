@@ -52,6 +52,7 @@ CREATE TABLE calendar_event (
 -- todo_tasksテーブルの作成
 CREATE TABLE todo_tasks (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
     priority VARCHAR(8) NOT NULL,
     due_kind VARCHAR(16) NOT NULL,
@@ -59,6 +60,7 @@ CREATE TABLE todo_tasks (
     due_time TIME,
     is_completed BOOLEAN DEFAULT FALSE,
     memo TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- priorityがとれる値の制約
     CONSTRAINT chk_priority CHECK (priority IN ('HIGH', 'MIDDLE', 'LOW')),
