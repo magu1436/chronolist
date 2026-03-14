@@ -22,4 +22,11 @@
         LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
         WHERE block.status = 'HOLD'
     </select>
+
+    <!-- scheduleIdの取得方法が分からないため未完成 -->
+    <insert id="insertTimeBlock" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO time_blocks (table_id, title, status, schedule_id, width, start_at, color)
+        VALUES
+        (#{timeTableId}, #{title}, #{status}, #{scheduleId}, #{width}, #{startAt}, #{color})
+    </insert>
 </mapper>
