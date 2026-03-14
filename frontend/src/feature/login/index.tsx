@@ -18,7 +18,7 @@ const LoginPage = () => {
             <form action="http://localhost:8080/login" method="post">
                 <div>
                     <label>ログインID</label>
-                    <input type="text" name="user_id" required />
+                    <input type="text" name="login_id" required />
                 </div>
                 <div>
                     <label>パスワード</label>
