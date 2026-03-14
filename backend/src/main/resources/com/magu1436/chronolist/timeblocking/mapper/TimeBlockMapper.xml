@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper">
+    <select id=getTimeBlockById resultMap="TimeBlockngResultMap.TimeBlockResult">
+        SELECT
+            block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
+            task.title AS task_title,
+            schedule.id AS schedule_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
+        FROM time_blocks block
+        LEFT JOIN time_block_tasks task ON block.id = task.time_block_id
+        LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
+        WHERE block_id = #{id}
+    </select>
 </mapper>
