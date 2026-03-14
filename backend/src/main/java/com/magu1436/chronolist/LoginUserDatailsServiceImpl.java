@@ -18,17 +18,17 @@ public class LoginUserDatailsServiceImpl implements UserDetailsService{
     private final LoginMapper loginMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String loginId)
             throws UsernameNotFoundException{
 
-        Users authentication = loginMapper.getUsersByUserId(username);
+        Users authentication = loginMapper.getUsersByLoginId(loginId);
 
         if (authentication != null){
-            return new LoginUser(authentication.getUserId(),
+            return new LoginUser(authentication.getLoginId(),
                                     authentication.getPassword(),
                                     Collections.emptyList());
         } else {
-            throw new UsernameNotFoundException(username + "→ 指定しているユーザー名は存在しません");
+            throw new UsernameNotFoundException(loginId + "→ 指定しているユーザー名は存在しません");
         }
     }
 }

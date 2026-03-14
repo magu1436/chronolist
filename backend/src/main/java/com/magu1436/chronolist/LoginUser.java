@@ -6,9 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 public class LoginUser extends User{
-    public LoginUser(String username,
+    public LoginUser(String loginId,
         String password,
         Collection<? extends GrantedAuthority> authorities){
-            super(username, password, authorities);
+            super(loginId, password, authorities);
     }
 }
