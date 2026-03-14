@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 
 import lombok.Data;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 
 /** 
@@ -12,7 +14,9 @@ import lombok.NoArgsConstructor;
  * @author konoma1103
  */
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Schedule {
     /** スケジュールID */
     private int id;
