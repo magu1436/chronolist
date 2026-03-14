@@ -44,4 +44,10 @@
         LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
         WHERE table.date = #{date}
     </select>
+
+    <insert id="insertTimeTable" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO time_tables (date)
+        VALUES
+        (#{date})
+    </insert>
 </mapper>
