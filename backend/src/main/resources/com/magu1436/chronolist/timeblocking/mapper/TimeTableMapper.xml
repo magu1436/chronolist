@@ -1,38 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper">
-
-    <!-- TimeTableとTimeBlockの1対多の関係 -->
-    <resultMap id="TimeTableResult"
-        type="com.magu1436.chronolist.timeblocking.entity.TimeTable">
-        <id property="id" column="table_id" />
-        <result property="date" column="date" />
-        <collection property="timeBlocks" resultMap="TimeBlockResult" />
-    </resultMap>
-
-    <resultMap id="TimeBlockResult"
-        type="com.magu1436.chronolist.timeblocking.entity.TimeBlock">
-        <id property="id" column="block_id" />
-        <result property="timeTableId" column="block_table_id" />
-        <result property="title" column="block_title" />
-        <result property="status" column="status" />
-        <association property="relatedSchedule" javaType="com.magu1436.chronolist.scheduler.entity.Schedule">
-            <id property="id" column="schedule_id" />
-            <result property="kind" column="kind" />
-            <result property="startAt" column="start_at" />
-            <result property="endAt" column="end_at" />
-            <result property="startDate" column="start_date" />
-            <result property="endDate" column="end_date" />
-            <result property="title" column="schedule_title" />
-        </association>
-        <result property="width" column="width" />
-        <result property="startAt" column="start_at" />
-        <!-- tasksは間違っている可能性あり -->
-        <collection property="tasks" ofType="string" column="task_title" />
-        <result property="color" column="color" />
-    </resultMap>
-
-    <select id="getTimeTableByDate" resultMap="TimeTableResult">
+    <select id="getTimeTableByDate" resultMap="TimeBlockingResultMap.TimeTableResult">
         SELECT
             table.id AS table_id, table.date,
             block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
