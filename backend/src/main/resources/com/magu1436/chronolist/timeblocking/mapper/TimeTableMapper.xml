@@ -50,4 +50,9 @@
         VALUES
         (#{date})
     </insert>
+
+    <update id="updateTimeTable">
+        UPDATE time_tables SET date = #{date}
+        WHERE id = #{id}
+    </update>
 </mapper>
