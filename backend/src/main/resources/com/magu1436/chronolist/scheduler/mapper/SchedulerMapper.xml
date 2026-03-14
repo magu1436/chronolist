@@ -20,9 +20,9 @@
     </select>
 
     <insert id="insertSchedule" useGeneratedKeys="true" keyProperty="id" parameterType="com.magu1436.chronolist.scheduler.entity.Schedule">
-        INSERT INTO schedule (kind, start_at, end_at, start_date, end_date, title)
+        INSERT INTO schedule (user_id, kind, start_at, end_at, start_date, end_date, title)
         VALUES
-        (#{kind}, #{startAt}, #{endAt}, #{startDate}, #{endDate}, #{title})
+        (#{userId}, #{kind}, #{startAt}, #{endAt}, #{startDate}, #{endDate}, #{title})
     </insert>
 
     <update id="updateSchedule" parameterType="com.magu1436.chronolist.scheduler.entity.Schedule">
