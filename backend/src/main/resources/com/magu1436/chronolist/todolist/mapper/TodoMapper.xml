@@ -36,9 +36,9 @@
             parameterType="com.magu1436.chronolist.todolist.entity.ToDoTask" 
             useGeneratedKeys="true" 
             keyProperty="id">
-        INSERT INTO todo_tasks (title, priority, due_kind, due_date, due_time, is_completed, memo)
+        INSERT INTO todo_tasks (user_id, title, priority, due_kind, due_date, due_time, is_completed, memo)
         VALUES
-        (#{title}, #{priority}, #{dueKind}, #{dueDate}, #{dueTime}, #{isCompleted}, #{memo})
+        (#{userId}, #{title}, #{priority}, #{dueKind}, #{dueDate}, #{dueTime}, #{isCompleted}, #{memo})
     </insert>
 
     <update id="updateTask" parameterType="com.magu1436.chronolist.todolist.entity.ToDoTask">
