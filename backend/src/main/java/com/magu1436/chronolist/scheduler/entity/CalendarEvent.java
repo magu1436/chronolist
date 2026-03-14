@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CalendarEvent {
     /** カレンダーイベントID */
-    private int id;
+    private Integer id;
+    /** ユーザーID */
+    private int userId;
     /** スケジュールID */
     private int scheduleId;
     /** スケジュールの種類 */
