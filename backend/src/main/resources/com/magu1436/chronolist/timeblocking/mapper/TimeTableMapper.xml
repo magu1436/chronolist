@@ -55,4 +55,8 @@
         UPDATE time_tables SET date = #{date}
         WHERE id = #{id}
     </update>
+
+    <delete id="deleteTimeTable" parameterType="int">
+        DELETE FROM time_tables WHERE id = #{id}
+    </delete>
 </mapper>
