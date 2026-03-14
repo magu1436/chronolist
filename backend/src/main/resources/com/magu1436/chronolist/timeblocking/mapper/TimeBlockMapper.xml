@@ -29,4 +29,11 @@
         VALUES
         (#{timeTableId}, #{title}, #{status}, #{scheduleId}, #{width}, #{startAt}, #{color})
     </insert>
+
+    <update id="updateTimeBlock">
+    </update>
+
+    <delete id="deleteTimeBlock" parameterType="int">
+        DELETE FROM time_blocks WHERE id = #{id}
+    </delete>
 </mapper>
