@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class ToDoTask {
     /** idの設定 */
     private Integer id;
+    /** ユーザーIDの設定 */
+    private int userId;
     /** タイトルの設定 */
     private String title;
     /** 期日の設定 */
