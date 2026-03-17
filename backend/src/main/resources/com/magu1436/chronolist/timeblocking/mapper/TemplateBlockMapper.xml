@@ -22,3 +22,7 @@
         UPDATE template_blocks SET title = #{title}, width = #{width}, color = #{color}
         WHERE id = #{id}
     </update>
+
+    <delete id="deleteTemplateBlock" parameterType="int">
+        DELETE FROM template_blocks WHERE id = #{id}
+    </delete>
