@@ -7,6 +7,8 @@ import TimeTableConfigure from "../contexts/TimeTableConfigure";
 
 type TimeBlockProps = {
     source: TimeBlockSource,
+    conlumnIndex?: number,
+    maxColumnIndex?: number,
     ref?: React.Ref<HTMLDivElement>,
 }
 
@@ -20,7 +22,7 @@ type TimeBlockProps = {
  * @param {TimeBlockProps} props
  * @returns {JSX.Element}描画する {@link TimeBlock}
  */
-const TimeBlock: FC<TimeBlockProps> = ({source, ref}) => {
+const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, ref}) => {
 
     const {
         setNodeRef,
@@ -65,6 +67,11 @@ const TimeBlock: FC<TimeBlockProps> = ({source, ref}) => {
         top = source.startAt.toMinutes() * (slotHeight / slotMinutes);
     }
 
+    let left;
+    if (source.status === "PLACED" && conlumnIndex && maxColumnIndex) {
+        left = `${(conlumnIndex / maxColumnIndex) * 100}%`;
+    }
+
     return (
         <Paper
             ref={mergedRef}
@@ -73,7 +80,7 @@ const TimeBlock: FC<TimeBlockProps> = ({source, ref}) => {
             sx={{
                 bgcolor: source.color,
                 color: "white",
-                width: "auto",
+                width: maxColumnIndex ? `${100 / maxColumnIndex}%` : "auto",
                 height: `${Math.floor(source.width * (slotHeight / slotMinutes))}px`,
                 display: "inline-flex",
                 maxWidth: "100%",
@@ -83,6 +90,7 @@ const TimeBlock: FC<TimeBlockProps> = ({source, ref}) => {
                 transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
                 position: source.status === "PLACED" ? "absolute" : "unset",
                 top,
+                left,
                 zIndex: 1,
 
                 opacity: (over && isDragging) ? 0 : 1,  // ドロップ中は透明
