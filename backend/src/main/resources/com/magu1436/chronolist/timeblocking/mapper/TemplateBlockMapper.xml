@@ -26,3 +26,4 @@
     <delete id="deleteTemplateBlock" parameterType="int">
         DELETE FROM template_blocks WHERE id = #{id}
     </delete>
+</mapper>
