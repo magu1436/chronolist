@@ -5,3 +5,9 @@
         SELECT id, title, width, color
         FROM template_blocks
     </select>
+
+    <select id="getTemplateBlockById" resultType="com.magu1436.chronolist.timeblocking.entity.TemplateBlock">
+        SELECT id, title, width, color
+        FROM template_blocks
+        WHERE id = #{id}
+    </select>
