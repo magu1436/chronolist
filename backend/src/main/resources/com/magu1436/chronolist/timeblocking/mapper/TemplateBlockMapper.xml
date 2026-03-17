@@ -11,3 +11,9 @@
         FROM template_blocks
         WHERE id = #{id}
     </select>
+
+    <insert id="insertTemplateBlock" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO template_blocks (title, width, color)
+        VALUES
+        (#{title}, #{width}, #{color})
+    </insert>
