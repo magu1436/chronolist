@@ -24,7 +24,8 @@ public class LoginUserDatailsServiceImpl implements UserDetailsService{
         Users authentication = loginMapper.getUsersByLoginId(loginId);
 
         if (authentication != null){
-            return new LoginUser(authentication.getLoginId(),
+            return new LoginUser(authentication.getId(),
+                                    authentication.getLoginId(),
                                     authentication.getPassword(),
                                     Collections.emptyList());
         } else {
