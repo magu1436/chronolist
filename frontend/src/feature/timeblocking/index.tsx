@@ -16,7 +16,30 @@ const TimeBlockingPage = () => {
     const timeTableSource: TimeTableSource = {
         id: 121,
         date: new Date(),
-        blocks: [],
+        blocks: [
+            {
+                id: 3,
+                timeTableId: 1,
+                status: "PLACED",
+                relatedSchedle: null,
+                width: 90,
+                startAt: new Time("1:30"),
+                tasks: [],
+                color: "red",
+                title: "test block 3",
+            },
+            {
+                id: 4,
+                timeTableId: 1,
+                status: "PLACED",
+                relatedSchedle: null,
+                width: 60,
+                startAt: new Time("2:30"),
+                tasks: [],
+                color: "blue",
+                title: "test block 4",
+            }
+        ],
     };
 
     const tableConfig = {
@@ -38,6 +61,17 @@ const TimeBlockingPage = () => {
         tasks: [],
         color: "red",
         title: "test block 1 test block 2 test block 3 test block 4",
+    },  
+    {
+        id: 2,
+        timeTableId: 1,
+        status: "HOLD",
+        relatedSchedle: null,
+        width: 150,
+        startAt: null,
+        tasks: [],
+        color: "red",
+        title: "test block 2",
     }]);
 
     return (

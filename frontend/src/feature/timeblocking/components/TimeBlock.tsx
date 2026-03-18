@@ -68,7 +68,11 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
     }
 
     let left;
-    if (source.status === "PLACED" && conlumnIndex && maxColumnIndex) {
+    if (
+        source.status === "PLACED" && 
+        conlumnIndex !== undefined &&
+        maxColumnIndex !== undefined
+    ) {
         left = `${(conlumnIndex / maxColumnIndex) * 100}%`;
     }
 
@@ -85,7 +89,6 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
                 display: "inline-flex",
                 maxWidth: "100%",
                 overflowWrap: "anywhere",
-                margin: "2px",
                 padding: "5px",
                 transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
                 position: source.status === "PLACED" ? "absolute" : "unset",

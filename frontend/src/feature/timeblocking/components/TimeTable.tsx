@@ -261,10 +261,6 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
      * グルーピングし, 分割して表示するための関数.
      */
     const blocksOnTableSorted = useCallback(() => {
-        let blockGroups: TimeBlockSource[][] = [];
-        let prevBlock: TimeBlockSource | null = null;
-        let prevGroup: TimeBlockSource[] = [];
-
         /**
          * ２つのブロックが時間軸上で重複しているかどうか比較し, 結果を返す関数
          * 
@@ -281,6 +277,9 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
 
         
         // 衝突が起こっているブロック同士をグルーピング
+        let blockGroups: TimeBlockSource[][] = [];
+        let prevBlock: TimeBlockSource | null = null;
+        let prevGroup: TimeBlockSource[] = [];
         for(const block of blocksOnTable.sort((b1, b2) => b1.startAt!.toMinutes() - b2.startAt!.toMinutes())){
             if (!prevBlock) {
                 prevBlock = block;
@@ -298,6 +297,10 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         if (prevGroup.length > 0) {
             blockGroups = [...blockGroups, prevGroup];
         }
+        blockGroups.forEach(group => group.forEach(block => console.log(block.id)));
+        console.log(`blockgroups len: ${blockGroups.length}`);
+        blockGroups.forEach(g => console.log(g.length));
+        console.log(`blockGroups: ${blockGroups}`)
 
         // 衝突が起こっているかどうかによって分割したタイムブロックのノードのリストを作成
         let blockNodes: ReactElement[] = [];
@@ -316,7 +319,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             columns.forEach((col, index) => {
                 blockNodes = [
                     ...blockNodes,
-                    ...col.map(b => <TimeBlock key={b.id} source={b} conlumnIndex={index} maxColumnIndex={col.length}/>)
+                    ...col.map(b => <TimeBlock key={b.id} source={b} conlumnIndex={index} maxColumnIndex={columns.length}/>)
                 ];
             });
         }
