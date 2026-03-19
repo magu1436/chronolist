@@ -16,6 +16,7 @@ const LoginPage = () => {
     const [ password, setPassword ] = useState<string>("");
 
     const handleLogin = async () => {
+        console.log("---ログイン処理を開始----------------------------------------")
         try {
             const res = await myAxios({
                 url: "/login",
@@ -41,6 +42,7 @@ const LoginPage = () => {
                 console.log("不明なエラー");
             }
         }
+        console.log("---ログイン処理を終了----------------------------------------")
     }
     
     return (
