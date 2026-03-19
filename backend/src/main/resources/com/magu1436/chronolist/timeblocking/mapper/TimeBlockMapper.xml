@@ -29,7 +29,9 @@
         (#{timeTableId}, #{title}, #{status}, #{relatedSchedule.id}, #{width}, #{startAt}, #{color})
     </insert>
 
-    <update id="updateTimeBlock">
+    <update id="updateTimeBlock" parameterType="com.magu1436.chronolist.timeblocking.entity.TimeBlock">
+        UPDATE time_blocks SET table_id = #{timeTableId}, title = #{title}, status = #{status}, schedule_id = #{relatedSchedule.id}, width = #{width}, start_at = #{startAt}, color = #{color}
+        WHERE id = #{id}
     </update>
 
     <delete id="deleteTimeBlock" parameterType="int">
