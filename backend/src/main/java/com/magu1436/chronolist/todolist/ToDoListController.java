@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.magu1436.chronolist.LoginUser;
 import com.magu1436.chronolist.todolist.entity.ToDoTask;
 import com.magu1436.chronolist.todolist.mapper.ToDoMapper;
 
@@ -42,8 +44,8 @@ public class ToDoListController {
      * @author milk0924
      */
     @GetMapping("getAll")
-    public ResponseEntity<List<ToDoTask>> getall(){
-        List<ToDoTask> tasks = mapper.getAllTasks();
+    public ResponseEntity<List<ToDoTask>> getall(@AuthenticationPrincipal LoginUser loginUser){
+        List<ToDoTask> tasks = mapper.getAllTasks(loginUser.getId());
         return ResponseEntity.ok(tasks);
     }
 
