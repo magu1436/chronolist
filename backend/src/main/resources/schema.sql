@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS schedule;
 -- scheduleテーブルの作成（H2 Database Ver）
 CREATE TABLE schedule (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT,            -- 一旦NULL許容で作成
+    user_id INT NOT NULL,
     kind VARCHAR(8),
     start_at TIMESTAMP,
     end_at TIMESTAMP,
@@ -14,7 +14,7 @@ CREATE TABLE schedule (
     end_date DATE,
     tz varchar(64) NOT NULL DEFAULT 'Asia/Tokyo',
     title VARCHAR(64) NOT NULL,
-    -- FOREIGN KEY (id) REFERENCES calendar_event(schedule_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- kindが「TIMED」か「ALL_DAY」のどちらかをとるための制約
     CONSTRAINT chk_kind_str CHECK (kind IN ('DATED', 'ALL_DAY')),
@@ -41,7 +41,6 @@ CREATE TABLE schedule (
 -- calendar_eventテーブルの作成（H2 Database Ver）
 CREATE TABLE calendar_event (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT,            -- 一旦NULL許容で作成
     schedule_id INT NOT NULL,
     color VARCHAR(16),
     memo TEXT,

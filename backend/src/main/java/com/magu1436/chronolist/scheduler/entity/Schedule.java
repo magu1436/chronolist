@@ -19,7 +19,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Schedule {
     /** スケジュールID */
-    private int id;
+    private Integer id;
+    /** ユーザーID */
+    private int userId;
     /** スケジュールの種類 */
     private ScheduleKind kind;
     /** 開始時刻 */
