@@ -267,7 +267,6 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             }}
         >
             {blocksOnTableSorted()}
-            {prevBlockSource && <TimeBlock source={prevBlockSource} />}
         </Box>
     )
 }
