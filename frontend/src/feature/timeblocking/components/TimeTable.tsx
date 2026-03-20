@@ -82,7 +82,10 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
      */
     const showPrevBlock = useCallback((startAt: Time, originalSource: TimeBlockSource) => {
         setPrevBlockSource(createPrevBlockSorce(startAt, originalSource));
-        setBlocksOnTable([...blocksOnTable, createPrevBlockSorce(startAt, originalSource)]);
+        setBlocksOnTable([
+            ...blocksOnTable,
+            createPrevBlockSorce(startAt, originalSource)
+        ]);
         setPrevPointTime(startAt);
         console.log("prevBlock shown");
     }, [blocksOnTable]);
@@ -147,9 +150,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         onDragEnd(e) {
             if (!e.active?.data.current) return;
             const originalSource: TimeBlockSource = e.active.data.current.source;
-            console.log(`originalSource: ${originalSource}`);
             const movedBlockId = originalSource.id;
-            console.log(`movedBlockId: ${movedBlockId}`);
             // removePrevBlock()メソッドでのリスト更新処理が上書きされるため, 必ずプレビューブロックも削除する必要がある？
             const filteredBlocks = blocksOnTable.filter(block => block.id !== movedBlockId && block.id !== PREVIEW_BLOCK_ID);
       
@@ -223,20 +224,24 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         if (prevGroup.length > 0) {
             blockGroups = [...blockGroups, prevGroup];
         }
-        blockGroups.forEach(g => console.log(g.map(b => b.id)));
+        console.log(`blockGroups: ${blockGroups.map(g => g.map(b => b.id))}`);
 
         // 衝突が起こっているかどうかによって分割したタイムブロックのノードのリストを作成
         let blockNodes: ReactElement[] = [];
         for(const group of blockGroups) {
+            console.log(`group: ${group.map(b => b.id)}`);
             let columns: TimeBlockSource[][] = [];
             for(const block of group) {
                 for(let i = 0; i < group.length; i++) {
+                    console.log(`columns: ${columns}`);
                     if (!columns[i]) {
                         columns[i] = [block];
                         break;
                     }
-                    if (columns[i].some(b => isConflict(b, block))) continue;
-                    columns[i] = [...columns[i], block];
+                    if (!columns[i].some(b => isConflict(b, block))) {
+                        columns[i] = [...columns[i], block];
+                        break;
+                    }
                 }
             }
             console.log(`columns: ${columns.map(c => c.map(b => b.id))}`);
