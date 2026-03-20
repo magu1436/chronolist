@@ -60,14 +60,16 @@ public class SchedulerController {
     /**
      * 予定登録API.
      * 新しいスケジュールおよびカレンダーイベントをDBに登録する
+     * @param loginUser ログイン中のユーザー
      * @param calendarEvent DBに登録したい {@code calendarEvent} エンティティ. {@code id} はDB登録時に自動生成されるため持たない
      * @return bodyに「登録した {@code calendarEvent} に自動で付与された {@code id} 」を持った {@code ResponseEntity} 
      * @author konoma1103
      */
     @PostMapping("register")
-    public ResponseEntity<Integer> insertEvent(@RequestBody CalendarEvent calendarEvent) {
-        // 受け取ったCalendarEventを元にScheduleを生成
+    public ResponseEntity<Integer> insertEvent(@AuthenticationPrincipal LoginUser loginUser, @RequestBody CalendarEvent calendarEvent) {
+        // 受け取ったCalendarEventを元にScheduleを生成(userIdは引数から取得)
         Schedule schedule = Schedule.builder()
+                                    .userId(loginUser.getId())
                                     .kind(calendarEvent.getKind())
                                     .startAt(calendarEvent.getStartAt())
                                     .endAt(calendarEvent.getEndAt())
