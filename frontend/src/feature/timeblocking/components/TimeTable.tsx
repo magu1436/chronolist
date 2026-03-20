@@ -10,87 +10,7 @@ import type { TimeBlockSource } from "../types/blockSourceTypes";
 import TimeBlock from "./TimeBlock";
 import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
 import BlocksAtField from "../contexts/BlocksAtField";
-
-
-/**
- * 一時間あたり目盛りを描画するコンポーネント.  
- */
-const HourScaleMark: FC<{ label: string }> = ({ label }) => {
-
-    const { gridSize, slotHeight } = useContext(TimeTableConfigure);
-
-    return (
-        <>
-            <Typography
-                variant="body2"
-                sx={{
-                    borderTop: gridSize,
-                    height: slotHeight,
-                }}>
-                    {label}
-            </Typography>
-        </>
-    );
-};
-
-
-/**
- * 小刻み目盛りを描画するコンポーネント.  
- * 
- * 時間表の小刻み目盛りを描画する.  
- * {@link HourScaleMark} よりも小さい目盛りを描画する.  
- */
-const SmallScaleMark: FC<{label: string}> = ({label}) => {
-
-    const { gridSize, slotHeight } = useContext(TimeTableConfigure);
-
-    return (
-        <>
-            <Typography
-                variant="caption"
-                sx={{
-                    borderTop: gridSize,
-                    height: slotHeight,
-                }}>
-                    {label}
-                </Typography>
-        </>
-    );
-}
-
-
-function* scaleRange(start: Time, end: Time, step: number) {
-    for (let i = start.toMinutes(); i <= end.toMinutes(); i += step) {
-        if (i % 60 === 0) {
-            yield (<HourScaleMark key={i} label={new Time(i).toString()} />);
-            continue;
-        }
-        yield (<SmallScaleMark key={i} label={new Time(i).toString()} />);
-    }
-}
-
-
-
-/**
- * 時間表の小刻み目盛りの凡例を描画するコンポーネント.
- * 
- * 一時間単位の目盛りは {@link HourScaleMark} を使用して描画され,  
- * そうでないスロットごとの目盛りは {@link SmallScaleMark} を使用して描画される.
- */
-const Legend = () => {
-
-    const {
-        startTime,
-        slotMinutes,
-    } = useContext(TimeTableConfigure);
-    const endTime = startTime.add(24 * 60);
-
-    return (
-        <Stack alignItems={"flex-end"}>
-            {Array.from(scaleRange(startTime, endTime, slotMinutes))}
-        </Stack>
-    )
-}
+import Legend from "./timeTableComponents/Legend";
 
 
 /**
@@ -227,7 +147,9 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         onDragEnd(e) {
             if (!e.active?.data.current) return;
             const originalSource: TimeBlockSource = e.active.data.current.source;
+            console.log(`originalSource: ${originalSource}`);
             const movedBlockId = originalSource.id;
+            console.log(`movedBlockId: ${movedBlockId}`);
             // removePrevBlock()メソッドでのリスト更新処理が上書きされるため, 必ずプレビューブロックも削除する必要がある？
             const filteredBlocks = blocksOnTable.filter(block => block.id !== movedBlockId && block.id !== PREVIEW_BLOCK_ID);
       
@@ -239,6 +161,10 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
                     ...filteredBlocks, 
                     {...prevBlockSource, id: movedBlockId}
                 ]);
+                console.log([
+                    ...filteredBlocks, 
+                    {...prevBlockSource, id: movedBlockId}
+                ].map(b => b.id));
                 console.log("Placed");
             // タイムテーブル上からブロック領域へ移動させた場合の処理
             } else if (originalSource.status === "PLACED") {
@@ -297,10 +223,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         if (prevGroup.length > 0) {
             blockGroups = [...blockGroups, prevGroup];
         }
-        blockGroups.forEach(group => group.forEach(block => console.log(block.id)));
-        console.log(`blockgroups len: ${blockGroups.length}`);
-        blockGroups.forEach(g => console.log(g.length));
-        console.log(`blockGroups: ${blockGroups}`)
+        blockGroups.forEach(g => console.log(g.map(b => b.id)));
 
         // 衝突が起こっているかどうかによって分割したタイムブロックのノードのリストを作成
         let blockNodes: ReactElement[] = [];
@@ -316,6 +239,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
                     columns[i] = [...columns[i], block];
                 }
             }
+            console.log(`columns: ${columns.map(c => c.map(b => b.id))}`);
             columns.forEach((col, index) => {
                 blockNodes = [
                     ...blockNodes,
