@@ -27,7 +27,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
     const [ blocksOnTable, setBlocksOnTable ] = useState<TimeBlockSource[]>(source.blocks);
     
     const prevPointTimeRef = useRef<Time | null>(null);
-    const [ prevBlockSource, setPrevBlockSource ] = useState<TimeBlockSource | null>(null);
+    const prevBlockSource = useRef<TimeBlockSource | null>(null);
     const draggingBlockSource = useRef<TimeBlockSource | null>(null);
 
     const {
@@ -72,8 +72,8 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
      */
     const removePrevBlock = useCallback(() => {
         prevPointTimeRef.current = null;
-        setPrevBlockSource(null);
-        if (blocksOnTable.find(b => b.id === PREVIEW_BLOCK_ID)) setBlocksOnTable(blocksOnTable.filter(b => b.id !== PREVIEW_BLOCK_ID));
+        prevBlockSource.current = null;
+        setBlocksOnTable((blocks) => blocks.filter(b => b.id !== PREVIEW_BLOCK_ID));
         console.log("prevBlock removed");
     }, [blocksAtField, blocksOnTable]);
 
@@ -81,7 +81,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
      * プレビューブロックを表示する
      */
     const showPrevBlock = useCallback((startAt: Time, originalSource: TimeBlockSource) => {
-        setPrevBlockSource(createPrevBlockSorce(startAt, originalSource));
+        prevBlockSource.current = createPrevBlockSorce(startAt, originalSource);
         setBlocksOnTable([
             ...blocksOnTable.filter(b => b.id !== originalSource.id),
             createPrevBlockSorce(startAt, originalSource)
@@ -95,7 +95,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
      */
     const movePrevBlock = useCallback((startAt: Time) => {
         // エラー処理
-        if (!prevBlockSource) {
+        if (!prevBlockSource.current) {
             console.log("prevBlockSource is null");
             return;
         }
@@ -107,11 +107,11 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         // カーソル移動時でも, 同じ時刻の範囲ならば何もしない(負荷軽減)
         if (prevPointTimeRef.current.toMinutes() === startAt.toMinutes()) return;
 
-        const movedPrevBlockSource: TimeBlockSource = {...prevBlockSource, startAt};
-        setPrevBlockSource(movedPrevBlockSource);
+        const movedPrevBlockSource: TimeBlockSource = {...prevBlockSource.current, startAt};
+        prevBlockSource.current = movedPrevBlockSource;
         setBlocksOnTable(blocksOnTable.map(b => b.id === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
         prevPointTimeRef.current = startAt;
-    }, [prevBlockSource, prevPointTimeRef.current, blocksOnTable]);
+    }, [prevBlockSource.current, prevPointTimeRef.current, blocksOnTable]);
 
     useDndMonitor({
         onDragStart(event) {
@@ -153,26 +153,15 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         },
         onDragEnd(e) {
             if (draggingBlockSource.current === null) return;
-            // removePrevBlock()メソッドでのリスト更新処理が上書きされるため, 必ずプレビューブロックも削除する必要がある？
-            const filteredBlocks = blocksOnTable.filter(block =>  block.id !== PREVIEW_BLOCK_ID);
             const movedBlockId: number = draggingBlockSource.current.id;
-      
+            const prevSource = prevBlockSource.current;
             removePrevBlock();
-
-            if (e.over && prevBlockSource) {
+            if (e.over && prevSource) {
                 setBlocksAtField(blocksAtField.filter(block => block.id !== movedBlockId));
-                setBlocksOnTable([
-                    ...filteredBlocks, 
-                    {...prevBlockSource, id: movedBlockId}
-                ]);
-                console.log([
-                    ...filteredBlocks, 
-                    {...prevBlockSource, id: movedBlockId}
-                ].map(b => b.id));
+                setBlocksOnTable((blocks) => [...blocks, {...prevSource, id: movedBlockId}]);
                 console.log("Placed");
             // タイムテーブル上からブロック領域へ移動させた場合の処理
             } else if (draggingBlockSource.current.status === "PLACED") {
-                setBlocksOnTable(filteredBlocks);
                 setBlocksAtField([
                     ...blocksAtField,
                     {...draggingBlockSource.current, id: movedBlockId, status: "HOLD"},
@@ -206,6 +195,8 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             const b2: startAndEnd = {start: block2.startAt!, end: new Time(block2.startAt!.toMinutes() + block2.width)};
             return b1.start < b2.end && b1.end > b2.start;
         }
+
+        blocksOnTable.forEach(block => console.log("block", block));
 
         
         // 衝突が起こっているブロック同士をグルーピング
