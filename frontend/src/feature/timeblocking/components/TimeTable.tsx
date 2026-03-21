@@ -26,7 +26,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
     // ブロックを並列に描画するロジックの生成時に使用する可能性があるため残しておく
     const [ blocksOnTable, setBlocksOnTable ] = useState<TimeBlockSource[]>(source.blocks);
     
-    const [ prevPointTime, setPrevPointTime ] = useState<Time | null>(null);
+    const prevPointTimeRef = useRef<Time | null>(null);
     const [ prevBlockSource, setPrevBlockSource ] = useState<TimeBlockSource | null>(null);
     const draggingBlockSource = useRef<TimeBlockSource | null>(null);
 
@@ -71,7 +71,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
      * プレビューブロックを削除する
      */
     const removePrevBlock = useCallback(() => {
-        setPrevPointTime(null);
+        prevPointTimeRef.current = null;
         setPrevBlockSource(null);
         if (blocksOnTable.find(b => b.id === PREVIEW_BLOCK_ID)) setBlocksOnTable(blocksOnTable.filter(b => b.id !== PREVIEW_BLOCK_ID));
         console.log("prevBlock removed");
@@ -86,7 +86,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             ...blocksOnTable.filter(b => b.id !== originalSource.id),
             createPrevBlockSorce(startAt, originalSource)
         ]);
-        setPrevPointTime(startAt);
+        prevPointTimeRef.current = startAt;
         console.log("prevBlock shown");
     }, [blocksOnTable]);
 
@@ -99,19 +99,19 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             console.log("prevBlockSource is null");
             return;
         }
-        if (prevPointTime === null) {
+        if (prevPointTimeRef.current === null) {
             console.log("prevPointTime is null");
             return;
         };
 
         // カーソル移動時でも, 同じ時刻の範囲ならば何もしない(負荷軽減)
-        if (prevPointTime.toMinutes() === startAt.toMinutes()) return;
+        if (prevPointTimeRef.current.toMinutes() === startAt.toMinutes()) return;
 
         const movedPrevBlockSource: TimeBlockSource = {...prevBlockSource, startAt};
         setPrevBlockSource(movedPrevBlockSource);
         setBlocksOnTable(blocksOnTable.map(b => b.id === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
-        setPrevPointTime(startAt);
-    }, [prevBlockSource, prevPointTime, blocksOnTable]);
+        prevPointTimeRef.current = startAt;
+    }, [prevBlockSource, prevPointTimeRef.current, blocksOnTable]);
 
     useDndMonitor({
         onDragStart(event) {
@@ -120,7 +120,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         },
         onDragMove(event) {
             // エラー処理
-            if (prevPointTime === null) {
+            if (prevPointTimeRef.current === null) {
                 console.log("prevPointTime is null");
                 return;
             };
