@@ -46,7 +46,6 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
     const {
         setNodeRef,
         rect,
-        active,
         isOver,
     } = useDroppable({
         id: TIMETABLE_ID,
