@@ -1,6 +1,6 @@
-import { useContext, useCallback, useState, type FC, type ReactElement } from "react";
+import { useContext, useCallback, useState, type FC, type ReactElement, useRef } from "react";
 import { useDroppable, useDndMonitor } from "@dnd-kit/core";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 
 import type { TimeTableSource } from "../types/timeTableSource";
 import { Time } from "@/utils/time";
@@ -28,6 +28,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
     
     const [ prevPointTime, setPrevPointTime ] = useState<Time | null>(null);
     const [ prevBlockSource, setPrevBlockSource ] = useState<TimeBlockSource | null>(null);
+    const draggingBlockSource = useRef<TimeBlockSource | null>(null);
 
     const {
         gridSize,
@@ -83,7 +84,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
     const showPrevBlock = useCallback((startAt: Time, originalSource: TimeBlockSource) => {
         setPrevBlockSource(createPrevBlockSorce(startAt, originalSource));
         setBlocksOnTable([
-            ...blocksOnTable,
+            ...blocksOnTable.filter(b => b.id !== originalSource.id),
             createPrevBlockSorce(startAt, originalSource)
         ]);
         setPrevPointTime(startAt);
@@ -114,6 +115,10 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
     }, [prevBlockSource, prevPointTime, blocksOnTable]);
 
     useDndMonitor({
+        onDragStart(event) {
+            if (!event.active?.data?.current) return;
+            draggingBlockSource.current = event.active.data.current.source as TimeBlockSource;
+        },
         onDragMove(event) {
             // エラー処理
             if (prevPointTime === null) {
@@ -148,11 +153,10 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             removePrevBlock();
         },
         onDragEnd(e) {
-            if (!e.active?.data.current) return;
-            const originalSource: TimeBlockSource = e.active.data.current.source;
-            const movedBlockId = originalSource.id;
+            if (draggingBlockSource.current === null) return;
             // removePrevBlock()メソッドでのリスト更新処理が上書きされるため, 必ずプレビューブロックも削除する必要がある？
-            const filteredBlocks = blocksOnTable.filter(block => block.id !== movedBlockId && block.id !== PREVIEW_BLOCK_ID);
+            const filteredBlocks = blocksOnTable.filter(block =>  block.id !== PREVIEW_BLOCK_ID);
+            const movedBlockId: number = draggingBlockSource.current.id;
       
             removePrevBlock();
 
@@ -168,18 +172,20 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
                 ].map(b => b.id));
                 console.log("Placed");
             // タイムテーブル上からブロック領域へ移動させた場合の処理
-            } else if (originalSource.status === "PLACED") {
+            } else if (draggingBlockSource.current.status === "PLACED") {
                 setBlocksOnTable(filteredBlocks);
                 setBlocksAtField([
                     ...blocksAtField,
-                    {...originalSource, id: movedBlockId, status: "HOLD"},
+                    {...draggingBlockSource.current, id: movedBlockId, status: "HOLD"},
                 ]);
                 console.log("Held");
             }
+            draggingBlockSource.current = null;
         },
         onDragCancel() {
             console.log("Dragging Cancelled");
             removePrevBlock();
+            draggingBlockSource.current = null;
         },
     });
 
