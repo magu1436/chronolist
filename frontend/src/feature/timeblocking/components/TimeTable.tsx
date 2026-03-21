@@ -82,13 +82,13 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
      */
     const showPrevBlock = useCallback((startAt: Time, originalSource: TimeBlockSource) => {
         prevBlockSource.current = createPrevBlockSorce(startAt, originalSource);
-        setBlocksOnTable([
-            ...blocksOnTable.filter(b => b.id !== originalSource.id),
+        setBlocksOnTable((blocks) => [
+            ...blocks.filter(b => b.id !== originalSource.id),
             createPrevBlockSorce(startAt, originalSource)
         ]);
         prevPointTimeRef.current = startAt;
         console.log("prevBlock shown");
-    }, [blocksOnTable]);
+    }, []);
 
     /**
      * プレビューブロックを移動する
@@ -108,10 +108,10 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         if (prevPointTimeRef.current.toMinutes() === startAt.toMinutes()) return;
 
         const movedPrevBlockSource: TimeBlockSource = {...prevBlockSource.current, startAt};
+        setBlocksOnTable((blocks) => blocks.map(b => b.id === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
         prevBlockSource.current = movedPrevBlockSource;
-        setBlocksOnTable(blocksOnTable.map(b => b.id === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
         prevPointTimeRef.current = startAt;
-    }, [prevBlockSource.current, prevPointTimeRef.current, blocksOnTable]);
+    }, []);
 
     useDndMonitor({
         onDragStart(event) {
@@ -140,12 +140,13 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         onDragOver(event) {
             // ドラッグオーバー開始時にはプレビューブロックを表示
             if (event.over) {
-                if (!rect?.current?.top || !event.active?.rect?.current?.translated || !event.active.data.current) {
+                if (draggingBlockSource.current === null) throw new Error("draggingBlockSource is null");
+                if (!rect?.current?.top || !event.active?.rect?.current?.translated) {
                     console.log("Invalid event");
                     return;
                 };
                 const cursorTime = pointToTime(event.active.rect.current.translated.top - rect.current.top);
-                showPrevBlock(cursorTime, event.active.data.current.source);
+                showPrevBlock(cursorTime, draggingBlockSource.current);
                 return;
             }
             // ドラッグオーバー終了時にはプレビューブロックを削除
@@ -157,14 +158,15 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             const prevSource = prevBlockSource.current;
             removePrevBlock();
             if (e.over && prevSource) {
-                setBlocksAtField(blocksAtField.filter(block => block.id !== movedBlockId));
+                setBlocksAtField((blocks) => blocks.filter(block => block.id !== movedBlockId));
                 setBlocksOnTable((blocks) => [...blocks, {...prevSource, id: movedBlockId}]);
                 console.log("Placed");
             // タイムテーブル上からブロック領域へ移動させた場合の処理
             } else if (draggingBlockSource.current.status === "PLACED") {
-                setBlocksAtField([
-                    ...blocksAtField,
-                    {...draggingBlockSource.current, id: movedBlockId, status: "HOLD"},
+                const draggingSource = draggingBlockSource.current;
+                setBlocksAtField((blocks) => [
+                    ...blocks,
+                    {...draggingSource, id: movedBlockId, status: "HOLD", startAt: null},
                 ]);
                 console.log("Held");
             }
@@ -196,8 +198,6 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
             return b1.start < b2.end && b1.end > b2.start;
         }
 
-        blocksOnTable.forEach(block => console.log("block", block));
-
         
         // 衝突が起こっているブロック同士をグルーピング
         let blockGroups: TimeBlockSource[][] = [];
@@ -220,16 +220,13 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
         if (prevGroup.length > 0) {
             blockGroups = [...blockGroups, prevGroup];
         }
-        console.log(`blockGroups: ${blockGroups.map(g => g.map(b => b.id))}`);
 
         // 衝突が起こっているかどうかによって分割したタイムブロックのノードのリストを作成
         let blockNodes: ReactElement[] = [];
         for(const group of blockGroups) {
-            console.log(`group: ${group.map(b => b.id)}`);
             let columns: TimeBlockSource[][] = [];
             for(const block of group) {
                 for(let i = 0; i < group.length; i++) {
-                    console.log(`columns: ${columns}`);
                     if (!columns[i]) {
                         columns[i] = [block];
                         break;
@@ -240,7 +237,6 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
                     }
                 }
             }
-            console.log(`columns: ${columns.map(c => c.map(b => b.id))}`);
             columns.forEach((col, index) => {
                 blockNodes = [
                     ...blockNodes,

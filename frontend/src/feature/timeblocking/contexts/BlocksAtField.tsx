@@ -4,7 +4,7 @@ import type { TimeBlockSource } from "../types/blockSourceTypes";
 
 const BlocksAtField = createContext<{
     blocksAtField: TimeBlockSource[],
-    setBlocksAtField: (blocks: TimeBlockSource[]) => void
+    setBlocksAtField: (blocks: TimeBlockSource[] | ((blocks: TimeBlockSource[]) => TimeBlockSource[])) => void
 }>({
     blocksAtField: [],
     setBlocksAtField: () => {}
