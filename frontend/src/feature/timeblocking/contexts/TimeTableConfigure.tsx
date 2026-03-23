@@ -2,6 +2,7 @@ import { Time } from "@/utils/time";
 import { createContext } from "react";
 
 const TimeTableConfigure = createContext<{
+    timeTableId: number,
     gridSize: number,
     tableHeight: number,
     tableWidth: number | string,
@@ -9,6 +10,7 @@ const TimeTableConfigure = createContext<{
     slotMinutes: number,
     slotHeight: number
 }>({
+    timeTableId: 0,
     gridSize: 1,
     tableHeight: 2000,
     tableWidth: "100%",

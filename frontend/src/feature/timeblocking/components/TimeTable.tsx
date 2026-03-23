@@ -1,182 +1,41 @@
-import { useContext, useCallback, useState, type FC, type ReactElement, useRef } from "react";
-import { useDroppable, useDndMonitor } from "@dnd-kit/core";
+import { useContext, useCallback, type FC, type ReactElement} from "react";
+import { useDroppable } from "@dnd-kit/core";
 import { Box, Stack } from "@mui/material";
 
-import type { TimeTableSource } from "../types/timeTableSource";
 import { Time } from "@/utils/time";
 import { TIMETABLE_ID } from "../static/droppableId";
 import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import type { TimeBlockSource } from "../types/blockSourceTypes";
 import TimeBlock from "./TimeBlock";
-import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
-import BlocksAtField from "../contexts/BlocksAtField";
 import Legend from "./timeTableComponents/Legend";
-
+import BlockRepositories from "../contexts/BlockRepositories";
 
 /**
- * タイムテーブルを描画するコンポーネント.
+ * タイムテーブル本体を描画するコンポーネント.
  *   
- * {@link TimeBlockSource} に基づいてタイムテーブルを描画する.  
+ * {@link BlockRepositories} コンテキストで提供された `blocksOnTable` に  
+ * 基づいてタイムテーブルを描画する.  
  * {@link useDroppable} を使用してドラッグ先として利用可能なコンポーネントとして  
  * 実装されており, {@link TimeBlock} を設置できる.  
  */
-const Table: FC<{source: TimeTableSource}> = ({source}) => {
+const Table: FC = () => {
 
-    // テーブル上のブロックのリストのステート
-    // ブロックを並列に描画するロジックの生成時に使用する可能性があるため残しておく
-    const [ blocksOnTable, setBlocksOnTable ] = useState<TimeBlockSource[]>(source.blocks);
-    
-    const prevPointTimeRef = useRef<Time | null>(null);
-    const prevBlockSource = useRef<TimeBlockSource | null>(null);
-    const draggingBlockSource = useRef<TimeBlockSource | null>(null);
+    const {
+        blocksOnTable,
+        setBlocksOnTable,   // タイムテーブル取得機能を実装した際に使用
+    } = useContext(BlockRepositories);
 
     const {
         gridSize,
         tableHeight,
         tableWidth,
         slotHeight,
-        slotMinutes,
     } = useContext(TimeTableConfigure);
 
     const {
-        blocksAtField,
-        setBlocksAtField,
-    } = useContext(BlocksAtField);
-
-    const {
         setNodeRef,
-        rect,
-        isOver,
     } = useDroppable({
         id: TIMETABLE_ID,
-    });
-
-    const pointToTime = useCallback((relativePointerY: number) => {
-        const time = new Time(Math.floor(relativePointerY / slotHeight) * slotMinutes);
-        return time;
-    }, []);
-
-    const createPrevBlockSorce = useCallback((startAt: Time, originalSource: TimeBlockSource): TimeBlockSource => {
-        console.log(`original: ${originalSource}`);
-        return {
-            ...originalSource,
-            id: PREVIEW_BLOCK_ID,
-            timeTableId: source.id,
-            status: "PLACED",
-            startAt,
-        };
-    }, []);
-
-    /**
-     * プレビューブロックを削除する
-     */
-    const removePrevBlock = useCallback(() => {
-        prevPointTimeRef.current = null;
-        prevBlockSource.current = null;
-        setBlocksOnTable((blocks) => blocks.filter(b => b.id !== PREVIEW_BLOCK_ID));
-        console.log("prevBlock removed");
-    }, [blocksAtField, blocksOnTable]);
-
-    /**
-     * プレビューブロックを表示する
-     */
-    const showPrevBlock = useCallback((startAt: Time, originalSource: TimeBlockSource) => {
-        prevBlockSource.current = createPrevBlockSorce(startAt, originalSource);
-        setBlocksOnTable((blocks) => [
-            ...blocks.filter(b => b.id !== originalSource.id),
-            createPrevBlockSorce(startAt, originalSource)
-        ]);
-        prevPointTimeRef.current = startAt;
-        console.log("prevBlock shown");
-    }, []);
-
-    /**
-     * プレビューブロックを移動する
-     */
-    const movePrevBlock = useCallback((startAt: Time) => {
-        // エラー処理
-        if (!prevBlockSource.current) {
-            console.log("prevBlockSource is null");
-            return;
-        }
-        if (prevPointTimeRef.current === null) {
-            console.log("prevPointTime is null");
-            return;
-        };
-
-        // カーソル移動時でも, 同じ時刻の範囲ならば何もしない(負荷軽減)
-        if (prevPointTimeRef.current.toMinutes() === startAt.toMinutes()) return;
-
-        const movedPrevBlockSource: TimeBlockSource = {...prevBlockSource.current, startAt};
-        setBlocksOnTable((blocks) => blocks.map(b => b.id === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
-        prevBlockSource.current = movedPrevBlockSource;
-        prevPointTimeRef.current = startAt;
-    }, []);
-
-    useDndMonitor({
-        onDragStart(event) {
-            if (!event.active?.data?.current) return;
-            draggingBlockSource.current = event.active.data.current.source as TimeBlockSource;
-        },
-        onDragMove(event) {
-            // エラー処理
-            if (prevPointTimeRef.current === null) {
-                console.log("prevPointTime is null");
-                return;
-            };
-            if (!rect?.current?.top || !event.active?.rect?.current?.translated || !event.active.data.current) {
-                console.log("Invalid event");
-                return;
-            };
-            if (!isOver) return;
-
-            const cursorTime = pointToTime(event.active.rect.current.translated.top - rect.current.top);
-            // カーソル操作時, そのカーソルに対応した時刻を出力するテスト用のコード
-            // テスト時に便利なため残しておく
-            // console.log(`cursorTime: ${cursorTime}`);
-
-            movePrevBlock(cursorTime);
-        },
-        onDragOver(event) {
-            // ドラッグオーバー開始時にはプレビューブロックを表示
-            if (event.over) {
-                if (draggingBlockSource.current === null) throw new Error("draggingBlockSource is null");
-                if (!rect?.current?.top || !event.active?.rect?.current?.translated) {
-                    console.log("Invalid event");
-                    return;
-                };
-                const cursorTime = pointToTime(event.active.rect.current.translated.top - rect.current.top);
-                showPrevBlock(cursorTime, draggingBlockSource.current);
-                return;
-            }
-            // ドラッグオーバー終了時にはプレビューブロックを削除
-            removePrevBlock();
-        },
-        onDragEnd(e) {
-            if (draggingBlockSource.current === null) return;
-            const movedBlockId: number = draggingBlockSource.current.id;
-            const prevSource = prevBlockSource.current;
-            removePrevBlock();
-            if (e.over && prevSource) {
-                setBlocksAtField((blocks) => blocks.filter(block => block.id !== movedBlockId));
-                setBlocksOnTable((blocks) => [...blocks, {...prevSource, id: movedBlockId}]);
-                console.log("Placed");
-            // タイムテーブル上からブロック領域へ移動させた場合の処理
-            } else if (draggingBlockSource.current.status === "PLACED") {
-                const draggingSource = draggingBlockSource.current;
-                setBlocksAtField((blocks) => [
-                    ...blocks,
-                    {...draggingSource, id: movedBlockId, status: "HOLD", startAt: null},
-                ]);
-                console.log("Held");
-            }
-            draggingBlockSource.current = null;
-        },
-        onDragCancel() {
-            console.log("Dragging Cancelled");
-            removePrevBlock();
-            draggingBlockSource.current = null;
-        },
     });
 
     /**
@@ -264,7 +123,7 @@ const Table: FC<{source: TimeTableSource}> = ({source}) => {
 }
 
 
-const TimeTable: FC<{source: TimeTableSource}> = ({source}) => {
+const TimeTable: FC = () => {
 
     return (
         <Box
@@ -281,11 +140,10 @@ const TimeTable: FC<{source: TimeTableSource}> = ({source}) => {
                 alignItems={"flex-start"}
             >
                 <Legend />
-                <Table source={source} />
+                <Table/>
             </Stack>
         </Box>
     )
 }
-
 
 export default TimeTable;

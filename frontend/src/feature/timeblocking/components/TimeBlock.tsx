@@ -96,7 +96,7 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
                 left,
                 zIndex: 1,
 
-                opacity: (over && isDragging) ? 0 : 1,  // ドロップ中は透明
+                opacity: (over && isDragging) ? 0.5 : 1,  // ドロップ中は透明
             }}
         >
             <Typography variant="h6">{source.title}</Typography>
