@@ -4,6 +4,7 @@ import java.util.List;
 import java.time.LocalDate;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.magu1436.chronolist.LoginUser;
 import com.magu1436.chronolist.scheduler.entity.CalendarEvent;
 import com.magu1436.chronolist.scheduler.entity.Schedule;
 import com.magu1436.chronolist.scheduler.mapper.SchedulerMapper;
@@ -45,8 +47,8 @@ public class SchedulerController {
      * @author konoma1103
      */ 
     @GetMapping("getEvents/{startDate}/{endDate}")
-    public ResponseEntity<List<CalendarEvent>> getEvent(@PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate){
-        List<CalendarEvent> calendarEvents = mapper.getCalendarEventsFromTo(startDate, endDate);
+    public ResponseEntity<List<CalendarEvent>> getEvent(@AuthenticationPrincipal LoginUser loginuser, @PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate){
+        List<CalendarEvent> calendarEvents = mapper.getCalendarEventsFromTo(loginuser.getId(), startDate, endDate);
         return ResponseEntity.ok(calendarEvents);
     }
 
