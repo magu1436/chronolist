@@ -165,7 +165,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
     useDndMonitor({
         onDragStart(event) {
             if (!event.active?.data?.current) return;
-            const dbs = event.active.data.current.source as TimeBlockSource;
+            const dbs = { ...event.active.data.current.source } as TimeBlockSource;
             if (templateBlocks.find(b => b.clientId === dbs.clientId)) {
                 dbs.clientId = uuidv4();
             };
