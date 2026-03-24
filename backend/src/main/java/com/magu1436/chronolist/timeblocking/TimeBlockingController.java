@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.magu1436.chronolist.scheduler.mapper.SchedulerMapper;
 import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
@@ -46,7 +47,7 @@ public class TimeBlockingController {
      * <p>このメソッドは,Json形式のデータを受け取り,そのデータに紐づけられた{@code TimeTable}を返す.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
-     * date: DateString
+     *   date: DateString
      * }</pre>
      * @param  date 参照する日付情報.
      * <ul>
@@ -54,7 +55,7 @@ public class TimeBlockingController {
      * </ul>
      * @return 該当の{@code TimeTable}とHTTPStatusを返すレスポンス.
      * 正常終了時は{@code 200 OK}を返す.
-     * @throws ResponseStatusException 指定された日付から取得したタイムテーブルが{@code Null}だったとき.({@code 404 Not Found})
+     * 指定された日付から取得したタイムテーブルが{@code Null}だったとき.({@code 404 Not Found})
      * @author milk0924
      */
     @GetMapping("timeTable/getByDate")
@@ -73,7 +74,7 @@ public class TimeBlockingController {
      * <p>このメソッドは,Json形式のデータを受け取り,そのデータをDBに登録し,登録されたときにそのタイムテーブルに登録されたIDを返却する.</p>
      * <h3>リクエストJsonの形</h3>
      * <pre> {
-     * date: DateString
+     *   date: DateString
      * }</pre>
      * @param timeTable 渡された日付を元に作成されたタイムテーブル
      * <ul>
@@ -131,16 +132,6 @@ public class TimeBlockingController {
 	 * tasks: List<{@link TimeBlockTask}>,
 	 * color: String
      * }</pre>
-     * @param timeBlock Jsonの内容が入れられた{@code TimeBlock}.詳細は{@link TimeBlock}.
-     * <ul>
-     * <li> {@code TimeBlock}:{@code TimeTableId}はこのタイムブロックを保存するタイムテーブルのIDが渡される. </li>
-     * <li> {@code TimeBlock}:(titeleとrelatedscheduleについて)参照:{@link TimeBlock}</li>
-     * </ul>
-     * @return 対応するHTTPStatusを返す.
-     * 正常終了時は{@code 200 Ok}を返す.
-     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
-     * @author milk0924
-     */
     @PutMapping("timeBlock/update")
     public ResponseEntity<Void> update(@RequestBody TimeBlock timeBlock){
         if(ExistsTimeBlockById(timeBlock.getId())){
@@ -157,16 +148,15 @@ public class TimeBlockingController {
      * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code status:TimeBlockStatus}のみを渡されたJsonのデータに更新する.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
-     * id: int,
-	 * status: TimeBlockStatus
+     *   id: int,
+	 *   status: TimeBlockStatus
      * }</pre>
      * @param timmeBlock Jsonの値が保存されている{@code timeBlock}.
      * <ul>
      * <li> {@code timeBlock}:Jsonで渡される以外の情報は持っていない. 参照:{@link TimeBlock}</li>
      * </ul>
      * @return 対応するHTTPStatusを返す.
-     * 正常終了時は{@code 200 Ok}を返す.
-     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
+     * 正常終了時は{@code 200 Ok}を返す. 指定するIDのデータが見つからないとき({@code 404 Not Found})
      * @author milk0924
      */
     @PutMapping("timeBlock/update/status")
@@ -186,16 +176,15 @@ public class TimeBlockingController {
      * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code startAt: TimeString}のみを渡されたJsonのデータに更新する.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
-     * id: int,
-	 * startAt: TimeString
+     *   id: int,
+	 *   startAt: TimeString
      * }</pre>
      * @param timeBlock Jsonの値が保存されている{@code timeBlock}.
      * <ul>
      * <li> {@code timeBlock}:Jsonで渡される以外の情報は持っていない. 参照:{@link TimeBlock}</li>
      * </ul>
      * @return 対応するHTTPStatusを返す.
-     * 正常終了時は{@code 200 Ok}を返す.
-     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
+     * 正常終了時は{@code 200 Ok}を返す.指定するIDのデータが見つからないとき({@code 404 Not Found})
      * @author milk0924
      */
     @PutMapping("timeBlock/update/startAt")
@@ -216,12 +205,11 @@ public class TimeBlockingController {
      * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code TimeBlock}を削除する.また,そのブロックに紐づけられたタスクデータ,{@code relatedschedule}がある場合はそれらも削除される.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
-     * id: int
+     *   id: int
      * }</pre>
      * @param timeBlock Jsonの値が保存されている{@code timeBlock}.
      * @return 対応するHTTPStatusを返す.
-     * 正常終了時は{@code 204 No Content}を返す.
-     * @throws ResponseStatusException 指定するIDのデータが見つからないとき({@code 404 Not Found})
+     * 正常終了時は{@code 204 No Content}を返す.指定するIDのデータが見つからないとき({@code 404 Not Found})
      * @author milk0924
      */
     @DeleteMapping("timeBlock/delete")
@@ -296,9 +284,9 @@ public class TimeBlockingController {
      * <p>このメソッドはJsonの内容を受け取り,その内容を保存した新しいテンプレートブロックをDBに保存する.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
-     * title: String,
-	 * width: int,
-	 * color: String
+     *   title: String,
+	 *   width: int,
+	 *   color: String
      * }</pre>
      * @param templateBlock Jsonの内容が保存された{@code templateBlock}.詳細は{@link TemplateBlock}.
      * <ul>
@@ -319,15 +307,15 @@ public class TimeBlockingController {
      * <p>このメソッドはJsonの内容を受け取り,その内容を指定のIDに対応するテンプレートブロックに反映する.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
-     * id: int,
-	 * title: String,
-	 * width: int,
-	 * color: String
+     *   id: int,
+	 *   title: String,
+	 *   width: int,
+	 *   color: String
      * }</pre>
      * @param templateBlock Jsonの内容が保存された{@code TemplateBlock}.詳細は{@link TemplateBlock}.
      * @return 対応するHTTPStatusを返すレスポンス.
-     * 正常終了時は{@code 204 No Content}を返します
-     * @throws ResponseStatusException 指定するIDのテンプレートブロックが見つからなかったとき{@code 404 Not Found}
+     * 正常終了時は{@code 204 No Content}を返します.
+     * 指定するIDのテンプレートブロックが見つからなかったとき{@code 404 Not Found}
      * @author milk0924
      */
     @PutMapping("templateBlock/update")
@@ -344,12 +332,12 @@ public class TimeBlockingController {
      * テンプレートブロックをDBから削除する
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
-     * id: int
+     *   id: int
      * }</pre>
      * @param templateBlock Jsonの内容が保存された{@code TemplateBlock}.詳細は{@link TemplateBlock}.>
      * @return 対応するHTTPStatusを返すレスポンス.
-     * 正常終了時は{@code 204 No Content}を返します
-     * @throws ResponseStatusException 指定するIDのテンプレートブロックが見つからなかったとき{@code 404 Not Found}
+     * 正常終了時は{@code 204 No Content}を返します.
+     * 指定するIDのテンプレートブロックが見つからなかったとき{@code 404 Not Found}
      * @author milk0924
      */
     @DeleteMapping("templateBlock/delete")
