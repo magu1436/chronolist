@@ -39,6 +39,7 @@ public class SchedulerController {
     /** 
      * 特定期間のカレンダーイベント取得API.
      * DBに登録されているカレンダーイベントのうち, 指定した期間のカレンダーイベントを返す
+     * @param loginUser ログイン中のユーザー
      * @param startDate 指定期間の開始日
      * @param endDate 指定期間の終了日
      * @return 指定期間に一致したカレンダーイベントのリスト, 
@@ -47,22 +48,28 @@ public class SchedulerController {
      * @author konoma1103
      */ 
     @GetMapping("getEvents/{startDate}/{endDate}")
-    public ResponseEntity<List<CalendarEvent>> getEvent(@AuthenticationPrincipal LoginUser loginuser, @PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate){
-        List<CalendarEvent> calendarEvents = mapper.getCalendarEventsFromTo(loginuser.getId(), startDate, endDate);
+    public ResponseEntity<List<CalendarEvent>> getEvent(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable("startDate") LocalDate startDate,
+            @PathVariable("endDate") LocalDate endDate
+        ){
+        List<CalendarEvent> calendarEvents = mapper.getCalendarEventsFromTo(loginUser.getId(), startDate, endDate);
         return ResponseEntity.ok(calendarEvents);
     }
 
     /**
      * 予定登録API.
      * 新しいスケジュールおよびカレンダーイベントをDBに登録する
+     * @param loginUser ログイン中のユーザー
      * @param calendarEvent DBに登録したい {@code calendarEvent} エンティティ. {@code id} はDB登録時に自動生成されるため持たない
      * @return bodyに「登録した {@code calendarEvent} に自動で付与された {@code id} 」を持った {@code ResponseEntity} 
      * @author konoma1103
      */
     @PostMapping("register")
-    public ResponseEntity<Integer> insertEvent(@RequestBody CalendarEvent calendarEvent) {
-        // 受け取ったCalendarEventを元にScheduleを生成
+    public ResponseEntity<Integer> insertEvent(@AuthenticationPrincipal LoginUser loginUser, @RequestBody CalendarEvent calendarEvent) {
+        // 受け取ったCalendarEventを元にScheduleを生成(userIdは引数から取得)
         Schedule schedule = Schedule.builder()
+                                    .userId(loginUser.getId())
                                     .kind(calendarEvent.getKind())
                                     .startAt(calendarEvent.getStartAt())
                                     .endAt(calendarEvent.getEndAt())
