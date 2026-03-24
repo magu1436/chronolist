@@ -14,6 +14,7 @@ import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
+import com.magu1436.chronolist.timeblocking.mapper.TimeBlockTaskMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class TimeBlockingController {
      * 使うマッパー
      */
     private final TemplateBlockMapper templateBlockMapper;
+    private final TimeBlockTaskMapper timeBlockTaskMapper;
     private final TimeBlockMapper timeBlockMapper;
     private final TimeTableMapper timeTableMapper;
     private final SchedulerMapper schedulerMapper;
@@ -97,7 +99,7 @@ public class TimeBlockingController {
 	 * status: TimeBlockStatus,
 	 * width: int,
 	 * startAt: TimeString,
-	 * tasks: List<String>,
+	 * tasks: List<{@link TimeBlockTask}>,
 	 * color: String
      * }</pre>
      * @param timeBlock Jsonの内容が入れられた{@code TimeBlock}.{@code int id}は登録のときに自動で渡される.詳細は{@link TimeBlock}.
@@ -125,7 +127,7 @@ public class TimeBlockingController {
 	 * status: TimeBlockStatus,
 	 * width: int,
 	 * startAt: TimeString,
-	 * tasks: List<String>,
+	 * tasks: List<{@link TimeBlockTask}>,
 	 * color: String
      * }</pre>
      * @param timeBlock Jsonの内容が入れられた{@code TimeBlock}.詳細は{@link TimeBlock}.
