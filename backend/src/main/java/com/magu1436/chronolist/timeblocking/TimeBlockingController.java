@@ -362,6 +362,16 @@ public class TimeBlockingController {
     }
 
     /**
+     * TimeBlockTaskの存在をIDによって確かめるメソッド
+     * @param id
+     * @return boolean
+     */
+    private boolean ExistsTimeBlockTaskById(Integer id){
+        TimeBlockTask timeBlockTaskGotById = timeBlockTaskMapper.getTimeBlockTaskById(id);
+        return timeBlockTaskGotById != null;
+    }
+
+    /**
      * TemplateBlockの存在を確かめるメソッド
      * @param id
      * @return boolean

@@ -15,6 +15,13 @@ import com.magu1436.chronolist.timeblocking.entity.TimeBlockTask;
 public interface TimeBlockTaskMapper {
 
     /**
+     * 引数で指定した{@code id}をもつ{@link TimeBlockTask}をデータベースから取得する
+     * 
+     * @param id 取得する{@link TimeBlockTask}のID
+     */
+    TimeBlockTask getTimeBlockTaskById(int id);
+
+    /**
      * 新しい{@link TimeBlockTask}をデータベースに登録する。
      * <p>
      * 登録時に生成された ID は、引数の {@link TimeBlockTask} に設定される。
