@@ -4,7 +4,8 @@ import type { Time } from "@/utils/time"
 
 
 export type TimeBlockSource = {
-    id: number,
+    id?: number,
+    clientId: string,
     timeTableId: number | null,
     title: string,
     status: TimeBlockStatus,
@@ -16,7 +17,8 @@ export type TimeBlockSource = {
 }
 
 export type TemplateBlockSource = {
-    id: number,
+    id?: number,
+    clientId: string,
     title: string,
     width: number,
     color: string,

@@ -16,7 +16,7 @@ const TemplateBlock: FC<TemplateBlockProps> = ({source}) => {
         attributes,
         listeners,
     } = useDraggable({
-        id: `templateblock-${source.id}`,
+        id: source.clientId,
         data: { source },
     });
 

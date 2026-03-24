@@ -32,7 +32,7 @@ const BlocksArea = () => {
             >
                 <Stack>
                     {blocksAtField.map(b => (
-                        <TimeBlock key={b.id} source={b} />
+                        <TimeBlock key={b.clientId} source={b} />
                     ))}
                 </Stack>
             </Paper>

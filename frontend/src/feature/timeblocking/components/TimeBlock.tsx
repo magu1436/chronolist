@@ -30,7 +30,7 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
         attributes,
         isDragging,
     } = useDraggable({
-        id: `timeblock-${source.id}`,
+        id: source.clientId,
         data: { source },
     });
 

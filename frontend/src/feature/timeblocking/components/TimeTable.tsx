@@ -99,7 +99,7 @@ const Table: FC = () => {
             columns.forEach((col, index) => {
                 blockNodes = [
                     ...blockNodes,
-                    ...col.map(b => <TimeBlock key={b.id} source={b} conlumnIndex={index} maxColumnIndex={columns.length}/>)
+                    ...col.map(b => <TimeBlock key={b.clientId} source={b} conlumnIndex={index} maxColumnIndex={columns.length}/>)
                 ];
             });
         }

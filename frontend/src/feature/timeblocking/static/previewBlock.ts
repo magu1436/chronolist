@@ -1,1 +1,1 @@
-export const PREVIEW_BLOCK_ID: number = -1;
+export const PREVIEW_BLOCK_ID: string = "preview-block";

@@ -30,7 +30,7 @@ const TemplateBlockArea = () => {
         >
             <Stack>
                 {templateBlocks.map(b => (
-                    <TemplateBlock key={b.id} source={b} />
+                    <TemplateBlock key={b.clientId} source={b} />
                 ))}
             </Stack>
         </Paper>

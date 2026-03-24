@@ -1,5 +1,6 @@
 import { defaultDropAnimationSideEffects, DragOverlay, useDndMonitor } from "@dnd-kit/core"
 import { useRef, type FC, type ReactElement, useContext, useCallback, useState } from "react"
+import { v4 as uuidv4 } from "uuid";
 
 import type { TemplateBlockSource, TimeBlockSource } from "../types/blockSourceTypes";
 import { Time } from "@/utils/time";
@@ -12,6 +13,7 @@ import { BLOCKS_AREA_ID, TEMPLATE_BLOCKS_AREA_ID, TIMETABLE_ID } from "../static
 const testBlocksOnTable: TimeBlockSource[] = [
     {
         id: 3,
+        clientId: uuidv4(),
         timeTableId: 1,
         status: "PLACED",
         relatedSchedle: null,
@@ -23,6 +25,7 @@ const testBlocksOnTable: TimeBlockSource[] = [
     },
     {
         id: 4,
+        clientId: uuidv4(),
         timeTableId: 1,
         status: "PLACED",
         relatedSchedle: null,
@@ -35,6 +38,7 @@ const testBlocksOnTable: TimeBlockSource[] = [
 ];
 const testBlocksAtField: TimeBlockSource[] = [{
         id: 1,
+        clientId: uuidv4(),
         timeTableId: null,
         status: "HOLD",
         relatedSchedle: null,
@@ -46,6 +50,7 @@ const testBlocksAtField: TimeBlockSource[] = [{
     },
     {
         id: 2,
+        clientId: uuidv4(),
         timeTableId: null,
         status: "HOLD",
         relatedSchedle: null,
@@ -60,12 +65,14 @@ const testBlocksAtField: TimeBlockSource[] = [{
 const testTemplateBlocks: TemplateBlockSource[] = [
     {
         id: 1,
+        clientId: uuidv4(),
         title: "test template block 1",
         width: 120,
         color: "cyan",
     },
     {
         id: 2,
+        clientId: uuidv4(),
         title: "test template block 2",
         width: 150,
         color: "cyan",
@@ -105,7 +112,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
         console.log(`original: ${originalSource}`);
         return {
             ...originalSource,
-            id: PREVIEW_BLOCK_ID,
+            clientId: PREVIEW_BLOCK_ID,
             timeTableId: timeTableId,
             status: "PLACED",
             startAt,
@@ -118,7 +125,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
     const removePrevBlock = useCallback(() => {
         prevPointTimeRef.current = null;
         prevBlockSource.current = null;
-        setBlocksOnTable((blocks) => blocks.filter(b => b.id !== PREVIEW_BLOCK_ID));
+        setBlocksOnTable((blocks) => blocks.filter(b => b.clientId !== PREVIEW_BLOCK_ID));
         console.log("prevBlock removed");
     }, [blocksAtField, blocksOnTable]);
 
@@ -128,7 +135,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
     const showPrevBlock = useCallback((startAt: Time, originalSource: TimeBlockSource) => {
         prevBlockSource.current = createPrevBlockSorce(startAt, originalSource);
         setBlocksOnTable((blocks) => [
-            ...blocks.filter(b => b.id !== originalSource.id),
+            ...blocks.filter(b => b.clientId !== originalSource.clientId),
             createPrevBlockSorce(startAt, originalSource)
         ]);
         prevPointTimeRef.current = startAt;
@@ -153,7 +160,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
         if (prevPointTimeRef.current.toMinutes() === startAt.toMinutes()) return;
 
         const movedPrevBlockSource: TimeBlockSource = {...prevBlockSource.current, startAt};
-        setBlocksOnTable((blocks) => blocks.map(b => b.id === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
+        setBlocksOnTable((blocks) => blocks.map(b => b.clientId === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
         prevBlockSource.current = movedPrevBlockSource;
         prevPointTimeRef.current = startAt;
     }, []);
@@ -211,18 +218,18 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
             if (draggingBlockSource.current === null) {
                 throw new Error("draggingBlockSource is null");
             }
-            const movedBlockId: number = draggingBlockSource.current.id
+            const movedBlockId: string = draggingBlockSource.current.clientId;
             const prevSource = prevBlockSource.current;
             removePrevBlock();
             switch (e.over?.id) {
                 case TIMETABLE_ID:
                     if (prevSource === null) throw new Error("prevSource is null");
-                    setBlocksAtField((blocks) => blocks.filter(block => block.id !== movedBlockId));
-                    setBlocksOnTable((blocks) => [...blocks, {...prevSource, id: movedBlockId}]);
+                    setBlocksAtField((blocks) => blocks.filter(block => block.clientId !== movedBlockId));
+                    setBlocksOnTable((blocks) => [...blocks, {...prevSource, clientId: movedBlockId}]);
                     console.log("Placed");
                     break;
                 case BLOCKS_AREA_ID:
-                    if (!blocksAtField.find(b => b.id === movedBlockId)) {
+                    if (!blocksAtField.find(b => b.clientId === movedBlockId)) {
                         const heldBlockSource: TimeBlockSource = {
                             ...draggingBlockSource.current,
                             status: "HOLD",
