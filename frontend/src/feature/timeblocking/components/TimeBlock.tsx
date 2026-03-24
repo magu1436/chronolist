@@ -85,7 +85,6 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
             {...listeners}
             sx={{
                 width: maxColumnIndex ? `${100 / maxColumnIndex}%` : "auto",
-                height: `${Math.floor(source.width * (slotHeight / slotMinutes))}px`,
                 maxWidth: "100%",
                 transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
                 position: source.status === "PLACED" ? "absolute" : "unset",

@@ -1,7 +1,8 @@
 import { Paper, Typography } from "@mui/material"
-import { type ComponentPropsWithoutRef, type FC } from "react";
+import { useContext, type ComponentPropsWithoutRef, type FC } from "react";
 
 import type { TimeBlockSource } from "../types/blockSourceTypes";
+import TimeTableConfigure from "../contexts/TimeTableConfigure";
 
 
 type TimeBlockViewProps = {
@@ -10,6 +11,14 @@ type TimeBlockViewProps = {
 } & ComponentPropsWithoutRef<typeof Paper>;
 
 const TimeBlockView: FC<TimeBlockViewProps> = ({ source, ref, sx, ...rest }) => {
+    
+    const {
+        slotHeight,
+        slotMinutes,
+    } = useContext(TimeTableConfigure);
+
+    const height = Math.floor(source.width * (slotHeight / slotMinutes));
+    
     return (
         <Paper
             ref={ref}
@@ -21,6 +30,7 @@ const TimeBlockView: FC<TimeBlockViewProps> = ({ source, ref, sx, ...rest }) => 
                 overflowWrap: "anywhere",
                 padding: "5px",
                 zIndex: 1,
+                height,
                 ...sx,
             }}
         >
