@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS schedule;
 -- scheduleテーブルの作成（H2 Database Ver）
 CREATE TABLE schedule (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
+    -- user_id INT NOT NULL,
     kind VARCHAR(8),
     start_at TIMESTAMP,
     end_at TIMESTAMP,
@@ -14,7 +14,7 @@ CREATE TABLE schedule (
     end_date DATE,
     tz varchar(64) NOT NULL DEFAULT 'Asia/Tokyo',
     title VARCHAR(64) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    -- FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- kindが「TIMED」か「ALL_DAY」のどちらかをとるための制約
     CONSTRAINT chk_kind_str CHECK (kind IN ('DATED', 'ALL_DAY')),
@@ -51,7 +51,7 @@ CREATE TABLE calendar_event (
 -- todo_tasksテーブルの作成
 CREATE TABLE todo_tasks (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
+    -- user_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
     priority VARCHAR(8) NOT NULL,
     due_kind VARCHAR(16) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE todo_tasks (
     due_time TIME,
     is_completed BOOLEAN DEFAULT FALSE,
     memo TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    -- FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- priorityがとれる値の制約
     CONSTRAINT chk_priority CHECK (priority IN ('HIGH', 'MIDDLE', 'LOW')),
