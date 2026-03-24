@@ -57,7 +57,8 @@ public class ToDoListController {
      * @author milk0924
      */
     @PostMapping("register")
-    public ResponseEntity<Integer> register(@RequestBody ToDoTask task){
+    public ResponseEntity<Integer> register(@AuthenticationPrincipal LoginUser loginUser, @RequestBody ToDoTask task){
+        task.setUserId(loginUser.getId());
         mapper.insertTask(task);
         Integer id = task.getId();
         return ResponseEntity.ok(id);
