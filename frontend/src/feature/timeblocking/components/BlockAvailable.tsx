@@ -166,7 +166,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
         onDragStart(event) {
             if (!event.active?.data?.current) return;
             const dbs = { ...event.active.data.current.source } as TimeBlockSource;
-            if (templateBlocks.find(b => b.clientId === dbs.clientId)) {
+            if (dbs.fromTemplateBlockSource) {
                 dbs.clientId = uuidv4();
             };
             draggingBlockSource.current = dbs;
@@ -227,6 +227,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                         startAt: prevPointTimeRef.current,
                         timeTableId,
                         status: "PLACED",
+                        fromTemplateBlockSource: undefined,
                     };
                     setBlocksAtField((blocks) => blocks.filter(block => block.clientId !== movedBlockSource.clientId));
                     setBlocksOnTable((blocks) => [...blocks, newBlockSource]);
@@ -239,15 +240,16 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                             status: "HOLD",
                             startAt: null,
                             timeTableId: null,
+                            fromTemplateBlockSource: undefined,
                         };
                         setBlocksAtField((blocks) => [...blocks, heldBlockSource]);
                     };
                     console.log("Held");
                     break;
                 case TEMPLATE_BLOCKS_AREA_ID:
+                    if (movedBlockSource.fromTemplateBlockSource) return;
                     const newTemplateBlock: TemplateBlockSource = {
                         ...draggingBlockSource.current,
-                        clientId: uuidv4(),
                         id: undefined,
                     };
                     setBlocksAtField((blocks) => blocks.filter(block => block.clientId !== movedBlockSource.clientId));

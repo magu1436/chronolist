@@ -14,6 +14,7 @@ export type TimeBlockSource = {
     startAt: Time | null,
     tasks: string[],
     color: string,
+    fromTemplateBlockSource?: TemplateBlockSource,
 }
 
 export type TemplateBlockSource = {

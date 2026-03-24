@@ -10,15 +10,6 @@ type TemplateBlockProps = {
 };
 
 const TemplateBlock: FC<TemplateBlockProps> = ({source}) => {
-    
-    const {
-        setNodeRef,
-        attributes,
-        listeners,
-    } = useDraggable({
-        id: source.clientId,
-        data: { source },
-    });
 
     const blockSource: TimeBlockSource = {
         ...source,
@@ -27,7 +18,17 @@ const TemplateBlock: FC<TemplateBlockProps> = ({source}) => {
         startAt: null,
         tasks: [],
         timeTableId: null,
+        fromTemplateBlockSource: source,
     }
+    
+    const {
+        setNodeRef,
+        attributes,
+        listeners,
+    } = useDraggable({
+        id: source.clientId,
+        data: { source: blockSource },
+    });
 
     return (
         <TimeBlockView
