@@ -22,6 +22,6 @@ public class TimeBlock {
     private Schedule relatedSchedule;
     private int width;
     private LocalTime startAt;
-    private List<String> tasks;
+    private List<TimeBlockTask> tasks;
     private String color;
 }
