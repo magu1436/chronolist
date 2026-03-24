@@ -226,7 +226,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                     })
                 }}
             >
-                {draggingBlockSource.current && <TimeBlockView source={draggingBlockSource.current} />}
+                {draggingBlockSource.current && <TimeBlockView source={draggingBlockSource.current} sx={{opacity: prevBlockSource.current ? 0 : 1}} />}
             </DragOverlay>
         </BlockRepositories>
     )
