@@ -35,7 +35,7 @@ const testBlocksOnTable: TimeBlockSource[] = [
 ];
 const testBlocksAtField: TimeBlockSource[] = [{
         id: 1,
-        timeTableId: 1,
+        timeTableId: null,
         status: "HOLD",
         relatedSchedle: null,
         width: 120,
@@ -46,7 +46,7 @@ const testBlocksAtField: TimeBlockSource[] = [{
     },
     {
         id: 2,
-        timeTableId: 1,
+        timeTableId: null,
         status: "HOLD",
         relatedSchedle: null,
         width: 150,
@@ -211,6 +211,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                             ...draggingBlockSource.current,
                             status: "HOLD",
                             startAt: null,
+                            timeTableId: null,
                         };
                         setBlocksAtField((blocks) => [...blocks, heldBlockSource]);
                     };

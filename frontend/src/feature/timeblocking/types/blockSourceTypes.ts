@@ -5,7 +5,7 @@ import type { Time } from "@/utils/time"
 
 export type TimeBlockSource = {
     id: number,
-    timeTableId: number,
+    timeTableId: number | null,
     title: string,
     status: TimeBlockStatus,
     relatedSchedle: ScheduleSource | null,
