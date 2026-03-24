@@ -31,22 +31,16 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     
-        private final AuthenticationConfiguration authenticationConfiguration;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final PasswordEncoder passwordEncoder;
 
-        // PasswordEncoderを定義(BCryptに変更予定)
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-            return NoOpPasswordEncoder.getInstance();
-        }
-
-        // NoOpPasswordEncoderを使うように明示的に宣言
-        @Bean
-        public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-            authProvider.setUserDetailsService(userDetailsService);
-            authProvider.setPasswordEncoder(passwordEncoder());
-            return authProvider;
-        }
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder); // フィールドを使用
+        return authProvider;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
