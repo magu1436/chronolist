@@ -6,6 +6,7 @@ import TimeTableConfigure from "./contexts/TimeTableConfigure";
 import { Time } from "@/utils/time";
 import BlockAvailable from "./components/BlockAvailable";
 import BlocksArea from "./components/BlocksArea";
+import TemplateBlockArea from "./components/TemplateBlockArea";
 
 
 const TimeBlockingPage = () => {
@@ -30,7 +31,16 @@ const TimeBlockingPage = () => {
                 <BlockAvailable>
                     <Stack direction={"row"}>
                         <Box sx={{height: "100vh", width: "50vw"}}><TimeTable /></Box>
-                        <Box sx={{height: "100vh", width: "50vw"}}><BlocksArea /></Box>
+                        <Stack
+                            sx={{
+                                height: "100vh",
+                                width: "50vw",
+                                border: "1px solid red",
+                            }}
+                        >
+                            <BlocksArea />
+                            <TemplateBlockArea />
+                        </Stack>
                     </Stack>
                 </BlockAvailable>
             </TimeTableConfigure>

@@ -1,7 +1,7 @@
 import { defaultDropAnimationSideEffects, DragOverlay, useDndMonitor } from "@dnd-kit/core"
 import { useRef, type FC, type ReactElement, useContext, useCallback, useState } from "react"
 
-import type { TimeBlockSource } from "../types/blockSourceTypes";
+import type { TemplateBlockSource, TimeBlockSource } from "../types/blockSourceTypes";
 import { Time } from "@/utils/time";
 import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
@@ -57,6 +57,21 @@ const testBlocksAtField: TimeBlockSource[] = [{
     }
 ];
 
+const testTemplateBlocks: TemplateBlockSource[] = [
+    {
+        id: 1,
+        title: "test template block 1",
+        width: 120,
+        color: "cyan",
+    },
+    {
+        id: 2,
+        title: "test template block 2",
+        width: 150,
+        color: "cyan",
+    }
+];
+
 type BlockAvailableProps = {
     children?: ReactElement,
 }
@@ -69,6 +84,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
 
     const [ blocksOnTable, setBlocksOnTable ] = useState<TimeBlockSource[]>(testBlocksOnTable);
     const [ blocksAtField, setBlocksAtField ] = useState<TimeBlockSource[]>(testBlocksAtField);
+    const [ templateBlocks, setTemplateBlocks ] = useState<TemplateBlockSource[]>(testTemplateBlocks);
 
     const prevPointTimeRef = useRef<Time | null>(null);
     const prevBlockSource = useRef<TimeBlockSource | null>(null);
@@ -235,6 +251,8 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
             setBlocksOnTable,
             blocksAtField,
             setBlocksAtField,
+            templateBlocks,
+            setTemplateBlocks
         }}>
             {children}
             <DragOverlay
