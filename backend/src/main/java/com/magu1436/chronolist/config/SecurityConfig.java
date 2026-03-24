@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -14,12 +16,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.magu1436.chronolist.CustomFailureHandler;
 import com.magu1436.chronolist.CustomSuccessHandler;
 import com.magu1436.chronolist.JsonLoginFilter;
-
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,20 +31,22 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
+        private final AuthenticationConfiguration authenticationConfiguration;
 
-    // コンストラクタ：Springから2つの部品を同時にもらう
-    public SecurityConfig(
-        AuthenticationConfiguration authenticationConfiguration,
-        PasswordEncoder passwordEncoder,
-        UserDetailsService userDetailsService
-    ) {
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.passwordEncoder = passwordEncoder; 
-        this.userDetailsService = userDetailsService;
-    }
+        // PasswordEncoderを定義(BCryptに変更予定)
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+            return NoOpPasswordEncoder.getInstance();
+        }
+
+        // NoOpPasswordEncoderを使うように明示的に宣言
+        @Bean
+        public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+            authProvider.setUserDetailsService(userDetailsService);
+            authProvider.setPasswordEncoder(passwordEncoder());
+            return authProvider;
+        }
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
