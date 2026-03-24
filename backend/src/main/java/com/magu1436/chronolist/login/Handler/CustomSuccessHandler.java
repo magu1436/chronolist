@@ -1,4 +1,4 @@
-package com.magu1436.chronolist;
+package com.magu1436.chronolist.login.Handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

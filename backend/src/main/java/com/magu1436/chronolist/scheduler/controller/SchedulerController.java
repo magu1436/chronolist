@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.magu1436.chronolist.LoginUser;
+import com.magu1436.chronolist.login.LoginUser;
 import com.magu1436.chronolist.scheduler.entity.CalendarEvent;
 import com.magu1436.chronolist.scheduler.entity.Schedule;
 import com.magu1436.chronolist.scheduler.mapper.SchedulerMapper;

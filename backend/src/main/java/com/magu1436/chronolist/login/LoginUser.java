@@ -1,4 +1,4 @@
-package com.magu1436.chronolist;
+package com.magu1436.chronolist.login;
 
 import java.util.Collection;
 
