@@ -37,9 +37,4 @@
     <delete id="deleteTimeBlock" parameterType="int">
         DELETE FROM time_blocks WHERE id = #{id}
     </delete>
-
-    <update id="updateTimeBlockTasks">
-        UPDATE time_block_tasks SET title = #{tasks}
-        WHERE time_block_id = #{timeBlockId}
-    </update>
 </mapper>
