@@ -6,4 +6,10 @@
         FROM users
         WHERE login_id = #{loginId}
     </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.magu1436.chronolist.login.entity.Users">
+        INSERT INTO users (login_id, password, role)
+        VALUES
+        (#{loginId}, #{password}, #{role})
+    </insert>
 </mapper>
