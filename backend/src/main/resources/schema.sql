@@ -101,7 +101,8 @@ CREATE TABLE time_blocks (
 
 -- time_block_tasksテーブルの作成
 CREATE TABLE time_block_tasks (
-    time_block_id INT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    time_block_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
     FOREIGN KEY (time_block_id) REFERENCES time_blocks(id)
 );
