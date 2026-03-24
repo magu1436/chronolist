@@ -7,6 +7,7 @@ import ToDoListPage from "@/feature/todolist";
 import SchedulerPage from "@/feature/schesuler";
 import HomePage from "@/feature/home";
 import LoginPage from "@/feature/login";
+import SingnUpPage from "@/feature/signup";
 
 
 const routesBasic = createBrowserRouter(
@@ -19,6 +20,7 @@ const routesBasic = createBrowserRouter(
             <Route path="/todolist" element={<ToDoListPage />} />
             <Route path="/scheduler" element={<SchedulerPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SingnUpPage />} />
         </>
     )
 );

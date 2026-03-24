@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.magu1436.chronolist.LoginUser;
+import com.magu1436.chronolist.login.LoginUser;
 import com.magu1436.chronolist.todolist.entity.ToDoTask;
 import com.magu1436.chronolist.todolist.mapper.ToDoMapper;
 

@@ -9,6 +9,7 @@ const HomePage = () => {
 
     return (
         <div className={classNames("d-flex", "flex-column", "align-items-center")}>
+            <Button className="m-1" onClick={() => {nav("/signup")}}>新規登録</Button>
             <Button className="m-1" onClick={() => {nav("/login")}}>ログイン</Button>
             <Button className="m-1" onClick={() => {nav("/todolist")}}>ToDoリスト</Button>
             <Button className="m-1" onClick={() => {nav("/scheduler")}}>スケジューラ</Button>
