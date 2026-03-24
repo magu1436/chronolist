@@ -6,7 +6,7 @@ import { Time } from "@/utils/time";
 import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
 import BlockRepositories from "../contexts/BlockRepositories";
-import TimeBlock from "./TimeBlock";
+import TimeBlockView from "./TimeBlockView";
 
 const testBlocksOnTable: TimeBlockSource[] = [
     {
@@ -226,7 +226,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                     })
                 }}
             >
-                {draggingBlockSource.current && <TimeBlock source={draggingBlockSource.current} />}
+                {draggingBlockSource.current && <TimeBlockView source={draggingBlockSource.current} />}
             </DragOverlay>
         </BlockRepositories>
     )

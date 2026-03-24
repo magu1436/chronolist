@@ -4,6 +4,7 @@ import { useDraggable } from "@dnd-kit/core";
 
 import { type TimeBlockSource } from "../types/blockSourceTypes";
 import TimeTableConfigure from "../contexts/TimeTableConfigure";
+import TimeBlockView from "./TimeBlockView";
 
 type TimeBlockProps = {
     source: TimeBlockSource,
@@ -77,30 +78,22 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
     }
 
     return (
-        <Paper
+        <TimeBlockView
+            source={source}
             ref={mergedRef}
             {...attributes}
             {...listeners}
             sx={{
-                bgcolor: source.color,
-                color: "white",
                 width: maxColumnIndex ? `${100 / maxColumnIndex}%` : "auto",
                 height: `${Math.floor(source.width * (slotHeight / slotMinutes))}px`,
-                display: "inline-flex",
                 maxWidth: "100%",
-                overflowWrap: "anywhere",
-                padding: "5px",
                 transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
                 position: source.status === "PLACED" ? "absolute" : "unset",
                 top,
                 left,
-                zIndex: 1,
-
                 opacity: (over && isDragging) ? 0.5 : 1,  // ドロップ中は透明
             }}
-        >
-            <Typography variant="h6">{source.title}</Typography>
-        </Paper>
+        />
     );
 };
 
