@@ -239,7 +239,7 @@ public class TimeBlockingController {
     }
 
     /**
-     * 受け取ったブロックタスクをDBに登録する
+     * {@code TimeBlockTask}をDBに登録する
      * <p>このメソッドはJsonの内容を受け取り,その内容を保存した新しいブロックタスクをDBに保存する.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
@@ -258,6 +258,24 @@ public class TimeBlockingController {
     public ResponseEntity<Integer> registerTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
         timeBlockTaskMapper.insertTimeBlockTask(timeBlockTask);
         return ResponseEntity.status(HttpStatus.CREATED).body(timeBlockTask.getId());
+    }
+
+    /**
+     * {@code TimeBlockTask}をDBから削除する.
+     * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code TimeBlockTask}を削除する.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * id: int
+     * }</pre>
+     * @param timeBlockTask Jsonの値が保存されている{@code timeBlockTask}.
+     * @return 対応するHTTPStatusを返す.
+     * 正常終了時は{@code 204 No Content}を返す.
+     * @author konoma1103
+     */
+    @DeleteMapping("timeBlockTask/delete")
+    public ResponseEntity<Void> deleteTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
+        timeBlockTaskMapper.deleteTimeBlockTask(timeBlockTask.getId());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
