@@ -30,7 +30,7 @@ const TimeBlockingPage = () => {
                 <BlockAvailable>
                     <Stack direction={"row"}>
                         <Box sx={{height: "100vh", width: "50vw"}}><TimeTable /></Box>
-                        <BlocksArea />
+                        <Box sx={{height: "100vh", width: "50vw"}}><BlocksArea /></Box>
                     </Stack>
                 </BlockAvailable>
             </TimeTableConfigure>

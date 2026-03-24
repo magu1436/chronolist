@@ -7,6 +7,7 @@ import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
 import BlockRepositories from "../contexts/BlockRepositories";
 import TimeBlockView from "./TimeBlockView";
+import { BLOCKS_AREA_ID, TEMPLATE_BLOCKS_AREA_ID, TIMETABLE_ID } from "../static/droppableId";
 
 const testBlocksOnTable: TimeBlockSource[] = [
     {
@@ -147,55 +148,76 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
             draggingBlockSource.current = event.active.data.current.source as TimeBlockSource;
         },
         onDragMove(event) {
-            // エラー処理
-            if (prevPointTimeRef.current === null) {
-                console.log("prevPointTime is null");
-                return;
-            };
-            if (!event.over?.rect.top || !event.active?.rect?.current?.translated || !event.active.data.current) {
-                console.log("Invalid event");
-                return;
-            };
+            switch (event.over?.id) {
+                case TIMETABLE_ID:
+                    if (prevPointTimeRef.current === null) {
+                        console.log("prevPointTime is null");
+                        return;
+                    };
+                    if (!event.over?.rect.top || !event.active?.rect?.current?.translated || !event.active.data.current) {
+                        console.log("Invalid event");
+                        return;
+                    };
+                    const cursorTime = pointToTime(event.active.rect.current.translated.top - event.over.rect.top);
+                    // カーソル操作時, そのカーソルに対応した時刻を出力するテスト用のコード
+                    // テスト時に便利なため残しておく
+                    // console.log(`cursorTime: ${cursorTime}`);
 
-            const cursorTime = pointToTime(event.active.rect.current.translated.top - event.over.rect.top);
-            // カーソル操作時, そのカーソルに対応した時刻を出力するテスト用のコード
-            // テスト時に便利なため残しておく
-            // console.log(`cursorTime: ${cursorTime}`);
-
-            movePrevBlock(cursorTime);
+                    movePrevBlock(cursorTime);
+                    break;
+                case BLOCKS_AREA_ID:
+                    break;
+                case TEMPLATE_BLOCKS_AREA_ID:
+                    break;
+            }
         },
         onDragOver(event) {
-            // ドラッグオーバー開始時にはプレビューブロックを表示
-            if (event.over) {
-                if (draggingBlockSource.current === null) throw new Error("draggingBlockSource is null");
-                if (!event.over.rect.top || !event.active?.rect?.current?.translated) {
-                    console.log("Invalid event");
-                    return;
-                };
-                const cursorTime = pointToTime(event.active.rect.current.translated.top - event.over.rect.top);
-                showPrevBlock(cursorTime, draggingBlockSource.current);
-                return;
+            switch (event.over?.id) {
+                case TIMETABLE_ID:
+                    // ドラッグオーバー開始時にプレビューブロックを表示
+                    if (draggingBlockSource.current === null) throw new Error("draggingBlockSource is null");
+                    if (!event.over.rect.top || !event.active?.rect?.current?.translated) {
+                        console.log("Invalid event");
+                        return;
+                    };
+                    const cursorTime = pointToTime(event.active.rect.current.translated.top - event.over.rect.top);
+                    showPrevBlock(cursorTime, draggingBlockSource.current);
+                    break;
+                case BLOCKS_AREA_ID:
+                    removePrevBlock();
+                    break;
+                case TEMPLATE_BLOCKS_AREA_ID:
+                    removePrevBlock();
+                    break;
             }
-            // ドラッグオーバー終了時にはプレビューブロックを削除
-            removePrevBlock();
         },
         onDragEnd(e) {
-            if (draggingBlockSource.current === null) return;
-            const movedBlockId: number = draggingBlockSource.current.id;
+            if (draggingBlockSource.current === null) {
+                throw new Error("draggingBlockSource is null");
+            }
+            const movedBlockId: number = draggingBlockSource.current.id
             const prevSource = prevBlockSource.current;
             removePrevBlock();
-            if (e.over && prevSource) {
-                setBlocksAtField((blocks) => blocks.filter(block => block.id !== movedBlockId));
-                setBlocksOnTable((blocks) => [...blocks, {...prevSource, id: movedBlockId}]);
-                console.log("Placed");
-            // タイムテーブル上からブロック領域へ移動させた場合の処理
-            } else if (draggingBlockSource.current.status === "PLACED") {
-                const draggingSource = draggingBlockSource.current;
-                setBlocksAtField((blocks) => [
-                    ...blocks,
-                    {...draggingSource, id: movedBlockId, status: "HOLD", startAt: null},
-                ]);
-                console.log("Held");
+            switch (e.over?.id) {
+                case TIMETABLE_ID:
+                    if (prevSource === null) throw new Error("prevSource is null");
+                    setBlocksAtField((blocks) => blocks.filter(block => block.id !== movedBlockId));
+                    setBlocksOnTable((blocks) => [...blocks, {...prevSource, id: movedBlockId}]);
+                    console.log("Placed");
+                    break;
+                case BLOCKS_AREA_ID:
+                    if (!blocksAtField.find(b => b.id === movedBlockId)) {
+                        const heldBlockSource: TimeBlockSource = {
+                            ...draggingBlockSource.current,
+                            status: "HOLD",
+                            startAt: null,
+                        };
+                        setBlocksAtField((blocks) => [...blocks, heldBlockSource]);
+                    };
+                    console.log("Held");
+                    break;
+                case TEMPLATE_BLOCKS_AREA_ID:
+                    break;
             }
             draggingBlockSource.current = null;
         },

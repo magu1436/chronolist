@@ -25,7 +25,8 @@ const BlocksArea = () => {
                 sx = {{
                     height: "100%",
                     width: "100%",
-                    margin: 1,
+                    padding: 1,
+                    backgroundColor: "lightgreen",
                 }}
             >
                 <Stack>
