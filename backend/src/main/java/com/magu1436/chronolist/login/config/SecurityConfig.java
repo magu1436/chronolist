@@ -1,4 +1,4 @@
-package com.magu1436.chronolist.config;
+package com.magu1436.chronolist.login.config;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.magu1436.chronolist.CustomFailureHandler;
-import com.magu1436.chronolist.CustomSuccessHandler;
-import com.magu1436.chronolist.JsonLoginFilter;
+import com.magu1436.chronolist.login.JsonLoginFilter;
+import com.magu1436.chronolist.login.Handler.CustomFailureHandler;
+import com.magu1436.chronolist.login.Handler.CustomSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 

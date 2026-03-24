@@ -1,4 +1,4 @@
-package com.magu1436.chronolist;
+package com.magu1436.chronolist.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
