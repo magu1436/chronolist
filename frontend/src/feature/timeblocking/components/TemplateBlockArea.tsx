@@ -25,7 +25,7 @@ const TemplateBlockArea = () => {
                 width: "100%",
                 padding: 1,
                 backgroundColor: "lightblue",
-                overflowY: "scroll",
+                overflowY: "auto",
             }}
         >
             <Grid container spacing={1}>

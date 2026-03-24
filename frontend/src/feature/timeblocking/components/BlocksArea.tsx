@@ -27,7 +27,7 @@ const BlocksArea = () => {
                     width: "100%",
                     padding: 1,
                     backgroundColor: "lightgreen",
-                    overflowY: "scroll",
+                    overflowY: "auto",
                 }}
             >
                 <Grid container spacing={1}>
