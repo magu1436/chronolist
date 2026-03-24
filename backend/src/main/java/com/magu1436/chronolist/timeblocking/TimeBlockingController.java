@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.magu1436.chronolist.scheduler.mapper.SchedulerMapper;
 import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
+import com.magu1436.chronolist.timeblocking.entity.TimeBlockTask;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
@@ -235,6 +236,28 @@ public class TimeBlockingController {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    /**
+     * 受け取ったブロックタスクをDBに登録する
+     * <p>このメソッドはJsonの内容を受け取り,その内容を保存した新しいブロックタスクをDBに保存する.</p>
+     * <h3>リクエストJsonの形:</h3>
+     * <pre> {
+     * timeBlockId: int,
+     * title: String
+     * }</pre>
+     * @param timeBlockTask Jsonの内容が保存された{@code timeBlockTask}.詳細は{@link TimeBlockTask}.
+     * <ul>
+     * <li> IDはDBに保存されたときに自動的に割り当てられる.</li>
+     * </ul>
+     * @return DB登録時に割り当てられたIDとHTTPStatusを返すレスポンス.
+     * 正常終了時は{@code 201 Created}を返す.
+     * @author konoma1103
+     */
+    @PutMapping("timeBlockTask/register")
+    public ResponseEntity<Integer> registerTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
+        timeBlockTaskMapper.insertTimeBlockTask(timeBlockTask);
+        return ResponseEntity.status(HttpStatus.CREATED).body(timeBlockTask.getId());
     }
 
     /**
