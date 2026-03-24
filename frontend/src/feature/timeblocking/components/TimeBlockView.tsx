@@ -31,6 +31,7 @@ const TimeBlockView: FC<TimeBlockViewProps> = ({ source, ref, sx, ...rest }) => 
                 padding: "5px",
                 zIndex: 1,
                 height,
+                width: "100%",
                 ...sx,
             }}
         >

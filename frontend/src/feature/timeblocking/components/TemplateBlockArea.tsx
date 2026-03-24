@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import BlockRepositories from "../contexts/BlockRepositories"
-import { Paper, Stack } from "@mui/material";
+import { Paper, Grid } from "@mui/material";
 import { useDroppable } from "@dnd-kit/core";
 import { TEMPLATE_BLOCKS_AREA_ID } from "../static/droppableId";
 import TemplateBlock from "./TemplateBlock";
@@ -28,11 +28,13 @@ const TemplateBlockArea = () => {
                 overflowY: "scroll",
             }}
         >
-            <Stack>
+            <Grid container spacing={1}>
                 {templateBlocks.map(b => (
-                    <TemplateBlock key={b.clientId} source={b} />
+                    <Grid key={b.clientId} size={6}>
+                        <TemplateBlock source={b} />
+                    </Grid>
                 ))}
-            </Stack>
+            </Grid>
         </Paper>
     )
 }

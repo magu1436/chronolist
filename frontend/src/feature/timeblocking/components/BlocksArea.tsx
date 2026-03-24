@@ -4,7 +4,7 @@ import { useDroppable } from "@dnd-kit/core";
 import BlockRepositories from "../contexts/BlockRepositories";
 import TimeBlock from "./TimeBlock";
 import { BLOCKS_AREA_ID } from "../static/droppableId";
-import { Paper, Stack } from "@mui/material";
+import { Paper, Grid } from "@mui/material";
 
 
 const BlocksArea = () => {
@@ -30,11 +30,13 @@ const BlocksArea = () => {
                     overflowY: "scroll",
                 }}
             >
-                <Stack>
+                <Grid container spacing={1}>
                     {blocksAtField.map(b => (
-                        <TimeBlock key={b.clientId} source={b} />
+                        <Grid key={b.clientId} size={6}>
+                            <TimeBlock key={b.clientId} source={b} />
+                        </Grid>
                     ))}
-                </Stack>
+                </Grid>
             </Paper>
         </>
     )
