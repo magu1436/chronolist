@@ -9,6 +9,7 @@ import { PREVIEW_BLOCK_ID } from "../static/previewBlock";
 import BlockRepositories from "../contexts/BlockRepositories";
 import TimeBlockView from "./TimeBlockView";
 import { BLOCKS_AREA_ID, TEMPLATE_BLOCKS_AREA_ID, TIMETABLE_ID } from "../static/droppableId";
+import { registerTemplateBlock } from "../api/templateBlock";
 
 const testBlocksOnTable: TimeBlockSource[] = [
     {
@@ -94,7 +95,6 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
     const [ templateBlocks, setTemplateBlocks ] = useState<TemplateBlockSource[]>(testTemplateBlocks);
 
     const prevPointTimeRef = useRef<Time | null>(null);
-    const prevBlockSource = useRef<TimeBlockSource | null>(null);
     const draggingBlockSource = useRef<TimeBlockSource | null>(null);
 
     const {
@@ -124,7 +124,6 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
      */
     const removePrevBlock = useCallback(() => {
         prevPointTimeRef.current = null;
-        prevBlockSource.current = null;
         setBlocksOnTable((blocks) => blocks.filter(b => b.clientId !== PREVIEW_BLOCK_ID));
         console.log("prevBlock removed");
     }, [blocksAtField, blocksOnTable]);
@@ -133,7 +132,6 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
      * プレビューブロックを表示する
      */
     const showPrevBlock = useCallback((startAt: Time, originalSource: TimeBlockSource) => {
-        prevBlockSource.current = createPrevBlockSorce(startAt, originalSource);
         setBlocksOnTable((blocks) => [
             ...blocks.filter(b => b.clientId !== originalSource.clientId),
             createPrevBlockSorce(startAt, originalSource)
@@ -147,28 +145,31 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
      */
     const movePrevBlock = useCallback((startAt: Time) => {
         // エラー処理
-        if (!prevBlockSource.current) {
-            console.log("prevBlockSource is null");
-            return;
-        }
         if (prevPointTimeRef.current === null) {
             console.log("prevPointTime is null");
+            return;
+        };
+        if (draggingBlockSource.current === null) {
+            console.log("draggingBlockSource is null");
             return;
         };
 
         // カーソル移動時でも, 同じ時刻の範囲ならば何もしない(負荷軽減)
         if (prevPointTimeRef.current.toMinutes() === startAt.toMinutes()) return;
 
-        const movedPrevBlockSource: TimeBlockSource = {...prevBlockSource.current, startAt};
+        const movedPrevBlockSource: TimeBlockSource = createPrevBlockSorce(startAt, draggingBlockSource.current);
         setBlocksOnTable((blocks) => blocks.map(b => b.clientId === PREVIEW_BLOCK_ID ? movedPrevBlockSource : b));
-        prevBlockSource.current = movedPrevBlockSource;
         prevPointTimeRef.current = startAt;
     }, []);
 
     useDndMonitor({
         onDragStart(event) {
             if (!event.active?.data?.current) return;
-            draggingBlockSource.current = event.active.data.current.source as TimeBlockSource;
+            const dbs = event.active.data.current.source as TimeBlockSource;
+            if (templateBlocks.find(b => b.clientId === dbs.clientId)) {
+                dbs.clientId = uuidv4();
+            };
+            draggingBlockSource.current = dbs;
         },
         onDragMove(event) {
             switch (event.over?.id) {
@@ -214,22 +215,25 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                     break;
             }
         },
-        onDragEnd(e) {
+        async onDragEnd(e) {
             if (draggingBlockSource.current === null) {
                 throw new Error("draggingBlockSource is null");
             }
-            const movedBlockId: string = draggingBlockSource.current.clientId;
-            const prevSource = prevBlockSource.current;
-            removePrevBlock();
+            const movedBlockSource: TimeBlockSource = draggingBlockSource.current;
             switch (e.over?.id) {
                 case TIMETABLE_ID:
-                    if (prevSource === null) throw new Error("prevSource is null");
-                    setBlocksAtField((blocks) => blocks.filter(block => block.clientId !== movedBlockId));
-                    setBlocksOnTable((blocks) => [...blocks, {...prevSource, clientId: movedBlockId}]);
+                    const newBlockSource: TimeBlockSource = {
+                        ...movedBlockSource,
+                        startAt: prevPointTimeRef.current,
+                        timeTableId,
+                        status: "PLACED",
+                    };
+                    setBlocksAtField((blocks) => blocks.filter(block => block.clientId !== movedBlockSource.clientId));
+                    setBlocksOnTable((blocks) => [...blocks, newBlockSource]);
                     console.log("Placed");
                     break;
                 case BLOCKS_AREA_ID:
-                    if (!blocksAtField.find(b => b.clientId === movedBlockId)) {
+                    if (!blocksAtField.find(b => b.clientId === movedBlockSource.clientId)) {
                         const heldBlockSource: TimeBlockSource = {
                             ...draggingBlockSource.current,
                             status: "HOLD",
@@ -241,9 +245,18 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                     console.log("Held");
                     break;
                 case TEMPLATE_BLOCKS_AREA_ID:
+                    const newTemplateBlock: TemplateBlockSource = {
+                        ...draggingBlockSource.current,
+                        clientId: uuidv4(),
+                        id: undefined,
+                    };
+                    setBlocksAtField((blocks) => blocks.filter(block => block.clientId !== movedBlockSource.clientId));
+                    setTemplateBlocks((blocks) => [...blocks, newTemplateBlock]);
+                    newTemplateBlock.id = await registerTemplateBlock(newTemplateBlock);
                     break;
             }
             draggingBlockSource.current = null;
+            removePrevBlock();
         },
         onDragCancel() {
             console.log("Dragging Cancelled");
@@ -274,7 +287,7 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                     })
                 }}
             >
-                {draggingBlockSource.current && <TimeBlockView source={draggingBlockSource.current} sx={{opacity: prevBlockSource.current ? 0 : 1}} />}
+                {draggingBlockSource.current && <TimeBlockView source={draggingBlockSource.current} sx={{opacity: prevPointTimeRef.current ? 0 : 1}} />}
             </DragOverlay>
         </BlockRepositories>
     )
