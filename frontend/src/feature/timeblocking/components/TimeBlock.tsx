@@ -1,5 +1,4 @@
 import { useCallback, useContext, type FC } from "react";
-import { Paper, Typography } from "@mui/material";
 import { useDraggable } from "@dnd-kit/core";
 
 import { type TimeBlockSource } from "../types/blockSourceTypes";
