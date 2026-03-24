@@ -258,12 +258,18 @@ public class TimeBlockingController {
      * @param timeBlockTask Jsonの値が保存されている{@code timeBlockTask}.
      * @return 対応するHTTPStatusを返す.
      * 正常終了時は{@code 204 No Content}を返す.
+     * 指定するIDのデータが見つからないときは({@code 404 Not Found})を返す.
      * @author konoma1103
      */
     @DeleteMapping("timeBlockTask/delete")
     public ResponseEntity<Void> deleteTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
-        timeBlockTaskMapper.deleteTimeBlockTask(timeBlockTask.getId());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        // 指定のIDをもつTimeBlockTaskがDBに存在する場合は削除を実行
+        if (ExistsTimeBlockTaskById(timeBlockTask.getId())){
+            timeBlockTaskMapper.deleteTimeBlockTask(timeBlockTask.getId());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     /**
