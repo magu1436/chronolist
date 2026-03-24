@@ -4,7 +4,7 @@
     <select id="getTimeBlockById" resultMap="TimeBlockingResultMap.TimeBlockResult">
         SELECT
             block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
-            task.id AS task_id, task.title AS task_title,
+            task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
             schedule.id AS schedule_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
         FROM time_blocks block
         LEFT JOIN time_block_tasks task ON block.id = task.time_block_id
@@ -15,7 +15,7 @@
     <select id="getHeldTimeBlocks" resultMap="TimeBlockingResultMap.TimeBlockResult">
         SELECT
             block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
-            task.id AS task_id, task.title AS task_title,
+            task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
             schedule.id AS schedule_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
         FROM time_blocks block
         LEFT JOIN time_block_tasks task ON block.id = task.time_block_id

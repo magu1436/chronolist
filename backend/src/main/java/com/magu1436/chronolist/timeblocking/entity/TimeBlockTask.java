@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TimeBlockTask {
     private int id;
+    private int timeBlockId;
     private String title;
 }
