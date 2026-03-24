@@ -26,8 +26,10 @@
         </association>
         <result property="width" column="width" />
         <result property="startAt" column="start_at" />
-        <!-- tasksは間違っている可能性あり -->
-        <collection property="tasks" ofType="string" column="task_title" />
+        <collection property="tasks" ofType="com.magu1436.chronolist.timeblocking.entity.TimeBlockTask" />
+            <id property="id" column="task_id" />
+            <result property="title" column="task_title" />
+        </collection>
         <result property="color" column="color" />
     </resultMap>
 </mapper>

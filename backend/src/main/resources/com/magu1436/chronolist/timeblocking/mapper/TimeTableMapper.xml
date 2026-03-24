@@ -5,7 +5,7 @@
         SELECT
             table.id AS table_id, table.date,
             block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
-            task.title AS task_title,
+            task.id AS task_id, task.title AS task_title,
             schedule.id AS schedule_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
         FROM time_tables table
         LEFT JOIN time_blocks block ON table.id = block.table_id
