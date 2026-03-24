@@ -28,8 +28,6 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
         setNodeRef,
         listeners,
         attributes,
-        transform,
-        over,
         isDragging,
     } = useDraggable({
         id: source.id,
@@ -85,11 +83,10 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
             sx={{
                 width: maxColumnIndex ? `${100 / maxColumnIndex}%` : "auto",
                 maxWidth: "100%",
-                transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
                 position: source.status === "PLACED" ? "absolute" : "unset",
                 top,
                 left,
-                opacity: (over && isDragging) ? 0.5 : 1,  // ドロップ中は透明
+                opacity: isDragging ? 0.5 : 1,  // ドロップ中は透明
             }}
         />
     );
