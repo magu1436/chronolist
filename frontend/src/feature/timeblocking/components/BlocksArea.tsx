@@ -3,7 +3,7 @@ import BlockRepositories from "../contexts/BlockRepositories";
 import TimeBlock from "./TimeBlock";
 
 
-const BlockField = () => {
+const BlocksArea = () => {
     const {
         blocksAtField,
     } = useContext(BlockRepositories);
@@ -17,4 +17,4 @@ const BlockField = () => {
     )
 };
 
-export default BlockField;
+export default BlocksArea;
