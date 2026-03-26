@@ -26,7 +26,7 @@ public class JsonLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // 1. JSON形式以外のリクエストは受け付けない
         if (request.getContentType() == null || !request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+            throw new AuthenticationServiceException("サポートされていない認証形式です:" + request.getMethod());
         }
 
         try {
@@ -43,7 +43,7 @@ public class JsonLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         } catch (IOException e) {
             // JSONの形式が正しくない場合などのエラー
-            throw new AuthenticationServiceException("Failed to parse authentication request body", e);
+            throw new AuthenticationServiceException("認証リクエストのボディの解析に失敗しました.", e);
         }
     }
 
