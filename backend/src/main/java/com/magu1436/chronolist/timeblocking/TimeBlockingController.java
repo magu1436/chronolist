@@ -288,15 +288,17 @@ public class TimeBlockingController {
     }
 
     /**
-     * DBに登録されているテンプレートブロックをすべて返却する
+     * ログイン中のユーザーのユーザーIDをもつテンプレートブロックをすべて返却する
      * <p>このメソッドは,DBに保存されているテンプレートブロックを取得し返却する.テンプレートブロックが存在しない場合でも,空のリストを返却する.</p>
+     * 
+     * @param loginUser ログイン中のユーザー
      * @return すべてのテンプレートブロックとHTTPStatusを返すレスポンス.
      * 正常終了時は{@code 200 Ok}を返す.
      * @author milk0924
      */
     @GetMapping("templateBlock/getAll")
-    public ResponseEntity<List<TemplateBlock>> getAllTemplateBlocks(){
-        List<TemplateBlock> allTemplateBlock = templateBlockMapper.getAllTemplateBlocks();
+    public ResponseEntity<List<TemplateBlock>> getAllTemplateBlocks(@AuthenticationPrincipal LoginUser loginUser){
+        List<TemplateBlock> allTemplateBlock = templateBlockMapper.getAllTemplateBlocks(loginUser.getId());
         return ResponseEntity.ok(allTemplateBlock);
     }
 
