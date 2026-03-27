@@ -3,6 +3,11 @@ import type { TimeBlockStatus } from "./statics"
 import type { Time } from "@/utils/time"
 
 
+export type TimeBlockTask = {
+    id: number,
+    title: string,
+};
+
 export type TimeBlockSource = {
     id?: number,
     clientId: string,
@@ -12,7 +17,7 @@ export type TimeBlockSource = {
     relatedSchedle: ScheduleSource | null,
     width: number,
     startAt: Time | null,
-    tasks: string[],
+    tasks: TimeBlockTask[],
     color: string,
     fromTemplateBlockSource?: TemplateBlockSource,
 }
