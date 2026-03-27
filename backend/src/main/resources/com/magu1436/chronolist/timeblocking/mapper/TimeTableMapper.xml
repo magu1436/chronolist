@@ -3,21 +3,21 @@
 <mapper namespace="com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper">
     <select id="getTimeTableByDate" resultMap="TimeBlockingResultMap.TimeTableResult">
         SELECT
-            table.id AS table_id, table.date,
-            block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
+            table.id AS table_id, table.user_id AS table_user_id, table.date,
+            block.id AS block_id, block.user_id AS block_user_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
             task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
-            schedule.id AS schedule_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
+            schedule.id AS schedule_id, schedule.user_id AS schedule_user_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
         FROM time_tables table
         LEFT JOIN time_blocks block ON table.id = block.table_id
         LEFT JOIN time_block_tasks task ON block.id = task.time_block_id
         LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
-        WHERE table.date = #{date}
+        WHERE (table_user_id = #{userId}) AND (table.date = #{date})
     </select>
 
     <insert id="insertTimeTable" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO time_tables (date)
+        INSERT INTO time_tables (user_id, date)
         VALUES
-        (#{date})
+        (#{userId}, #{date})
     </insert>
 
     <update id="updateTimeTable">
