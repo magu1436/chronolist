@@ -78,6 +78,7 @@ public class TimeBlockingController {
      * <pre> {
      *   date: DateString
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param timeTable 渡された日付を元に作成されたタイムテーブル
      * <ul>
      * <li> {@code timeTable} DB登録時に渡されたIDと日付をもつ.TimeBlockの情報に関しては無視される.詳細は{@link TimeTable}を参照.
@@ -87,7 +88,9 @@ public class TimeBlockingController {
      * @author milk0924 
      */
     @PostMapping("timeTable/createAt")
-    public ResponseEntity<Integer> createAt(@RequestBody TimeTable timeTable){
+    public ResponseEntity<Integer> createAt(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeTable timeTable){
+        // 受け取ったTimeTableにuserIdを登録
+        timeTable.setUserId(loginUser.getId());
         timeTableMapper.insertTimeTable(timeTable);
         Integer idFromCreatedTimeTable = timeTable.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeTable);
