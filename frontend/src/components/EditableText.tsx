@@ -6,13 +6,15 @@ type EditableTextProps = {
     value?: string,
     variant?: TypographyVariant | "inherit",
     style?: React.CSSProperties,
+    onChange?: (value: string) => void,
 };
 
-const EditableText: FC<EditableTextProps> = ({ value, variant, style }) => {
+const EditableText: FC<EditableTextProps> = ({ value, variant, style, onChange }) => {
     const [ isEditing, setIsEditing ] = useState(false);
     const [ text, setText ] = useState<string>(value || "");
 
     const handleFinishEdit = () => {
+        onChange?.(text);
         setIsEditing(false);
     };
     const handleKeyDown = (event: React.KeyboardEvent) => {
