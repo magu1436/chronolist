@@ -16,15 +16,16 @@ import com.magu1436.chronolist.timeblocking.entity.TimeTable;
 public interface TimeTableMapper {
 
     /**
-     * 指定した日付に対応する {@link TimeTable} を取得する。
+     * 指定したユーザーIDと日付に対応する {@link TimeTable} を取得する。
      * <p>
      * TimeTable は 1 日につき 1 つのみ存在する想定。
      * </p>
      *
+     * @param userId 取得対象のユーザーID
      * @param date 取得対象の日付。
      * @return 指定日の {@link TimeTable}。存在しない場合は {@code null} を返す。
      */
-    TimeTable getTimeTableByDate(LocalDate date);
+    TimeTable getTimeTableByDate(int userId, LocalDate date);
 
     /**
      * 新しい TimeTable をデータベースに登録する。
