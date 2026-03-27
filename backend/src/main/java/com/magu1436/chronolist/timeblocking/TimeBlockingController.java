@@ -109,6 +109,7 @@ public class TimeBlockingController {
 	 * tasks: List<{@link TimeBlockTask}>,
 	 * color: String
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param timeBlock Jsonの内容が入れられた{@code TimeBlock}.{@code int id}は登録のときに自動で渡される.詳細は{@link TimeBlock}.
      * <ul>
      * <li> {@code TimeBlock}:{@code TimeTableId}はこのタイムブロックを保存するタイムテーブルのIDが渡される. </li>
@@ -118,7 +119,9 @@ public class TimeBlockingController {
      * @author milk0924
      */
     @PostMapping("timeBlock/register")
-    public ResponseEntity<Integer> register(@RequestBody TimeBlock timeBlock){
+    public ResponseEntity<Integer> register(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeBlock timeBlock){
+        // 受け取ったTimeBlockにuserIdを登録
+        timeBlock.setUserId(loginUser.getId());
         timeBlockMapper.insertTimeBlock(timeBlock);
         Integer idFromCreatedTimeBlock = timeBlock.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeBlock);
