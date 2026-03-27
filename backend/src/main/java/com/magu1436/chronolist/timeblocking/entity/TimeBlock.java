@@ -16,6 +16,7 @@ import com.magu1436.chronolist.scheduler.entity.Schedule;
 @NoArgsConstructor
 public class TimeBlock {
     private int id;
+    private int userId;
     private int timeTableId;
     private String title;
     private TimeBlockStatus status;
