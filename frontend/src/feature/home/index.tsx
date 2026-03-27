@@ -13,6 +13,7 @@ const HomePage = () => {
             <Button className="m-1" onClick={() => {nav("/login")}}>ログイン</Button>
             <Button className="m-1" onClick={() => {nav("/todolist")}}>ToDoリスト</Button>
             <Button className="m-1" onClick={() => {nav("/scheduler")}}>スケジューラ</Button>
+            <Button className="m-1" onClick={() => {nav("/timeblocking")}}>タイムブロッキング</Button>
             <Button className="m-1" onClick={() => {nav("/test")}}>テスター</Button>
         </div>
     )

@@ -1,0 +1,28 @@
+import type { ScheduleApi } from "@/feature/schesuler/types/api"
+import type { TimeBlockStatus } from "./statics"
+
+
+export type TimeBlockApi = {
+    id: number,
+    timeTableId: number,
+    title: string,
+    status: TimeBlockStatus,
+    relatedSchedle: ScheduleApi | null,
+    width: number,
+    startAt: string | null,
+    tasks: string[],
+    color: string
+};
+
+export type TemplateBlockApi = {
+    id: number,
+    title: string,
+    width: number,
+    color: string,
+}
+
+export type TimeTableApi = {
+    id: number,
+    date: string,
+    blocks: TimeBlockApi[],
+}
