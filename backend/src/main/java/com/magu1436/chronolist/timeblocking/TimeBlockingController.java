@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.magu1436.chronolist.login.LoginUser;
 import com.magu1436.chronolist.scheduler.mapper.SchedulerMapper;
 import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
@@ -42,12 +44,13 @@ public class TimeBlockingController {
     private final SchedulerMapper schedulerMapper;
 
     /**
-     * 指定の日付のタイムテーブルを取得して返す.
+     * 指定のユーザーIDと日付をもつタイムテーブルを取得して返す.
      * <p>このメソッドは,Json形式のデータを受け取り,そのデータに紐づけられた{@code TimeTable}を返す.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
      *   date: DateString
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param  date 参照する日付情報.
      * <ul>
      * <li>{@code date}:yyyy-mm-ddで渡される.
@@ -58,8 +61,8 @@ public class TimeBlockingController {
      * @author milk0924
      */
     @GetMapping("timeTable/getByDate")
-    public ResponseEntity<TimeTable> getByDate(@RequestBody LocalDate date){
-        TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(date);
+    public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @RequestBody LocalDate date){
+        TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(loginUser.getId(), date);
 
         if(taskGotByDate == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
