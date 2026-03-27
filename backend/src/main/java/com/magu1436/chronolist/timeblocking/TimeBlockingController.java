@@ -126,15 +126,22 @@ public class TimeBlockingController {
      * id: int,
 	 * timeTableId: int,
 	 * status: TimeBlockStatus,
+     * relatedSchedule: Schedule,
 	 * width: int,
 	 * startAt: TimeString,
 	 * tasks: List<{@link TimeBlockTask}>,
 	 * color: String
      * }</pre>
+     */
     @PutMapping("timeBlock/update")
     public ResponseEntity<Void> update(@RequestBody TimeBlock timeBlock){
+        // 受け取ったTimeBlockがDBに存在する場合は更新を実行する
         if(ExistsTimeBlockById(timeBlock.getId())){
             timeBlockMapper.updateTimeBlock(timeBlock);
+            // 受け取ったTimeBlockのrelatedScheduleがNullでない場合はscheduleテーブルも更新する
+            if (timeBlock.getRelatedSchedule() != null){
+                schedulerMapper.updateSchedule(timeBlock.getRelatedSchedule());
+            }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
