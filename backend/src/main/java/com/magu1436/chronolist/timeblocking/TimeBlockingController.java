@@ -311,6 +311,7 @@ public class TimeBlockingController {
 	 *   width: int,
 	 *   color: String
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param templateBlock Jsonの内容が保存された{@code templateBlock}.詳細は{@link TemplateBlock}.
      * <ul>
      * <li> {@code TempleBlock}:Jsonに保存されている情報以外は持たない.IDはDBに保存されたときに自動的に割り当てられる.</li>
@@ -320,7 +321,9 @@ public class TimeBlockingController {
      * @author milk0924
      */
     @PutMapping("templateBlock/register")
-    public ResponseEntity<Integer> registerNewTemplateBlock(@RequestBody TemplateBlock templateBlock){
+    public ResponseEntity<Integer> registerNewTemplateBlock(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TemplateBlock templateBlock){
+        // 受け取ったTemplateBlockにuserIdを登録
+        templateBlock.setUserId(loginUser.getId());
         templateBlockMapper.insertTemplateBlock(templateBlock);
         return ResponseEntity.status(HttpStatus.CREATED).body(templateBlock.getId());
     }
