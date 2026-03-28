@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const SelectedTimeBlockId = createContext<{
     selectedTimeBlockId: number | null,
-    setSelectedTimeBlockId: number | ((block: number | null) => void)
+    setSelectedTimeBlockId: ((block: number | null | ((block: number | null) => void)) => void)
 }>({
     selectedTimeBlockId: null,
     setSelectedTimeBlockId: () => { },
