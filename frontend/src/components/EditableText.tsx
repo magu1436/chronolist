@@ -1,4 +1,4 @@
-import { Typography, type TypographyVariant } from "@mui/material";
+import { Typography, type TypographyVariant, Input, type SxProps } from "@mui/material";
 import { useState, type FC } from "react";
 
 
@@ -6,10 +6,11 @@ type EditableTextProps = {
     value?: string,
     variant?: TypographyVariant | "inherit",
     style?: React.CSSProperties,
+    sx?: SxProps,
     onChange?: (value: string) => void,
 };
 
-const EditableText: FC<EditableTextProps> = ({ value, variant, style, onChange }) => {
+const EditableText: FC<EditableTextProps> = ({ value, variant, style, sx, onChange }) => {
     const [ isEditing, setIsEditing ] = useState(false);
     const [ text, setText ] = useState<string>(value || "");
 
@@ -27,14 +28,18 @@ const EditableText: FC<EditableTextProps> = ({ value, variant, style, onChange }
             style={style}
             variant={variant}
             onDoubleClick={() => setIsEditing(true)}
+            sx={sx}
         >{text}</Typography>
     );
     const editNode = (
-        <input
+        <Input
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            autoFocus
+            onChange={(e) => setText(e.target.value.trim())}
             onKeyDown={(e) => {handleKeyDown(e);}}
             onBlur={handleFinishEdit}
+            sx={sx}
+            style={style}
         />
     );
 
