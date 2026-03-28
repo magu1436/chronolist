@@ -1,25 +1,49 @@
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, pointerWithin } from "@dnd-kit/core";
+import { Box, Stack } from "@mui/material";
 
-import TimeBlock from "./components/TimeBlock"
+import TimeTable from "./components/TimeTable";
+import TimeTableConfigure from "./contexts/TimeTableConfigure";
+import { Time } from "@/utils/time";
+import BlockAvailable from "./components/BlockAvailable";
+import BlocksArea from "./components/BlocksArea";
+import TemplateBlockArea from "./components/TemplateBlockArea";
 
 
 const TimeBlockingPage = () => {
+
+    const tableConfig = {
+        timeTableId: 1,
+        gridSize: 1,
+        tableHeight: 2000,
+        tableWidth: "100%",
+        startTime: new Time(0, 0),
+        slotMinutes: 30,
+        slotHeight: 2000 * 30 / (24 * 60),
+    };
+
     return (
         
         <DndContext
+            collisionDetection={pointerWithin}
             onDragEnd={(event) => {console.log(event)}}
         >
-            <TimeBlock source={{
-                id: 1,
-                timeTableId: 1,
-                status: "HOLD",
-                relatedSchedle: null,
-                width: 1,
-                startAt: null,
-                tasks: [],
-                color: "red",
-                title: "test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10 test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10 test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10",
-            }} />
+            <TimeTableConfigure value={tableConfig}>
+                <BlockAvailable>
+                    <Stack direction={"row"}>
+                        <Box sx={{height: "100vh", width: "50vw"}}><TimeTable /></Box>
+                        <Stack
+                            sx={{
+                                height: "100vh",
+                                width: "50vw",
+                                border: "1px solid red",
+                            }}
+                        >
+                            <BlocksArea />
+                            <TemplateBlockArea />
+                        </Stack>
+                    </Stack>
+                </BlockAvailable>
+            </TimeTableConfigure>
         </DndContext>
     )
 }
