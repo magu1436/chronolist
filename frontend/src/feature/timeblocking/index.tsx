@@ -8,7 +8,8 @@ import { Time } from "@/utils/time";
 import BlockAvailable from "./components/BlockAvailable";
 import BlocksArea from "./components/BlocksArea";
 import TemplateBlockArea from "./components/TemplateBlockArea";
-import SelectedTimeBlockId from "./contexts/SelectedTimeBlockId";
+import SelectedTimeBlockId from "./contexts/SelectedTimeBlockClientId";
+import TimeBlockDetailPanel from "./components/TimeBlockDetailPanel";
 
 
 const TimeBlockingPage = () => {
@@ -23,7 +24,7 @@ const TimeBlockingPage = () => {
         slotHeight: 2000 * 30 / (24 * 60),
     };
 
-    const [ selectedTimeBlockId, setSelectedTimeBlockId ] = useState<number | null>(null);
+    const [ selectedTimeBlockId, setSelectedTimeBlockId ] = useState<string | null>(null);
 
     return (
         
@@ -32,7 +33,7 @@ const TimeBlockingPage = () => {
             onDragEnd={(event) => {console.log(event)}}
         >
             <TimeTableConfigure value={tableConfig}>
-                <SelectedTimeBlockId value={{ selectedTimeBlockId, setSelectedTimeBlockId }}>
+                <SelectedTimeBlockId value={{ selectedTimeBlockId, setSelectedTimeBlockClientId: setSelectedTimeBlockId }}>
                     <BlockAvailable>
                         <Stack direction={"row"}>
                             <Box sx={{height: "100vh", width: "50vw"}}><TimeTable /></Box>
@@ -47,6 +48,7 @@ const TimeBlockingPage = () => {
                                 <TemplateBlockArea />
                             </Stack>
                         </Stack>
+                        <TimeBlockDetailPanel />
                     </BlockAvailable>
                 </SelectedTimeBlockId>
             </TimeTableConfigure>

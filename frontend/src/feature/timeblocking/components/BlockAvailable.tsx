@@ -81,7 +81,7 @@ const testTemplateBlocks: TemplateBlockSource[] = [
 ];
 
 type BlockAvailableProps = {
-    children?: ReactElement,
+    children?: ReactElement[],
 }
 
 /**
