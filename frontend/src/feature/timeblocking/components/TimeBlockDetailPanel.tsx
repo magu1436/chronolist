@@ -20,8 +20,12 @@ const style: SxProps = {
     p: 4,
 }
 
+/**
+ * タイムブロックの詳細を表示するモーダル
+ */
 const TimeBlockDetailPanel: FC = () => {
 
+    // 選択中のブロック
     const [ block, setBlock ] = useState<TimeBlockSource | undefined>(undefined);
 
     const {
@@ -31,6 +35,9 @@ const TimeBlockDetailPanel: FC = () => {
         setBlocksAtField,
     } = useContext(BlockRepositories);
 
+    /**
+     * パネル中でのブロックの変更をブロックリポジトリに反映する関数
+     */
     const reflectBlockToRepository = useCallback((block: TimeBlockSource) => {
         switch (block.status) {
             case "PLACED":
@@ -47,37 +54,57 @@ const TimeBlockDetailPanel: FC = () => {
         setSelectedTimeBlockClientId,
     } = useContext(SelectedTimeBlockClientId);
 
+    // モーダルの表示状態を管理するステート
     const [ open, setOpen ] = useState(false);
 
+    /**
+     * `selectedTimeBlockId` を監視し, 選択ブロックステートやモーダルの開閉状態を更新する
+     */
     useEffect(() => {
         setOpen(selectedTimeBlockId !== null);
+        if (selectedTimeBlockId === null) return;
         const selectedBlock = blocksOnTable.find(b => b.clientId === selectedTimeBlockId) || blocksAtField.find(b => b.clientId === selectedTimeBlockId);
         setBlock(selectedBlock);
     }, [selectedTimeBlockId]);
 
+    /**
+     * モーダルが閉じられた際の処理
+     */
     const handleClose = useCallback(() => {
         setSelectedTimeBlockClientId(null);
     }, []);
 
+    /**
+     * タイトルを変更した際の処理
+     */
     const handleSetText = useCallback((text: string) => {
         const editedBlock = block && { ...block, title: text };
         setBlock(editedBlock);
         editedBlock && reflectBlockToRepository(editedBlock);
     }, [block]);
 
+    /**
+     * ブロックの開始時刻(及び終了時刻)を変更した際の処理
+     */
     const handleSetTime = useCallback((time: Time) => {
         const editedBlock = block && { ...block, startAt: time };
         setBlock(editedBlock);
         editedBlock && reflectBlockToRepository(editedBlock);
     }, [block]);
 
+    /**
+     * ブロックの幅を変更した際の処理
+     */
     const handleSetWidth = useCallback((width: number) => {
         const editedBlock = block && { ...block, width: width };
         setBlock(editedBlock);
         editedBlock && reflectBlockToRepository(editedBlock);
     }, [block]);
 
-    const handleAddTasks = useCallback((tasks: TimeBlockTask[]) => {
+    /**
+     * ブロックのタスクを変更した際の処理
+     */
+    const handleSetTasks = useCallback((tasks: TimeBlockTask[]) => {
         const editedBlock = block && { ...block, tasks: [...tasks] };
         setBlock(editedBlock);
         editedBlock && reflectBlockToRepository(editedBlock);
@@ -95,7 +122,7 @@ const TimeBlockDetailPanel: FC = () => {
                     <Title text={block?.title} setText={handleSetText} />
                     {block?.startAt && <TimeRange width={block?.width} startAt={block?.startAt || undefined} setStartAt={handleSetTime} />}
                     <Width width={block?.width || 0} setWidth={handleSetWidth} />
-                    {block && <TimeBlockTasks tasks={block.tasks} setTasks={handleAddTasks} />}
+                    {block && <TimeBlockTasks tasks={block.tasks} setTasks={handleSetTasks} />}
                 </Stack>
             </Box>
         </Modal>
