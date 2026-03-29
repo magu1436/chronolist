@@ -6,6 +6,7 @@ import BlockRepositories from "../contexts/BlockRepositories";
 import type { TimeBlockSource } from "../types/blockSourceTypes";
 import type { Time } from "@/utils/time";
 import TimeRange from "./timeBlockDetailPanelComponents/TimeRange";
+import Width from "./timeBlockDetailPanelComponents/Width";
 
 const style: SxProps = {
     position: 'absolute',
@@ -70,6 +71,12 @@ const TimeBlockDetailPanel: FC = () => {
         editedBlock && reflectBlockToRepository(editedBlock);
     }, [block]);
 
+    const handleSetWidth = useCallback((width: number) => {
+        const editedBlock = block && { ...block, width: width };
+        setBlock(editedBlock);
+        editedBlock && reflectBlockToRepository(editedBlock);
+    }, [block]);
+
 
     return (
         <Modal
@@ -81,6 +88,7 @@ const TimeBlockDetailPanel: FC = () => {
                 <Stack>
                     <Title text={block?.title} setText={handleSetText} />
                     {block?.startAt && <TimeRange width={block?.width} startAt={block?.startAt || undefined} setStartAt={handleSetTime} />}
+                    <Width width={block?.width || 0} setWidth={handleSetWidth} />
                 </Stack>
             </Box>
         </Modal>

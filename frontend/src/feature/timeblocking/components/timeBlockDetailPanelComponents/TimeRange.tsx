@@ -1,7 +1,7 @@
 import EditableTimeText from "@/components/EditableTimeText";
 import { Time } from "@/utils/time";
 import { Stack } from "@mui/material";
-import { useCallback, useState, type FC } from "react";
+import { useCallback, useEffect, useState, type FC } from "react";
 
 
 type TimeRangeProps = {
@@ -15,6 +15,10 @@ type TimeRangeProps = {
  */
 const TimeRange: FC<TimeRangeProps> = ({ width = 0, startAt = new Time(), setStartAt }) => {
     const [ endAt, setEndAt ] = useState(startAt.add(width));
+
+    useEffect(() => {
+        setEndAt(startAt.add(width));
+    }, [width, startAt]);
 
     /**
      * 開始日時を変更したときの処理.  
