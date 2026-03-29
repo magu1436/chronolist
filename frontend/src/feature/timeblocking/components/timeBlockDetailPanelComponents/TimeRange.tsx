@@ -37,9 +37,15 @@ const TimeRange: FC<TimeRangeProps> = ({ width = 0, startAt = new Time(), setSta
     }, [width, handleSetStartAt]);
 
     return (
-        <Stack>
-            <EditableTimeText value={startAt} onChange={handleSetStartAt} />
-            <EditableTimeText value={endAt} onChange={handleSetEndAt} />
+        <Stack spacing={3} direction={"row"}>
+            <Stack>
+                <label>From</label>
+                <EditableTimeText variant="subtitle1" value={startAt} onChange={handleSetStartAt} />
+            </Stack>
+            <Stack>
+                <label>To</label>
+                <EditableTimeText variant="subtitle1" value={endAt} onChange={handleSetEndAt} />
+            </Stack>
         </Stack>
     );
 };

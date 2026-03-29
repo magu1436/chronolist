@@ -1,4 +1,4 @@
-import { Modal, Stack, Box, type SxProps } from "@mui/material"
+import { Modal, Stack, Box, type SxProps, Divider } from "@mui/material"
 import Title from "./timeBlockDetailPanelComponents/Title"
 import { useCallback, useContext, useEffect, useState, type FC } from "react";
 import SelectedTimeBlockClientId from "../contexts/SelectedTimeBlockClientId";
@@ -87,7 +87,9 @@ const TimeBlockDetailPanel: FC = () => {
                 sx={style}>
                 <Stack>
                     <Title text={block?.title} setText={handleSetText} />
+                    <Divider orientation={"horizontal"} textAlign="left" flexItem>時刻</Divider>
                     {block?.startAt && <TimeRange width={block?.width} startAt={block?.startAt || undefined} setStartAt={handleSetTime} />}
+                    <Divider orientation={"horizontal"} textAlign="left" flexItem>幅</Divider>
                     <Width width={block?.width || 0} setWidth={handleSetWidth} />
                 </Stack>
             </Box>
