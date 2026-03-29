@@ -3,7 +3,7 @@ import EditableText from "@/components/EditableText";
 
 type TitleProps = {
     text?: string,
-    setText?: (text: string | ((text: string) => string)) => void
+    setText?: (text: string) => void
 }
 
 const Title: FC<TitleProps> = ({ text, setText }) => {
