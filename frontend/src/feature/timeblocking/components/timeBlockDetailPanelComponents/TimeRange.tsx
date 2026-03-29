@@ -1,6 +1,6 @@
 import EditableTimeText from "@/components/EditableTimeText";
 import { Time } from "@/utils/time";
-import { Stack } from "@mui/material";
+import { Stack, Typography, type SxProps } from "@mui/material";
 import { useCallback, useEffect, useState, type FC } from "react";
 
 
@@ -9,6 +9,13 @@ type TimeRangeProps = {
     startAt?: Time,
     setStartAt: (startAt: Time) => void
 };
+
+const textSx: SxProps = {
+    fontSize: "2rem",
+};
+const labelSx: SxProps = {
+    fontSize: "1.3rem",
+}
 
 /**
  * 開始日時と終了日時を表示するコンポーネント
@@ -39,12 +46,12 @@ const TimeRange: FC<TimeRangeProps> = ({ width = 0, startAt = new Time(), setSta
     return (
         <Stack spacing={3} direction={"row"}>
             <Stack>
-                <label>From</label>
-                <EditableTimeText variant="subtitle1" value={startAt} onChange={handleSetStartAt} />
+                <Typography sx={labelSx}>From</Typography>
+                <EditableTimeText sx={textSx} value={startAt} onChange={handleSetStartAt} />
             </Stack>
             <Stack>
-                <label>To</label>
-                <EditableTimeText variant="subtitle1" value={endAt} onChange={handleSetEndAt} />
+                <Typography sx={labelSx}>To</Typography>
+                <EditableTimeText sx={textSx} value={endAt} onChange={handleSetEndAt} />
             </Stack>
         </Stack>
     );
