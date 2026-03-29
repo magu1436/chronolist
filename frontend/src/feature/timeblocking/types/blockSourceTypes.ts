@@ -4,7 +4,8 @@ import type { Time } from "@/utils/time"
 
 
 export type TimeBlockTask = {
-    id: number,
+    id?: number,
+    clientId: string,
     title: string,
 };
 
