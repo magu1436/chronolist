@@ -8,6 +8,7 @@ import type { Time } from "@/utils/time";
 import TimeRange from "./timeBlockDetailPanelComponents/TimeRange";
 import Width from "./timeBlockDetailPanelComponents/Width";
 import TimeBlockTasks from "./timeBlockDetailPanelComponents/TimeBlockTasks";
+import DeleteButton from "./timeBlockDetailPanelComponents/DeleteButton";
 
 const style: SxProps = {
     position: 'absolute',
@@ -110,6 +111,23 @@ const TimeBlockDetailPanel: FC = () => {
         editedBlock && reflectBlockToRepository(editedBlock);
     }, [block]);
 
+    /**
+     * 削除ボタンを押した際の処理
+     */
+    const handleDelete = useCallback(() => {
+        if (!block) return;
+
+        switch (block.status) {
+            case "PLACED":
+                setBlocksOnTable((blocks) => blocks.filter(b => b.clientId !== block.clientId));
+                break;
+            case "HOLD":
+                setBlocksAtField((blocks) => blocks.filter(b => b.clientId !== block.clientId));
+                break;
+        }
+        setSelectedTimeBlockClientId(null);
+    }, [block, setBlocksOnTable, setBlocksAtField, setSelectedTimeBlockClientId]);
+
 
     return (
         <Modal
@@ -123,6 +141,7 @@ const TimeBlockDetailPanel: FC = () => {
                     {block?.startAt && <TimeRange width={block?.width} startAt={block?.startAt || undefined} setStartAt={handleSetTime} />}
                     <Width width={block?.width || 0} setWidth={handleSetWidth} />
                     {block && <TimeBlockTasks tasks={block.tasks} setTasks={handleSetTasks} />}
+                    <DeleteButton onDelete={handleDelete} />
                 </Stack>
             </Box>
         </Modal>
