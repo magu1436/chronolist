@@ -4,6 +4,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { type TimeBlockSource } from "../types/blockSourceTypes";
 import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import TimeBlockView from "./TimeBlockView";
+import SelectedTimeBlockClientId from "../contexts/SelectedTimeBlockClientId";
 
 type TimeBlockProps = {
     source: TimeBlockSource,
@@ -33,6 +34,15 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
         id: source.clientId,
         data: { source },
     });
+
+    const {
+        setSelectedTimeBlockClientId,
+    } = useContext(SelectedTimeBlockClientId);
+
+    const handleDoubleClick = useCallback(() => {
+        setSelectedTimeBlockClientId(source.clientId);
+        console.log(`selected ${source.clientId}`);
+    }, []);
 
     // refを利用するための処理
     // 受け取ったrefとuseDraggableのrefをマージする
@@ -87,6 +97,7 @@ const TimeBlock: FC<TimeBlockProps> = ({source, conlumnIndex, maxColumnIndex, re
                 left,
                 opacity: isDragging ? 0.5 : 1,  // ドロップ中は透明
             }}
+            onDoubleClick={handleDoubleClick}
         />
     );
 };

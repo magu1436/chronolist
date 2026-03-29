@@ -1,4 +1,4 @@
-import { DndContext, pointerWithin } from "@dnd-kit/core";
+import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from "@dnd-kit/core";
 import { Box, Stack } from "@mui/material";
 import { useState } from "react";
 
@@ -26,21 +26,25 @@ const TimeBlockingPage = () => {
 
     const [ selectedTimeBlockId, setSelectedTimeBlockId ] = useState<string | null>(null);
 
+    const mouseSensor = useSensor(MouseSensor, {activationConstraint: {distance: 10}});
+    const sensors = useSensors(mouseSensor);
+
     return (
         
         <DndContext
             collisionDetection={pointerWithin}
             onDragEnd={(event) => {console.log(event)}}
+            sensors={sensors}
         >
             <TimeTableConfigure value={tableConfig}>
                 <SelectedTimeBlockId value={{ selectedTimeBlockId, setSelectedTimeBlockClientId: setSelectedTimeBlockId }}>
                     <BlockAvailable>
-                        <Stack direction={"row"}>
-                            <Box sx={{height: "100vh", width: "50vw"}}><TimeTable /></Box>
+                        <Stack direction={"row"} sx={{width: "100vw", height: "100vh"}}>
+                            <Box sx={{height: "100%", width: "50%"}}><TimeTable /></Box>
                             <Stack
                                 sx={{
-                                    height: "100vh",
-                                    width: "50vw",
+                                    height: "100%",
+                                    width: "50%",
                                     border: "1px solid red",
                                 }}
                             >
