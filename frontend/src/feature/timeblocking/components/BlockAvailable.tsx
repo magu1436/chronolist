@@ -109,7 +109,6 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
     }, []);
 
     const createPrevBlockSorce = useCallback((startAt: Time, originalSource: TimeBlockSource): TimeBlockSource => {
-        console.log(`original: ${originalSource}`);
         return {
             ...originalSource,
             clientId: PREVIEW_BLOCK_ID,
