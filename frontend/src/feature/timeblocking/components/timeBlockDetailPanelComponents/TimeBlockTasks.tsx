@@ -12,6 +12,9 @@ type TasksProps = {
     setTasks: (tasks: TimeBlockTask[]) => void
 };
 
+/**
+ * タイムブロックのタスクを表示するコンポーネント
+ */
 const TimeBlockTasks: FC<TasksProps> = ({ tasks, setTasks }) => {
 
     const handleAddTask = useCallback(() => {
@@ -28,6 +31,8 @@ const TimeBlockTasks: FC<TasksProps> = ({ tasks, setTasks }) => {
                             <EditableText value={task.title} onChange={(value) => setTasks(tasks.map(t => t.clientId === task.clientId ? {...t, title: value} : t))} />
                         </ListItem>
                     ))}
+
+                    {/* 新規タスクを追加するボタン */}
                     <ListItemButton onClick={handleAddTask}>
                         <ListItemIcon>
                             <AddIcon />
