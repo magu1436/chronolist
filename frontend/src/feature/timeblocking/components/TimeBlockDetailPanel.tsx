@@ -3,10 +3,11 @@ import Title from "./timeBlockDetailPanelComponents/Title"
 import { useCallback, useContext, useEffect, useState, type FC } from "react";
 import SelectedTimeBlockClientId from "../contexts/SelectedTimeBlockClientId";
 import BlockRepositories from "../contexts/BlockRepositories";
-import type { TimeBlockSource } from "../types/blockSourceTypes";
+import type { TimeBlockSource, TimeBlockTask } from "../types/blockSourceTypes";
 import type { Time } from "@/utils/time";
 import TimeRange from "./timeBlockDetailPanelComponents/TimeRange";
 import Width from "./timeBlockDetailPanelComponents/Width";
+import TimeBlockTasks from "./timeBlockDetailPanelComponents/TimeBlockTasks";
 
 const style: SxProps = {
     position: 'absolute',
@@ -76,6 +77,12 @@ const TimeBlockDetailPanel: FC = () => {
         editedBlock && reflectBlockToRepository(editedBlock);
     }, [block]);
 
+    const handleAddTasks = useCallback((tasks: TimeBlockTask[]) => {
+        const editedBlock = block && { ...block, tasks: [...tasks] };
+        setBlock(editedBlock);
+        editedBlock && reflectBlockToRepository(editedBlock);
+    }, [block]);
+
 
     return (
         <Modal
@@ -88,6 +95,7 @@ const TimeBlockDetailPanel: FC = () => {
                     <Title text={block?.title} setText={handleSetText} />
                     {block?.startAt && <TimeRange width={block?.width} startAt={block?.startAt || undefined} setStartAt={handleSetTime} />}
                     <Width width={block?.width || 0} setWidth={handleSetWidth} />
+                    {block && <TimeBlockTasks tasks={block.tasks} setTasks={handleAddTasks} />}
                 </Stack>
             </Box>
         </Modal>
