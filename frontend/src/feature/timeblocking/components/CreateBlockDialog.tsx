@@ -1,6 +1,6 @@
 import { useContext, useState, type FC } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import type { TimeBlockSource } from "../types/blockSourceTypes";
 import BlockRepositories from "../contexts/BlockRepositories";
