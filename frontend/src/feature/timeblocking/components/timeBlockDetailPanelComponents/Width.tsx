@@ -1,5 +1,5 @@
 import EditableNumberText from "@/components/EditableNumberText";
-import { Stack, Typography, type SxProps } from "@mui/material";
+import { Divider, Stack, Typography, type SxProps } from "@mui/material";
 import type { FC } from "react";
 
 
@@ -18,10 +18,14 @@ const unitSx: SxProps = {
 const Width: FC<WidthProps> = ({ width, setWidth }) => {
     
     return (
-        <Stack spacing={1} direction={"row"} alignItems={"end"}>
-            <EditableNumberText value={width} onChange={setWidth} sx={textSx} />
-            <Typography sx={unitSx}>min</Typography>
+        <Stack>
+            <Divider orientation={"horizontal"} textAlign="left" flexItem>ブロック幅</Divider>
+            <Stack spacing={1} direction={"row"} alignItems={"end"}>
+                <EditableNumberText value={width} onChange={setWidth} sx={textSx} />
+                <Typography sx={unitSx}>min</Typography>
+            </Stack>
         </Stack>
+        
     );
 };
 

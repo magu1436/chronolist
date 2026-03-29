@@ -1,6 +1,6 @@
 import EditableTimeText from "@/components/EditableTimeText";
 import { Time } from "@/utils/time";
-import { Stack, Typography, type SxProps } from "@mui/material";
+import { Divider, Stack, Typography, type SxProps } from "@mui/material";
 import { useCallback, useEffect, useState, type FC } from "react";
 
 
@@ -43,17 +43,23 @@ const TimeRange: FC<TimeRangeProps> = ({ width = 0, startAt = new Time(), setSta
         handleSetStartAt(endAt.subtract(width));
     }, [width, handleSetStartAt]);
 
+            
     return (
-        <Stack spacing={3} direction={"row"}>
+        <>
             <Stack>
-                <Typography sx={labelSx}>From</Typography>
-                <EditableTimeText sx={textSx} value={startAt} onChange={handleSetStartAt} />
+                <Divider orientation={"horizontal"} textAlign="left" flexItem>時刻</Divider>
+                <Stack spacing={3} direction={"row"}>
+                    <Stack>
+                        <Typography sx={labelSx}>From</Typography>
+                        <EditableTimeText sx={textSx} value={startAt} onChange={handleSetStartAt} />
+                    </Stack>
+                    <Stack>
+                        <Typography sx={labelSx}>To</Typography>
+                        <EditableTimeText sx={textSx} value={endAt} onChange={handleSetEndAt} />
+                    </Stack>
+                </Stack>
             </Stack>
-            <Stack>
-                <Typography sx={labelSx}>To</Typography>
-                <EditableTimeText sx={textSx} value={endAt} onChange={handleSetEndAt} />
-            </Stack>
-        </Stack>
+        </>
     );
 };
 
