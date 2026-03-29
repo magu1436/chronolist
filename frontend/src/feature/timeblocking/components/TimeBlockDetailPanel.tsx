@@ -4,6 +4,8 @@ import { useCallback, useContext, useEffect, useState, type FC } from "react";
 import SelectedTimeBlockClientId from "../contexts/SelectedTimeBlockClientId";
 import BlockRepositories from "../contexts/BlockRepositories";
 import type { TimeBlockSource } from "../types/blockSourceTypes";
+import type { Time } from "@/utils/time";
+import TimeRange from "./timeBlockDetailPanelComponents/TimeRange";
 
 const style: SxProps = {
     position: 'absolute',
@@ -62,6 +64,12 @@ const TimeBlockDetailPanel: FC = () => {
         editedBlock && reflectBlockToRepository(editedBlock);
     }, [block]);
 
+    const handleSetTime = useCallback((time: Time) => {
+        const editedBlock = block && { ...block, startAt: time };
+        setBlock(editedBlock);
+        editedBlock && reflectBlockToRepository(editedBlock);
+    }, [block]);
+
 
     return (
         <Modal
@@ -72,6 +80,7 @@ const TimeBlockDetailPanel: FC = () => {
                 sx={style}>
                 <Stack>
                     <Title text={block?.title} setText={handleSetText} />
+                    {block?.startAt && <TimeRange width={block?.width} startAt={block?.startAt || undefined} setStartAt={handleSetTime} />}
                 </Stack>
             </Box>
         </Modal>
