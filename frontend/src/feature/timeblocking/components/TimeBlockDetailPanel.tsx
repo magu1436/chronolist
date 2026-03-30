@@ -9,7 +9,7 @@ import TimeRange from "./timeBlockDetailPanelComponents/TimeRange";
 import Width from "./timeBlockDetailPanelComponents/Width";
 import TimeBlockTasks from "./timeBlockDetailPanelComponents/TimeBlockTasks";
 import DeleteButton from "./timeBlockDetailPanelComponents/DeleteButton";
-import update from "../api/timeBlock/update";
+import { update, updateStartAt, deleteApi } from "../api/timeBlockApi";
 
 const style: SxProps = {
     position: 'absolute',
@@ -91,8 +91,10 @@ const TimeBlockDetailPanel: FC = () => {
     const handleSetTime = useCallback((time: Time) => {
         const editedBlock = block && { ...block, startAt: time };
         setBlock(editedBlock);
+        if (!editedBlock) return;
+        if (!editedBlock.id) throw new Error("id is not still set: waiting for server response.");
         editedBlock && reflectBlockToRepository(editedBlock);
-        editedBlock && update(editedBlock);
+        editedBlock && updateStartAt(editedBlock.id, editedBlock.startAt);
     }, [block]);
 
     /**
@@ -120,6 +122,7 @@ const TimeBlockDetailPanel: FC = () => {
      */
     const handleDelete = useCallback(() => {
         if (!block) return;
+        if (!block.id) throw new Error("id is not still set: waiting for server response.");
 
         switch (block.status) {
             case "PLACED":
@@ -130,6 +133,7 @@ const TimeBlockDetailPanel: FC = () => {
                 break;
         }
         setSelectedTimeBlockClientId(null);
+        deleteApi(block.id);
     }, [block, setBlocksOnTable, setBlocksAtField, setSelectedTimeBlockClientId]);
 
 
