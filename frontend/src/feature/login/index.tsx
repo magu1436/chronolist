@@ -2,7 +2,7 @@ import myAxios from "@/utils/axios";
 import axios from "axios";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 
 const LoginPage = () => {
@@ -14,6 +14,7 @@ const LoginPage = () => {
 
     const [ loginId, setLoginId ] = useState<string>("");
     const [ password, setPassword ] = useState<string>("");
+    const nav = useNavigate();
 
     const handleLogin = async () => {
         console.log("---ログイン処理を開始----------------------------------------")
@@ -28,6 +29,7 @@ const LoginPage = () => {
             // ログイン成功時処理
             console.log("ログイン成功");
             console.log(`token: ${res.data.token}`);
+            nav("/")
 
         } catch (err) {
             if (axios.isAxiosError(err)) {
