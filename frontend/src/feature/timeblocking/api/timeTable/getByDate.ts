@@ -11,7 +11,7 @@ const getByDate = async (date: string) => {
             data: { date },
         });
         return toTimeTableSource(response);
-    } catch (error) {
+    } catch (error: unknown) {
         throw error;
     }
 };

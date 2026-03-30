@@ -9,9 +9,10 @@ import type { TimeBlockSource } from "../types/blockSourceTypes";
 import TimeBlock from "./TimeBlock";
 import Legend from "./timeTableComponents/Legend";
 import BlockRepositories from "../contexts/BlockRepositories";
-import { useLocation } from "react-router-dom";
-import { getByDate } from "../api/timeTableApi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { createAt, getByDate } from "../api/timeTableApi";
 import type { TimeTableSource } from "../types/timeTableSource";
+import { AxiosError } from "axios";
 
 /**
  * タイムテーブル本体を描画するコンポーネント.
@@ -39,6 +40,7 @@ const Table: FC = () => {
     } = useContext(TimeTableConfigure);
 
     const location = useLocation();
+    const nav = useNavigate();
     useEffect(() => {
         const query = new URLSearchParams(location.search);
         // useNavigate で渡された state またはURLのクエリパラメータから日付を取得
@@ -51,9 +53,13 @@ const Table: FC = () => {
         // テスト用ログ
         console.log("date: ", date);
 
-        getByDate(date).then(res => {
-            setTable(res);
-        });
+        getByDate(date)
+            .then(res => {setTable(res);})
+            .catch(e => {
+                if (e instanceof AxiosError && e.response?.status === 404) {
+                    createAt(date).then(() => {nav("/timeblocking", { state: { date } });});
+                }
+            });
     }, [ location ]);
 
     useEffect(() => {
