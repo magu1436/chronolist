@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.magu1436.chronolist.login.LoginUser;
 import com.magu1436.chronolist.scheduler.mapper.SchedulerMapper;
 import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
@@ -42,12 +44,13 @@ public class TimeBlockingController {
     private final SchedulerMapper schedulerMapper;
 
     /**
-     * 指定の日付のタイムテーブルを取得して返す.
+     * 指定のユーザーIDと日付をもつタイムテーブルを取得して返す.
      * <p>このメソッドは,Json形式のデータを受け取り,そのデータに紐づけられた{@code TimeTable}を返す.</p>
      * <h3>リクエストJsonの形:</h3>
      * <pre> {
      *   date: DateString
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param  date 参照する日付情報.
      * <ul>
      * <li>{@code date}:yyyy-mm-ddで渡される.
@@ -58,8 +61,8 @@ public class TimeBlockingController {
      * @author milk0924
      */
     @GetMapping("timeTable/getByDate")
-    public ResponseEntity<TimeTable> getByDate(@RequestBody LocalDate date){
-        TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(date);
+    public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @RequestBody LocalDate date){
+        TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(loginUser.getId(), date);
 
         if(taskGotByDate == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -75,6 +78,7 @@ public class TimeBlockingController {
      * <pre> {
      *   date: DateString
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param timeTable 渡された日付を元に作成されたタイムテーブル
      * <ul>
      * <li> {@code timeTable} DB登録時に渡されたIDと日付をもつ.TimeBlockの情報に関しては無視される.詳細は{@link TimeTable}を参照.
@@ -84,7 +88,9 @@ public class TimeBlockingController {
      * @author milk0924 
      */
     @PostMapping("timeTable/createAt")
-    public ResponseEntity<Integer> createAt(@RequestBody TimeTable timeTable){
+    public ResponseEntity<Integer> createAt(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeTable timeTable){
+        // 受け取ったTimeTableにuserIdを登録
+        timeTable.setUserId(loginUser.getId());
         timeTableMapper.insertTimeTable(timeTable);
         Integer idFromCreatedTimeTable = timeTable.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeTable);
@@ -103,6 +109,7 @@ public class TimeBlockingController {
 	 * tasks: List<{@link TimeBlockTask}>,
 	 * color: String
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param timeBlock Jsonの内容が入れられた{@code TimeBlock}.{@code int id}は登録のときに自動で渡される.詳細は{@link TimeBlock}.
      * <ul>
      * <li> {@code TimeBlock}:{@code TimeTableId}はこのタイムブロックを保存するタイムテーブルのIDが渡される. </li>
@@ -112,7 +119,9 @@ public class TimeBlockingController {
      * @author milk0924
      */
     @PostMapping("timeBlock/register")
-    public ResponseEntity<Integer> register(@RequestBody TimeBlock timeBlock){
+    public ResponseEntity<Integer> register(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeBlock timeBlock){
+        // 受け取ったTimeBlockにuserIdを登録
+        timeBlock.setUserId(loginUser.getId());
         timeBlockMapper.insertTimeBlock(timeBlock);
         Integer idFromCreatedTimeBlock = timeBlock.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeBlock);
@@ -279,15 +288,17 @@ public class TimeBlockingController {
     }
 
     /**
-     * DBに登録されているテンプレートブロックをすべて返却する
+     * ログイン中のユーザーのユーザーIDをもつテンプレートブロックをすべて返却する
      * <p>このメソッドは,DBに保存されているテンプレートブロックを取得し返却する.テンプレートブロックが存在しない場合でも,空のリストを返却する.</p>
+     * 
+     * @param loginUser ログイン中のユーザー
      * @return すべてのテンプレートブロックとHTTPStatusを返すレスポンス.
      * 正常終了時は{@code 200 Ok}を返す.
      * @author milk0924
      */
     @GetMapping("templateBlock/getAll")
-    public ResponseEntity<List<TemplateBlock>> getAllTemplateBlocks(){
-        List<TemplateBlock> allTemplateBlock = templateBlockMapper.getAllTemplateBlocks();
+    public ResponseEntity<List<TemplateBlock>> getAllTemplateBlocks(@AuthenticationPrincipal LoginUser loginUser){
+        List<TemplateBlock> allTemplateBlock = templateBlockMapper.getAllTemplateBlocks(loginUser.getId());
         return ResponseEntity.ok(allTemplateBlock);
     }
 
@@ -300,6 +311,7 @@ public class TimeBlockingController {
 	 *   width: int,
 	 *   color: String
      * }</pre>
+     * @param loginUser ログイン中のユーザー
      * @param templateBlock Jsonの内容が保存された{@code templateBlock}.詳細は{@link TemplateBlock}.
      * <ul>
      * <li> {@code TempleBlock}:Jsonに保存されている情報以外は持たない.IDはDBに保存されたときに自動的に割り当てられる.</li>
@@ -309,7 +321,9 @@ public class TimeBlockingController {
      * @author milk0924
      */
     @PutMapping("templateBlock/register")
-    public ResponseEntity<Integer> registerNewTemplateBlock(@RequestBody TemplateBlock templateBlock){
+    public ResponseEntity<Integer> registerNewTemplateBlock(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TemplateBlock templateBlock){
+        // 受け取ったTemplateBlockにuserIdを登録
+        templateBlock.setUserId(loginUser.getId());
         templateBlockMapper.insertTemplateBlock(templateBlock);
         return ResponseEntity.status(HttpStatus.CREATED).body(templateBlock.getId());
     }

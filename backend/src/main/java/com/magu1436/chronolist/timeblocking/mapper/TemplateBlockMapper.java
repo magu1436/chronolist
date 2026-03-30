@@ -17,15 +17,16 @@ import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 public interface TemplateBlockMapper {
 
     /**
-     * すべての {@link TemplateBlock} を取得する。
+     * 指定のユーザーIDをもつすべての {@link TemplateBlock} を取得する。
      * <p>
      * テンプレートブロックが登録されていない場合でも、
      * 空のリストを返す。
      * </p>
      *
+     * @param userId 取得対象となるユーザーID
      * @return すべての {@link TemplateBlock} の一覧
      */
-    List<TemplateBlock> getAllTemplateBlocks();
+    List<TemplateBlock> getAllTemplateBlocks(int userId);
 
     /**
      * 指定した ID の {@link TemplateBlock} を取得する。

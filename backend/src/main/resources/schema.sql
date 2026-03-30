@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS schedule;
 -- scheduleテーブルの作成（H2 Database Ver）
 CREATE TABLE schedule (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT,            -- 一旦NULL許容で作成
+    -- user_id INT NOT NULL,
     kind VARCHAR(8),
     start_at TIMESTAMP,
     end_at TIMESTAMP,
@@ -14,18 +14,18 @@ CREATE TABLE schedule (
     end_date DATE,
     tz varchar(64) NOT NULL DEFAULT 'Asia/Tokyo',
     title VARCHAR(64) NOT NULL,
-    -- FOREIGN KEY (id) REFERENCES calendar_event(schedule_id),
+    -- FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- kindが「TIMED」か「ALL_DAY」のどちらかをとるための制約
     CONSTRAINT chk_kind_str CHECK (kind IN ('DATED', 'ALL_DAY')),
     
     CONSTRAINT chk_kind_timed
         CHECK (
-            -- 「通常予定」のときにstart_atとend_atが必ず値をもつための制約. また開始時刻より終了時刻が後になるための制約
-            (kind = 'DATED' and start_at is NOT NULL and end_at is NOT NULL and start_at < end_at)
+            -- 「通常予定」のときにstart_atとend_atが必ず値をもつための制約. また開始時刻と終了時刻が同じか, 終了時刻が後になるための制約
+            (kind = 'DATED' and start_at is NOT NULL and end_at is NOT NULL and start_at <= end_at)
             or
-            -- 「終日予定」のときにstart_dateとend_dateが必ず値をもつための制約. また開始日より終了日が後になるための制約
-            (kind = 'ALL_DAY' and start_date is not NULL and end_date is not NULL and start_date < end_date)
+            -- 「終日予定」のときにstart_dateとend_dateが必ず値をもつための制約. また開始日と終了日が同じか, 終了日が後になるための制約
+            (kind = 'ALL_DAY' and start_date is not NULL and end_date is not NULL and start_date <= end_date)
         ),
 
     CONSTRAINT chk_exclusive
@@ -41,7 +41,6 @@ CREATE TABLE schedule (
 -- calendar_eventテーブルの作成（H2 Database Ver）
 CREATE TABLE calendar_event (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT,            -- 一旦NULL許容で作成
     schedule_id INT NOT NULL,
     color VARCHAR(16),
     memo TEXT,
@@ -52,6 +51,7 @@ CREATE TABLE calendar_event (
 -- todo_tasksテーブルの作成
 CREATE TABLE todo_tasks (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    -- user_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
     priority VARCHAR(8) NOT NULL,
     due_kind VARCHAR(16) NOT NULL,
@@ -59,6 +59,7 @@ CREATE TABLE todo_tasks (
     due_time TIME,
     is_completed BOOLEAN DEFAULT FALSE,
     memo TEXT,
+    -- FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- priorityがとれる値の制約
     CONSTRAINT chk_priority CHECK (priority IN ('HIGH', 'MIDDLE', 'LOW')),
@@ -76,15 +77,28 @@ CREATE TABLE todo_tasks (
 );
 
 
+-- Userテーブルの作成
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    login_id VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(60) NOT NULL,
+    role VARCHAR(8) NOT NULL,
+    -- roleがとれる値の制約
+    CONSTRAINT chk_role CHECK (role IN ('GENERAL', 'ADMIN'))
+);
+
 -- time_tablesテーブルの作成
 CREATE TABLE time_tables (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    date DATE NOT NULL
+    -- user_id INT NOT NULL,
+    date DATE NOT NULL,
+    -- FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- time_blocksテーブルの作成
 CREATE TABLE time_blocks (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    -- user_id INT NOT NULL,
     table_id INT,
     title VARCHAR(64) NOT NULL,
     status VARCHAR(8) NOT NULL,
@@ -115,8 +129,10 @@ CREATE TABLE time_block_tasks (
 
 -- template_blocksテーブルの作成
 CREATE TABLE template_blocks (
-    id int PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    -- user_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
     width INT NOT NULL,
-    color VARCHAR(8) NOT NULL
+    color VARCHAR(8) NOT NULL,
+    -- FOREIGN KEY (user_id) REFERENCES users(id)
 );

@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TimeTable {
     private int id;
+    private int userId;
     private LocalDate date;
     private List<TimeBlock> timeBlocks;
 }
