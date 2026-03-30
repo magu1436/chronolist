@@ -95,6 +95,19 @@ public class TimeBlockingController {
         Integer idFromCreatedTimeTable = timeTable.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeTable);
     }
+
+    /**
+     * HOLDブロック取得API
+     * <p>このメソッドはログイン中のユーザーがもち,かつHOLD状態の{@code TimeBlock}を全て取得する</p>
+     * @param loginUser ログイン中のユーザー
+     * @return ログイン中のユーザーがもつHOLD状態の{@code TimeBlock}とHttpStatus
+     * 正常終了時は{@code 200 ok}
+     */
+    @GetMapping("timeBlock/getHoldBlocks")
+    public ResponseEntity<List<TimeBlock>> getHoldBlocks(@AuthenticationPrincipal LoginUser loginUser){
+        List<TimeBlock> heldBlocks = timeBlockMapper.getHeldTimeBlocks(loginUser.getId());
+        return ResponseEntity.ok(heldBlocks);
+    }
     
     /**
      * 新しく{@code TimeBlock}をDBに保存し,保存時に割り当てられたIDを返却する.
