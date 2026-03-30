@@ -3,6 +3,11 @@ import type { TimeBlockSource } from "../../types/blockSourceTypes";
 
 
 const register = async (block: TimeBlockSource) => {
+
+    // テスト用コード
+    console.log("timeblocking/timeBlock/register");
+    console.log("block: ", block);
+
     try {
         const res = await axios.post(
             "timeblocking/timeBlock/register",
