@@ -5,6 +5,7 @@ import TimeTableConfigure from "../contexts/TimeTableConfigure";
 import type { TimeBlockSource } from "../types/blockSourceTypes";
 import BlockRepositories from "../contexts/BlockRepositories";
 import BlockWidthField from "@/components/BlockWidthField";
+import register from "../api/timeBlock/register";
 
 
 type CreateBlockDialogProps = {
@@ -64,7 +65,7 @@ const CreateBlockDialog: FC<CreateBlockDialogProps> = ({ open, setOpen }) => {
         return block;
     };
 
-    const handleClick = () => {
+    const handleClick = async () => {
         if (!title) {
             setTitleHasError(true);
             return;
@@ -76,6 +77,8 @@ const CreateBlockDialog: FC<CreateBlockDialogProps> = ({ open, setOpen }) => {
         const block = buildBlock();
         setBlocksAtField((blocks) => [...blocks, block]);
         handleClose();
+
+        block.id = await register(block);
     };
 
     return (
