@@ -8,7 +8,8 @@ const TimeTableConfigure = createContext<{
     tableWidth: number | string,
     startTime: Time,
     slotMinutes: number,
-    slotHeight: number
+    slotHeight: number,
+    setTimeTableId: (timeTableId: number) => void
 }>({
     timeTableId: 0,
     gridSize: 1,
@@ -17,6 +18,7 @@ const TimeTableConfigure = createContext<{
     startTime: new Time(0, 0),
     slotMinutes: 30,
     slotHeight: 2000 * 30 / (24 * 60),
+    setTimeTableId: () => {},
 });
 
 export default TimeTableConfigure;

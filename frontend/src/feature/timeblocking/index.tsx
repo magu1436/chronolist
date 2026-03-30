@@ -14,14 +14,17 @@ import TimeBlockDetailPanel from "./components/TimeBlockDetailPanel";
 
 const TimeBlockingPage = () => {
 
+    const [ timeTableId, setTimeTableId ] = useState(-1);
+
     const tableConfig = {
-        timeTableId: 1,
+        timeTableId,
         gridSize: 1,
         tableHeight: 2000,
         tableWidth: "100%",
         startTime: new Time(0, 0),
         slotMinutes: 30,
         slotHeight: 2000 * 30 / (24 * 60),
+        setTimeTableId,
     };
 
     const [ selectedTimeBlockId, setSelectedTimeBlockId ] = useState<string | null>(null);
