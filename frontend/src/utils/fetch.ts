@@ -15,6 +15,7 @@ export const customizedFetch = async <T,>(config: FetchConfig) => {
     const res = await axios({
         ...config,
         url,
+        withCredentials: true,
     });
     return res.data as T;
 };
