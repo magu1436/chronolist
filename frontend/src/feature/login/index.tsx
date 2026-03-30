@@ -1,4 +1,4 @@
-import myAxios from "@/utils/axios";
+import { customizedFetch } from "@/utils/fetch";
 import axios from "axios";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
@@ -19,16 +19,17 @@ const LoginPage = () => {
     const handleLogin = async () => {
         console.log("---ログイン処理を開始----------------------------------------")
         try {
-            const res = await myAxios({
+            await customizedFetch({
                 url: "/login",
-                method: "post",
-                data: { loginId, password},
-                withCredentials: true,
-            });
+                method: "POST",
+                data: {
+                    loginId,
+                    password,
+                },
+            })
 
             // ログイン成功時処理
             console.log("ログイン成功");
-            console.log(`token: ${res.data.token}`);
             nav("/")
 
         } catch (err) {
@@ -64,7 +65,7 @@ const LoginPage = () => {
                     <input type="password" name="password" value={password} required onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <Button variant="primary" type="submit">フォームログイン</Button>
-                <Button variant="success" onClick={handleLogin}>APIログイン</Button>
+                <Button type={"button"} variant="success" onClick={handleLogin}>APIログイン</Button>
             </form>
         </>
     )
