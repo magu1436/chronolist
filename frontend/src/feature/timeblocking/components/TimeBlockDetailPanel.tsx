@@ -11,6 +11,7 @@ import TimeBlockTasks from "./timeBlockDetailPanelComponents/TimeBlockTasks";
 import DeleteButton from "./timeBlockDetailPanelComponents/DeleteButton";
 import update from "../api/timeBlock/update";
 import updateStartAt from "../api/timeBlock/updateStartAt";
+import deleteApi from "../api/timeBlock/delete";
 
 const style: SxProps = {
     position: 'absolute',
@@ -123,6 +124,7 @@ const TimeBlockDetailPanel: FC = () => {
      */
     const handleDelete = useCallback(() => {
         if (!block) return;
+        if (!block.id) throw new Error("id is not still set: waiting for server response.");
 
         switch (block.status) {
             case "PLACED":
@@ -133,6 +135,7 @@ const TimeBlockDetailPanel: FC = () => {
                 break;
         }
         setSelectedTimeBlockClientId(null);
+        deleteApi(block.id);
     }, [block, setBlocksOnTable, setBlocksAtField, setSelectedTimeBlockClientId]);
 
 
