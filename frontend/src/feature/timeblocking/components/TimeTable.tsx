@@ -1,4 +1,4 @@
-import { useContext, useCallback, type FC, type ReactElement, useEffect} from "react";
+import { useContext, useCallback, type FC, type ReactElement, useEffect, useState} from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { Box, Stack } from "@mui/material";
 
@@ -11,6 +11,7 @@ import Legend from "./timeTableComponents/Legend";
 import BlockRepositories from "../contexts/BlockRepositories";
 import { useLocation } from "react-router-dom";
 import { getByDate } from "../api/timeTableApi";
+import type { TimeTableSource } from "../types/timeTableSource";
 
 /**
  * タイムテーブル本体を描画するコンポーネント.
@@ -22,9 +23,11 @@ import { getByDate } from "../api/timeTableApi";
  */
 const Table: FC = () => {
 
+    const [ table, setTable ] = useState<TimeTableSource>();
+
     const {
         blocksOnTable,
-        setBlocksOnTable,   // タイムテーブル取得機能を実装した際に使用
+        setBlocksOnTable,
     } = useContext(BlockRepositories);
 
     const {
@@ -36,19 +39,29 @@ const Table: FC = () => {
     } = useContext(TimeTableConfigure);
 
     const location = useLocation();
-
     useEffect(() => {
         const query = new URLSearchParams(location.search);
-        const date = query.get("date") || new Date().toISOString();
+        // useNavigate で渡された state またはURLのクエリパラメータから日付を取得
+        // 日付を取得できない場合は今日の日付を取得
+        const date = 
+            (location.state?.date as (string | undefined)) || 
+            query.get("date") ||
+            new Date().toISOString().split("T")[0];
 
         // テスト用ログ
         console.log("date: ", date);
 
         getByDate(date).then(res => {
-            setBlocksOnTable(res.blocks);
-            setTimeTableId(res.id);
+            setTable(res);
         });
     }, [ location ]);
+
+    useEffect(() => {
+        if (table) {
+            setBlocksOnTable(table.blocks);
+            setTimeTableId(table.id);
+        }
+    }, [ table ]);
 
     const {
         setNodeRef,
