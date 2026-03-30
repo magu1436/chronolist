@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -60,8 +61,8 @@ public class TimeBlockingController {
      * 指定された日付から取得したタイムテーブルが{@code Null}だったとき.({@code 404 Not Found})
      * @author milk0924
      */
-    @GetMapping("timeTable/getByDate")
-    public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @RequestBody LocalDate date){
+    @GetMapping("timeTable/getByDate/{date}")
+    public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("date") LocalDate date){
         TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(loginUser.getId(), date);
 
         if(taskGotByDate == null){

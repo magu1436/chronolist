@@ -3,6 +3,7 @@ package com.magu1436.chronolist.timeblocking.mapper;
 import java.time.LocalDate;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
 
@@ -25,7 +26,7 @@ public interface TimeTableMapper {
      * @param date 取得対象の日付。
      * @return 指定日の {@link TimeTable}。存在しない場合は {@code null} を返す。
      */
-    TimeTable getTimeTableByDate(int userId, LocalDate date);
+    TimeTable getTimeTableByDate(@Param("userId") int userId, @Param("date") LocalDate date);
 
     /**
      * 新しい TimeTable をデータベースに登録する。

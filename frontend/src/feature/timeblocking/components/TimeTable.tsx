@@ -153,7 +153,7 @@ const TimeTable: FC = () => {
         console.log("date: ", date);
 
         getByDate(date)
-            .then(res => {setTable(res);})
+            .then(res => {setTable(res); console.log(res);})
             .catch(e => {
                 if (e instanceof AxiosError && e.response?.status === 404) {
                     createAt(date).then(() => {nav("/timeblocking", { state: { date } });});
