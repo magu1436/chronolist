@@ -24,7 +24,7 @@ const CreateBlockDialog: FC<CreateBlockDialogProps> = ({ open, setOpen }) => {
         setBlocksAtField,
     } = useContext(BlockRepositories);
     
-    const [ title, setTitle ] = useState<string>();
+    const [ title, setTitle ] = useState<string>("");
     const [ titleHasError, setTitleHasError ] = useState<boolean>(false);
     const [ width, setWidth ] = useState<number>(slotMinutes);
     const [ widthHasError, setWidthHasError ] = useState<boolean>(false);
@@ -44,7 +44,7 @@ const CreateBlockDialog: FC<CreateBlockDialogProps> = ({ open, setOpen }) => {
 
     const handleClose = () => {
         setOpen(false);
-        setTitle(undefined);
+        setTitle("");
         setWidth(slotMinutes);
         setColor("gray");
     };
