@@ -1,6 +1,6 @@
 import { useContext, useCallback, type FC, type ReactElement, useEffect, useState} from "react";
 import { useDroppable } from "@dnd-kit/core";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 import { Time } from "@/utils/time";
 import { TIMETABLE_ID } from "../static/droppableId";
@@ -24,11 +24,8 @@ import { AxiosError } from "axios";
  */
 const Table: FC = () => {
 
-    const [ table, setTable ] = useState<TimeTableSource>();
-
     const {
         blocksOnTable,
-        setBlocksOnTable,
     } = useContext(BlockRepositories);
 
     const {
@@ -36,38 +33,7 @@ const Table: FC = () => {
         tableHeight,
         tableWidth,
         slotHeight,
-        setTimeTableId,
     } = useContext(TimeTableConfigure);
-
-    const location = useLocation();
-    const nav = useNavigate();
-    useEffect(() => {
-        const query = new URLSearchParams(location.search);
-        // useNavigate で渡された state またはURLのクエリパラメータから日付を取得
-        // 日付を取得できない場合は今日の日付を取得
-        const date = 
-            (location.state?.date as (string | undefined)) || 
-            query.get("date") ||
-            new Date().toISOString().split("T")[0];
-
-        // テスト用ログ
-        console.log("date: ", date);
-
-        getByDate(date)
-            .then(res => {setTable(res);})
-            .catch(e => {
-                if (e instanceof AxiosError && e.response?.status === 404) {
-                    createAt(date).then(() => {nav("/timeblocking", { state: { date } });});
-                }
-            });
-    }, [ location ]);
-
-    useEffect(() => {
-        if (table) {
-            setBlocksOnTable(table.blocks);
-            setTimeTableId(table.id);
-        }
-    }, [ table ]);
 
     const {
         setNodeRef,
@@ -162,6 +128,46 @@ const Table: FC = () => {
 
 const TimeTable: FC = () => {
 
+    const {
+        setTimeTableId,
+    } = useContext(TimeTableConfigure);
+
+    const {
+        setBlocksOnTable,
+    } = useContext(BlockRepositories);
+
+    const [ table, setTable ] = useState<TimeTableSource>();
+
+    const location = useLocation();
+    const nav = useNavigate();
+    useEffect(() => {
+        const query = new URLSearchParams(location.search);
+        // useNavigate で渡された state またはURLのクエリパラメータから日付を取得
+        // 日付を取得できない場合は今日の日付を取得
+        const date = 
+            (location.state?.date as (string | undefined)) || 
+            query.get("date") ||
+            new Date().toISOString().split("T")[0];
+
+        // テスト用ログ
+        console.log("date: ", date);
+
+        getByDate(date)
+            .then(res => {setTable(res);})
+            .catch(e => {
+                if (e instanceof AxiosError && e.response?.status === 404) {
+                    createAt(date).then(() => {nav("/timeblocking", { state: { date } });});
+                }
+            });
+    }, [ location ]);
+
+    useEffect(() => {
+        if (table) {
+            setBlocksOnTable(table.blocks);
+            setTimeTableId(table.id);
+        }
+    }, [ table ]);
+
     return (
         <Box
             sx={{
@@ -172,6 +178,7 @@ const TimeTable: FC = () => {
                 border: 1,
             }}
         >
+            <Typography sx={{fontSize: 30}}>{table?.date.toISOString().split("T")[0]}</Typography>
             <Stack
                 direction={"row"}
                 alignItems={"flex-start"}
