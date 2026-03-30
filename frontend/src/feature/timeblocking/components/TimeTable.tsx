@@ -1,4 +1,4 @@
-import { useContext, useCallback, type FC, type ReactElement} from "react";
+import { useContext, useCallback, type FC, type ReactElement, useEffect} from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { Box, Stack } from "@mui/material";
 
@@ -9,6 +9,8 @@ import type { TimeBlockSource } from "../types/blockSourceTypes";
 import TimeBlock from "./TimeBlock";
 import Legend from "./timeTableComponents/Legend";
 import BlockRepositories from "../contexts/BlockRepositories";
+import { useLocation } from "react-router-dom";
+import { getByDate } from "../api/timeTableApi";
 
 /**
  * タイムテーブル本体を描画するコンポーネント.
@@ -30,7 +32,23 @@ const Table: FC = () => {
         tableHeight,
         tableWidth,
         slotHeight,
+        setTimeTableId,
     } = useContext(TimeTableConfigure);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        const query = new URLSearchParams(location.search);
+        const date = query.get("date") || new Date().toISOString();
+
+        // テスト用ログ
+        console.log("date: ", date);
+
+        getByDate(date).then(res => {
+            setBlocksOnTable(res.blocks);
+            setTimeTableId(res.id);
+        });
+    }, [ location ]);
 
     const {
         setNodeRef,

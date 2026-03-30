@@ -14,6 +14,7 @@ const HomePage = () => {
             <Button className="m-1" onClick={() => {nav("/todolist")}}>ToDoリスト</Button>
             <Button className="m-1" onClick={() => {nav("/scheduler")}}>スケジューラ</Button>
             <Button className="m-1" onClick={() => {nav("/timeblocking")}}>タイムブロッキング</Button>
+            <Button className="m-1" onClick={() => {nav("/timeblocking?date=2025-12-29")}}>タイムブロッキング(2025-12-29)</Button>
             <Button className="m-1" onClick={() => {nav("/test")}}>テスター</Button>
         </div>
     )
