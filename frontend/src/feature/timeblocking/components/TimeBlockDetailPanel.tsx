@@ -10,6 +10,7 @@ import Width from "./timeBlockDetailPanelComponents/Width";
 import TimeBlockTasks from "./timeBlockDetailPanelComponents/TimeBlockTasks";
 import DeleteButton from "./timeBlockDetailPanelComponents/DeleteButton";
 import update from "../api/timeBlock/update";
+import updateStartAt from "../api/timeBlock/updateStartAt";
 
 const style: SxProps = {
     position: 'absolute',
@@ -91,8 +92,10 @@ const TimeBlockDetailPanel: FC = () => {
     const handleSetTime = useCallback((time: Time) => {
         const editedBlock = block && { ...block, startAt: time };
         setBlock(editedBlock);
+        if (!editedBlock) return;
+        if (!editedBlock.id) throw new Error("id is not still set: waiting for server response.");
         editedBlock && reflectBlockToRepository(editedBlock);
-        editedBlock && update(editedBlock);
+        editedBlock && updateStartAt(editedBlock.id, editedBlock.startAt);
     }, [block]);
 
     /**
