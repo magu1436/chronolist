@@ -1,11 +1,11 @@
 import { useCallback, type FC } from "react";
-import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from "@mui/material";
+import { Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { v4 as uuidv4 } from "uuid";
 
 import type { TimeBlockTask } from "../../types/blockSourceTypes";
 import EditableText from "@/components/EditableText";
-import { register } from "../../api/timeBlockTaskApi";
+import { deleteApi, register } from "../../api/timeBlockTaskApi";
 
 
 type TasksProps = {
@@ -25,6 +25,15 @@ const TimeBlockTasks: FC<TasksProps> = ({ tasks, blockId, setTasks }) => {
         const id = await register(newTask);
         newTask.id = id;
     }, [tasks, setTasks]);
+
+    const handleCheck = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const taskClientId = e.target.id;
+        const targetTask = tasks.find(task => task.clientId === taskClientId);
+        if (!targetTask) throw new Error("タスクを取得できません。");
+        if (!targetTask.id) throw new Error("タスクIDを取得できません。");
+        setTasks(tasks.filter(task => task.clientId !== taskClientId));
+        await deleteApi(targetTask.id);
+    }, [setTasks, tasks]);
     
     return (
         <>
@@ -33,6 +42,7 @@ const TimeBlockTasks: FC<TasksProps> = ({ tasks, blockId, setTasks }) => {
                 <List>
                     {tasks.map((task) => (
                         <ListItem key={`block-task-${task.clientId}`}>
+                            <Checkbox onChange={handleCheck} id={task.clientId} />
                             <EditableText value={task.title} onChange={(value) => setTasks(tasks.map(t => t.clientId === task.clientId ? {...t, title: value} : t))} />
                         </ListItem>
                     ))}

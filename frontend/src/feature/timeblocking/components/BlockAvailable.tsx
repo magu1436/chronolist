@@ -45,7 +45,10 @@ const testBlocksAtField: TimeBlockSource[] = [{
         relatedSchedle: null,
         width: 120,
         startAt: null,
-        tasks: [],
+        tasks: [
+            { id: 1, clientId: uuidv4(), timeBlockId: 1, title: "test task 1" },
+            { id: 2, clientId: uuidv4(), timeBlockId: 1, title: "test task 2" },
+        ],
         color: "red",
         title: "test block 1 test block 2 test block 3 test block 4",
     },
