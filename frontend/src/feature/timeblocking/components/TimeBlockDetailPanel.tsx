@@ -82,7 +82,10 @@ const TimeBlockDetailPanel: FC = () => {
     const handleSetText = useCallback((text: string) => {
         const editedBlock = block && { ...block, title: text };
         setBlock(editedBlock);
-        editedBlock && reflectBlockToRepository(editedBlock);
+        if (editedBlock) {
+            reflectBlockToRepository(editedBlock);
+            update(editedBlock);
+        }
     }, [block]);
 
     /**
