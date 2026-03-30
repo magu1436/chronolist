@@ -9,6 +9,7 @@ import TimeRange from "./timeBlockDetailPanelComponents/TimeRange";
 import Width from "./timeBlockDetailPanelComponents/Width";
 import TimeBlockTasks from "./timeBlockDetailPanelComponents/TimeBlockTasks";
 import DeleteButton from "./timeBlockDetailPanelComponents/DeleteButton";
+import update from "../api/timeBlock/update";
 
 const style: SxProps = {
     position: 'absolute',
@@ -91,6 +92,7 @@ const TimeBlockDetailPanel: FC = () => {
         const editedBlock = block && { ...block, startAt: time };
         setBlock(editedBlock);
         editedBlock && reflectBlockToRepository(editedBlock);
+        editedBlock && update(editedBlock);
     }, [block]);
 
     /**
@@ -100,6 +102,7 @@ const TimeBlockDetailPanel: FC = () => {
         const editedBlock = block && { ...block, width: width };
         setBlock(editedBlock);
         editedBlock && reflectBlockToRepository(editedBlock);
+        editedBlock && update(editedBlock);
     }, [block]);
 
     /**
@@ -109,6 +112,7 @@ const TimeBlockDetailPanel: FC = () => {
         const editedBlock = block && { ...block, tasks: [...tasks] };
         setBlock(editedBlock);
         editedBlock && reflectBlockToRepository(editedBlock);
+        editedBlock && update(editedBlock);
     }, [block]);
 
     /**
