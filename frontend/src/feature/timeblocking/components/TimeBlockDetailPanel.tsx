@@ -148,7 +148,7 @@ const TimeBlockDetailPanel: FC = () => {
                     <Title text={block?.title} setText={handleSetText} />
                     {block?.startAt && <TimeRange width={block?.width} startAt={block?.startAt || undefined} setStartAt={handleSetTime} />}
                     <Width width={block?.width || 0} setWidth={handleSetWidth} />
-                    {block && <TimeBlockTasks tasks={block.tasks} setTasks={handleSetTasks} />}
+                    {block && block.id && <TimeBlockTasks tasks={block.tasks} blockId={block.id} setTasks={handleSetTasks} />}
                     <DeleteButton onDelete={handleDelete} />
                 </Stack>
             </Box>
