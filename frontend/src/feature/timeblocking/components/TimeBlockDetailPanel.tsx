@@ -9,9 +9,7 @@ import TimeRange from "./timeBlockDetailPanelComponents/TimeRange";
 import Width from "./timeBlockDetailPanelComponents/Width";
 import TimeBlockTasks from "./timeBlockDetailPanelComponents/TimeBlockTasks";
 import DeleteButton from "./timeBlockDetailPanelComponents/DeleteButton";
-import update from "../api/timeBlock/update";
-import updateStartAt from "../api/timeBlock/updateStartAt";
-import deleteApi from "../api/timeBlock/delete";
+import { update, updateStartAt, deleteApi } from "../api/timeBlockApi";
 
 const style: SxProps = {
     position: 'absolute',
