@@ -32,7 +32,7 @@ VALUES
 INSERT INTO time_tables (user_id, date)
 VALUES
 (1, '2025-12-29');
-INSERT INTO time_tables (date)
+INSERT INTO time_tables (user_id, date)
 VALUES
 (1, '2025-10-31');
 
