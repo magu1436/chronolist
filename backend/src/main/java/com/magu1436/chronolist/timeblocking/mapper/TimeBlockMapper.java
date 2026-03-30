@@ -25,16 +25,17 @@ public interface TimeBlockMapper {
     TimeBlock getTimeBlockById(int id);
 
     /**
-     * ステータスが {@code HOLD} の {@link TimeBlock} をすべて取得する。
+     * 指定のユーザーIDをもち, かつステータスが {@code HOLD} の {@link TimeBlock} をすべて取得する。
      * <p>
      * {@code HOLD} はタイムテーブルに配置されていない保持状態のブロックであり、
      * 配置前の素材として表示される。
      * </p>
      *
+     * @param userId 取得対象となるユーザーID
      * @return {@code HOLD} 状態の {@link TimeBlock} の一覧。  
      *         該当がない場合でも空のリストを返す。
      */
-    List<TimeBlock> getHeldTimeBlocks();
+    List<TimeBlock> getHeldTimeBlocks(int userId);
 
     /**
      * 新しい {@link TimeBlock} をデータベースに登録する。

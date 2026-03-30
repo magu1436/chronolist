@@ -4,7 +4,7 @@ import ErrorDisplay from "../error";
 
 const DeleteResult = () => {
 
-    const targetId: number = 0;
+    const targetId: number = 1;
 
     const {isLoading, error} = useFetch(
         `scheduler/delete/${targetId}`,

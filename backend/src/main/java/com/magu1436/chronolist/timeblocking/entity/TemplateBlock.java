@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TemplateBlock {
     private int id;
+    private int userId;
     private String title;
     private int width;
     private String color;

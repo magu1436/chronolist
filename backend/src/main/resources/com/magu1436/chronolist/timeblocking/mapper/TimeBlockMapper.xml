@@ -3,9 +3,9 @@
 <mapper namespace="com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper">
     <select id="getTimeBlockById" resultMap="TimeBlockingResultMap.TimeBlockResult">
         SELECT
-            block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
+            block.id AS block_id, block.user_id AS block_user_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
             task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
-            schedule.id AS schedule_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
+            schedule.id AS schedule_id, schedule.user_id AS schedule_user_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
         FROM time_blocks block
         LEFT JOIN time_block_tasks task ON block.id = task.time_block_id
         LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
@@ -14,19 +14,19 @@
 
     <select id="getHeldTimeBlocks" resultMap="TimeBlockingResultMap.TimeBlockResult">
         SELECT
-            block.id AS block_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
+            block.id AS block_id, block.user_id AS block_user_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
             task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
-            schedule.id AS schedule_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
+            schedule.id AS schedule_id, schedule.user_id AS schedule_user_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
         FROM time_blocks block
         LEFT JOIN time_block_tasks task ON block.id = task.time_block_id
         LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
-        WHERE block.status = 'HOLD'
+        WHERE (block_user_id = #{userId}) AND (block.status = 'HOLD')
     </select>
 
     <insert id="insertTimeBlock" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO time_blocks (table_id, title, status, schedule_id, width, start_at, color)
+        INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
         VALUES
-        (#{timeTableId}, #{title}, #{status}, #{relatedSchedule.id}, #{width}, #{startAt}, #{color})
+        (#{userId}, #{timeTableId}, #{title}, #{status}, #{relatedSchedule.id}, #{width}, #{startAt}, #{color})
     </insert>
 
     <update id="updateTimeBlock" parameterType="com.magu1436.chronolist.timeblocking.entity.TimeBlock">
