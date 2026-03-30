@@ -14,6 +14,11 @@ export type TimeBlockApi = {
     color: string
 };
 
+export type TimeBlockTaskApi = {
+    id: number,
+    title: string,
+};
+
 export type TemplateBlockApi = {
     id: number,
     title: string,
