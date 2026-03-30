@@ -118,7 +118,7 @@ public class TimeBlockingController {
      * 正常終了時は{@code 201 Created}を返す.
      * @author milk0924
      */
-    @PostMapping("timeBlock/register")
+    @PutMapping("timeBlock/register")
     public ResponseEntity<Integer> register(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeBlock timeBlock){
         // 受け取ったTimeBlockにuserIdを登録
         timeBlock.setUserId(loginUser.getId());
