@@ -6,6 +6,7 @@ import type { Time } from "@/utils/time"
 export type TimeBlockTask = {
     id?: number,
     clientId: string,
+    timeBlockId: number,
     title: string,
 };
 

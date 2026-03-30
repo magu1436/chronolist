@@ -9,16 +9,17 @@ import EditableText from "@/components/EditableText";
 
 type TasksProps = {
     tasks: TimeBlockTask[],
+    blockId: number,
     setTasks: (tasks: TimeBlockTask[]) => void
 };
 
 /**
  * タイムブロックのタスクを表示するコンポーネント
  */
-const TimeBlockTasks: FC<TasksProps> = ({ tasks, setTasks }) => {
+const TimeBlockTasks: FC<TasksProps> = ({ tasks, blockId, setTasks }) => {
 
     const handleAddTask = useCallback(() => {
-        setTasks([...tasks, { clientId: uuidv4(), title: "new Task" }]);
+        setTasks([...tasks, { clientId: uuidv4(), timeBlockId: blockId, title: "new Task" }]);
     }, [tasks, setTasks]);
     
     return (
