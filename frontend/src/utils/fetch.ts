@@ -4,6 +4,21 @@ import { useEffect, useState } from "react";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
+type FetchConfig = {
+    url: string;
+    method: HttpMethod;
+    data?: any;
+}
+
+export const customizedFetch = async <T,>(config: FetchConfig) => {
+    const url = config.url?.startsWith("/")? config.url : `/${config.url}`;
+    const res = await axios({
+        ...config,
+        url,
+    });
+    return res.data as T;
+};
+
 /**
  * `Axios` を利用したデータフェッチカスタムフック.
  * @param app アプリケーション名
