@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper">
-    <select id="getTimeBlockById" resultMap="TimeBlockingResultMap.TimeBlockResult">
+    <select id="getTimeBlockById" resultMap="com.magu1436.chronolist.timeblocking.mapper.TimeblockingResultMap.TimeBlockResult">
         SELECT
             block.id AS block_id, block.user_id AS block_user_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
             task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
@@ -12,7 +12,7 @@
         WHERE block_id = #{id}
     </select>
 
-    <select id="getHeldTimeBlocks" resultMap="TimeBlockingResultMap.TimeBlockResult">
+    <select id="getHeldTimeBlocks" resultMap="com.magu1436.chronolist.timeblocking.mapper.TimeblockingResultMap.TimeBlockResult">
         SELECT
             block.id AS block_id, block.user_id AS block_user_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
             task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
