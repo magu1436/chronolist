@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { TimeBlockTask } from "../../types/blockSourceTypes";
 import EditableText from "@/components/EditableText";
+import { register } from "../../api/timeBlockTaskApi";
 
 
 type TasksProps = {
@@ -18,8 +19,11 @@ type TasksProps = {
  */
 const TimeBlockTasks: FC<TasksProps> = ({ tasks, blockId, setTasks }) => {
 
-    const handleAddTask = useCallback(() => {
-        setTasks([...tasks, { clientId: uuidv4(), timeBlockId: blockId, title: "new Task" }]);
+    const handleAddTask = useCallback( async () => {
+        const newTask: TimeBlockTask = { clientId: uuidv4(), timeBlockId: blockId, title: "new Task" };
+        setTasks([...tasks, newTask]);
+        const id = await register(newTask);
+        newTask.id = id;
     }, [tasks, setTasks]);
     
     return (
