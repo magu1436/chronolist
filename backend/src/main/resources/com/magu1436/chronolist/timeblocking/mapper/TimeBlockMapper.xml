@@ -12,6 +12,20 @@
         WHERE tb.id = #{id}
     </select>
 
+    <select id="getTimeBlocksByTimeTableId" resultMap="com.magu1436.chronolist.timeblocking.mapper.TimeblockingResultMap.TimeBlockResult">
+        SELECT
+            b.id AS block_id,
+            b.user_id AS user_id,
+            b.table_id AS block_table_id,
+            b.title AS block_title,
+            b.status,
+            b.width,
+            b.start_at,
+            b.color,
+        FROM time_blocks b
+        WHERE tb.table_id = #{timeTableId}
+    </select>
+
     <select id="getHeldTimeBlocks" resultMap="com.magu1436.chronolist.timeblocking.mapper.TimeblockingResultMap.TimeBlockResult">
         SELECT
             tb.id AS block_id, tb.user_id AS block_user_id, tb.table_id AS block_table_id, tb.title AS block_title, tb.status, tb.width, tb.start_at, tb.color,
