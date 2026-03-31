@@ -14,13 +14,13 @@
 
     <select id="getHeldTimeBlocks" resultMap="com.magu1436.chronolist.timeblocking.mapper.TimeblockingResultMap.TimeBlockResult">
         SELECT
-            block.id AS block_id, block.user_id AS block_user_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
-            task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
-            schedule.id AS schedule_id, schedule.user_id AS schedule_user_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
-        FROM time_blocks block
-        LEFT JOIN time_block_tasks task ON block.id = task.time_block_id
-        LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
-        WHERE (block_user_id = #{userId}) AND (block.status = 'HOLD')
+            tb.id AS block_id, tb.user_id AS block_user_id, tb.table_id AS block_table_id, tb.title AS block_title, tb.status, tb.width, tb.start_at, tb.color,
+            tbt.id AS task_id, tbt.time_block_id AS task_block_id, tbt.title AS task_title,
+            s.id AS schedule_id, s.user_id AS schedule_user_id, s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title AS schedule_title
+        FROM time_blocks tb
+        LEFT JOIN time_block_tasks tbt ON tb.id = tbt.time_block_id
+        LEFT JOIN schedule s ON tb.schedule_id = s.id
+        WHERE (tb.user_id = #{userId}) AND (tb.status = 'HOLD')
     </select>
 
     <insert id="insertTimeBlock" useGeneratedKeys="true" keyProperty="id">
