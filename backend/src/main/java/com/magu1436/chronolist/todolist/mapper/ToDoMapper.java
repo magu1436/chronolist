@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.magu1436.chronolist.todolist.entity.ToDoTask;
 
@@ -14,9 +15,13 @@ public interface ToDoMapper {
     /** idを元にToDoTaskを取得 */
     ToDoTask getTaskById(int id);
     /** ユーザーIDとpriorityを元にToDoTaskを取得 */
-    List<ToDoTask> getTasksByPriority(int userId, String priority);
+    List<ToDoTask> getTasksByPriority(@Param("userId") int userId, @Param("priority") String priority);
     /** ユーザーIDと期日を元にToDoTaskを取得 */
-    List<ToDoTask> getTasksByDueDate(int userId, LocalDate start_date, LocalDate end_date);
+    List<ToDoTask> getTasksByDueDate(
+        @Param("userId") int userId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
+    );
     /** 指定のユーザーIDをもち未完了のToDoTaskを取得 */
     List<ToDoTask> getTasksNotCompleted(int userId);
     /** タスクの新規登録 */

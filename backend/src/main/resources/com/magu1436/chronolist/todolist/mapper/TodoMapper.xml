@@ -23,7 +23,7 @@
     <select id="getTasksByDueDate" resultType="com.magu1436.chronolist.todolist.entity.ToDoTask">
         SELECT id, title, priority, due_kind, due_date, due_time, is_completed, memo
         FROM todo_tasks
-        WHERE (user_id = #{userId}) AND ((due_date &gt;= #{start_date}) AND (due_date &lt; #{end_date}))
+        WHERE (user_id = #{userId}) AND ((due_date &gt;= #{startDate}) AND (due_date &lt; #{endDate}))
     </select>
 
     <select id="getTasksNotCompleted" resultType="com.magu1436.chronolist.todolist.entity.ToDoTask">
