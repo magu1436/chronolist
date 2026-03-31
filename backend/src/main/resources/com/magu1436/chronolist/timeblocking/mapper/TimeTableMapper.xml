@@ -3,15 +3,15 @@
 <mapper namespace="com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper">
     <select id="getTimeTableByDate" resultMap="com.magu1436.chronolist.timeblocking.mapper.TimeblockingResultMap.TimeTableResult">
         SELECT
-            table.id AS table_id, table.user_id AS table_user_id, table.date,
-            block.id AS block_id, block.user_id AS block_user_id, block.table_id AS block_table_id, block.title AS block_title, block.status, block.width, block.start_at, block.color,
-            task.id AS task_id, task.time_block_id AS task_block_id, task.title AS task_title,
-            schedule.id AS schedule_id, schedule.user_id AS schedule_user_id, schedule.kind, schedule.start_at, schedule.end_at, schedule.start_date, schedule.end_date, schedule.title AS schedule_title
-        FROM time_tables table
-        LEFT JOIN time_blocks block ON table.id = block.table_id
-        LEFT JOIN time_block_tasks task ON block.id = task.time_block_id
-        LEFT JOIN schedule schedule ON block.schedule_id = schedule.id
-        WHERE (table_user_id = #{userId}) AND (table.date = #{date})
+            tt.id AS table_id, tt.user_id AS table_user_id, tt.date,
+            tb.id AS block_id, tb.user_id AS block_user_id, tb.table_id AS block_table_id, tb.title AS block_title, tb.status, tb.width, tb.start_at, tb.color,
+            tbt.id AS task_id, tbt.time_block_id AS task_block_id, tbt.title AS task_title,
+            s.id AS schedule_id, s.user_id AS schedule_user_id, s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title AS schedule_title
+        FROM time_tables tt
+        LEFT JOIN time_blocks tb ON tt.id = tb.table_id
+        LEFT JOIN time_block_tasks tbt ON tb.id = tbt.time_block_id
+        LEFT JOIN schedule s ON tb.schedule_id = s.id
+        WHERE (tt.user_id = #{userId}) AND (tt.date = #{date})
     </select>
 
     <insert id="insertTimeTable" useGeneratedKeys="true" keyProperty="id">
