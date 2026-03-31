@@ -86,3 +86,54 @@ CREATE TABLE users (
     -- roleがとれる値の制約
     CONSTRAINT chk_role CHECK (role IN ('GENERAL', 'ADMIN'))
 );
+
+-- time_tablesテーブルの作成
+CREATE TABLE time_tables (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    -- user_id INT NOT NULL,
+    date DATE NOT NULL,
+    -- FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- time_blocksテーブルの作成
+CREATE TABLE time_blocks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    -- user_id INT NOT NULL,
+    table_id INT,
+    title VARCHAR(64) NOT NULL,
+    status VARCHAR(8) NOT NULL,
+    schedule_id INT,
+    width INT NOT NULL,
+    start_at TIME,
+    color VARCHAR(8) NOT NULL,
+    -- FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY table_id
+        REFERENCES time_tables(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY schedule_id 
+        REFERENCES schedule(id)
+        ON DELETE CASCADE,
+
+    -- statusがとれる値の制約
+    CONSTRAINT chk_status CHECK (status IN ('PLACED', 'HOLD'))
+);
+
+-- time_block_tasksテーブルの作成
+CREATE TABLE time_block_tasks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    time_block_id INT NOT NULL,
+    title VARCHAR(64) NOT NULL,
+    FOREIGN KEY time_block_id
+        REFERENCES time_blocks(id)
+        ON DELETE CASCADE
+)
+
+-- template_blocksテーブルの作成
+CREATE TABLE template_blocks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    -- user_id INT NOT NULL,
+    title VARCHAR(64) NOT NULL,
+    width INT NOT NULL,
+    color VARCHAR(8) NOT NULL,
+    -- FOREIGN KEY (user_id) REFERENCES users(id)
+);
