@@ -63,13 +63,15 @@ public class TimeBlockingController {
      */
     @GetMapping("timeTable/getByDate/{date}")
     public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("date") LocalDate date){
-        TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(loginUser.getId(), date);
-
-        if(taskGotByDate == null){
+        TimeTable table = timeTableMapper.getTimeTableByDate(loginUser.getId(), date);
+        if(table == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(taskGotByDate);
+        List<TimeBlock> blocks = timeBlockMapper.getTimeBlocksByTimeTableId(table.getId());
+        table.setTimeBlocks(blocks);
+
+        return ResponseEntity.ok(table);
     }
 
     /** 
