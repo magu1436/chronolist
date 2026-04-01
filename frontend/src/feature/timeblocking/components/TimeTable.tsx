@@ -157,6 +157,8 @@ const TimeTable: FC = () => {
             .catch(e => {
                 if (e instanceof AxiosError && e.response?.status === 404) {
                     createAt(date).then(() => {nav("/timeblocking", { state: { date } });});
+                } else {
+                    throw e;
                 }
             });
     }, [ location ]);
