@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createAt, getByDate } from "../api/timeTableApi";
 import type { TimeTableSource } from "../types/timeTableSource";
 import { AxiosError } from "axios";
+import { NotFoundError } from "@/error/common";
 
 /**
  * タイムテーブル本体を描画するコンポーネント.
@@ -155,7 +156,8 @@ const TimeTable: FC = () => {
         getByDate(date)
             .then(res => {setTable(res);})
             .catch(e => {
-                if (e instanceof AxiosError && e.response?.status === 404) {
+                if (e instanceof NotFoundError) {
+                    console.log("タイムテーブルが見つからなかったため、新しく作成します")
                     createAt(date).then(() => {nav("/timeblocking", { state: { date } });});
                 } else {
                     throw e;
