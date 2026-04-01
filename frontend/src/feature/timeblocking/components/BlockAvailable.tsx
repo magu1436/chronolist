@@ -11,32 +11,6 @@ import TimeBlockView from "./TimeBlockView";
 import { BLOCKS_AREA_ID, TEMPLATE_BLOCKS_AREA_ID, TIMETABLE_ID } from "../static/droppableId";
 import { registerTemplateBlock } from "../api/templateBlock";
 
-const testBlocksOnTable: TimeBlockSource[] = [
-    {
-        id: 3,
-        clientId: uuidv4(),
-        timeTableId: 1,
-        status: "PLACED",
-        relatedSchedle: null,
-        width: 90,
-        startAt: new Time("1:30"),
-        tasks: [],
-        color: "red",
-        title: "test block 3",
-    },
-    {
-        id: 4,
-        clientId: uuidv4(),
-        timeTableId: 1,
-        status: "PLACED",
-        relatedSchedle: null,
-        width: 60,
-        startAt: new Time("2:30"),
-        tasks: [],
-        color: "blue",
-        title: "test block 4",
-    }
-];
 const testBlocksAtField: TimeBlockSource[] = [{
         id: 1,
         clientId: uuidv4(),
@@ -93,7 +67,7 @@ type BlockAvailableProps = {
  */
 const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
 
-    const [ blocksOnTable, setBlocksOnTable ] = useState<TimeBlockSource[]>(testBlocksOnTable);
+    const [ blocksOnTable, setBlocksOnTable ] = useState<TimeBlockSource[]>([]);
     const [ blocksAtField, setBlocksAtField ] = useState<TimeBlockSource[]>(testBlocksAtField);
     const [ templateBlocks, setTemplateBlocks ] = useState<TemplateBlockSource[]>(testTemplateBlocks);
 

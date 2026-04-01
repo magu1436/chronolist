@@ -39,6 +39,12 @@ VALUES
 -- time_blocksテーブルへの初期データ登録
 INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
 VALUES
+(1, 1, '病院', 'PLACED', null, 180, '9:30:00', 'RED');
+INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
+VALUES
+(1, 1, 'オンライン授業', 'PLACED', null, 90, '10:30:00', 'PINK');
+INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
+VALUES
 (1, 1, '基本情報の対策', 'PLACED', null, 90, '11:30:00', 'RED');
 INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
 VALUES
