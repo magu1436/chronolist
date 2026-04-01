@@ -20,7 +20,6 @@ import com.magu1436.chronolist.timeblocking.exception.TimeTableNotFoundException
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockTaskMapper;
-import com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper;
 import com.magu1436.chronolist.timeblocking.service.TimeTableService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,7 +43,6 @@ public class TimeBlockingController {
     private final TemplateBlockMapper templateBlockMapper;
     private final TimeBlockTaskMapper timeBlockTaskMapper;
     private final TimeBlockMapper timeBlockMapper;
-    private final TimeTableMapper timeTableMapper;
     private final SchedulerMapper schedulerMapper;
 
     private final TimeTableService timeTableService;
