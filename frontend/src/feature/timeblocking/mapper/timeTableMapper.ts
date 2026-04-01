@@ -13,6 +13,6 @@ export const toTimeTableSource = (api: TimeTableApi): TimeTableSource => {
     return {
         id: api.id,
         date: new Date(api.date),
-        blocks: api.blocks.map(toTimeBlockSource),
+        blocks: api.blocks?.map(block => toTimeBlockSource(block)) || [],
     };
 };
