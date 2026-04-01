@@ -17,6 +17,7 @@ export type TimeBlockApi = {
 export type TimeBlockTaskApi = {
     id: number,
     title: string,
+    timeBlockId: number,
 };
 
 export type TemplateBlockApi = {
