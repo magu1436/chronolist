@@ -90,7 +90,7 @@ public class TimeBlockingController {
      * <li> {@code timeTable} DB登録時に渡されたIDと日付をもつ.TimeBlockの情報に関しては無視される.詳細は{@link TimeTable}を参照.
      * </ul>
      * @return 登録の際に渡された{@code ID(int)}とHTTPStatusを返すレスポンス.
-     * 正常終了時は{@code 201 Created}を返す.
+     * 正常終了時は{@code 201 Created}を返す. 既に存在する日付の場合は{@code 409 Conflict}を返す.
      * @author milk0924 
      */
     @PostMapping("timeTable/createAt")
