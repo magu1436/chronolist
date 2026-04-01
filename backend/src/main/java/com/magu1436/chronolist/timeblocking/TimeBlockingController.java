@@ -15,6 +15,7 @@ import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlockTask;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
+import com.magu1436.chronolist.timeblocking.exception.TimeTableConflictException;
 import com.magu1436.chronolist.timeblocking.exception.TimeTableNotFoundException;
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
@@ -98,8 +99,13 @@ public class TimeBlockingController {
     public ResponseEntity<Integer> createAt(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeTable timeTable){
         // 受け取ったTimeTableにuserIdを登録
         timeTable.setUserId(loginUser.getId());
-        timeTableMapper.insertTimeTable(timeTable);
-        Integer idFromCreatedTimeTable = timeTable.getId();
+        TimeTable registeredTable;
+        try {
+            registeredTable = timeTableService.createAt(timeTable);
+        } catch (TimeTableConflictException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        Integer idFromCreatedTimeTable = registeredTable.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeTable);
     }
 

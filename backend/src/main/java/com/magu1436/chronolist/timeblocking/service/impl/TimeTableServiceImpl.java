@@ -3,9 +3,9 @@ package com.magu1436.chronolist.timeblocking.service.impl;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.SerializationUtils;
 
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
@@ -58,12 +58,12 @@ public class TimeTableServiceImpl implements TimeTableService{
      * @author magu1436
      */
     public TimeTable createAt(TimeTable timeTable) throws TimeTableConflictException {
-        TimeTable checkTable = this.getByDate(timeTable.getUserId(), timeTable.getDate());
-        if (checkTable != null) {
-            throw new TimeTableConflictException("既に指定のユーザーIDと日付の組み合わせのタイムテーブルが存在します.");
+        TimeTable inputTable = timeTable.clone();
+        try {
+            timeTableMapper.insertTimeTable(inputTable);
+        } catch (DuplicateKeyException e){
+            throw new TimeTableConflictException(String.format("TimeTable already exists. userId: %d, date: %tF", inputTable.getUserId(), inputTable.getDate()));
         }
-        TimeTable inputTable = SerializationUtils.clone(timeTable);
-        timeTableMapper.insertTimeTable(inputTable);
         return inputTable;
     }
     
