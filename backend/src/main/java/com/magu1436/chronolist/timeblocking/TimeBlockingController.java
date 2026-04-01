@@ -15,10 +15,12 @@ import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlockTask;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
+import com.magu1436.chronolist.timeblocking.exception.TimeTableNotFoundException;
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockTaskMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper;
+import com.magu1436.chronolist.timeblocking.service.TimeTableService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,6 +46,8 @@ public class TimeBlockingController {
     private final TimeTableMapper timeTableMapper;
     private final SchedulerMapper schedulerMapper;
 
+    private final TimeTableService timeTableService;
+
     /**
      * 指定のユーザーIDと日付をもつタイムテーブルを取得して返す.
      * <p>このメソッドは,Json形式のデータを受け取り,そのデータに紐づけられた{@code TimeTable}を返す.</p>
@@ -51,6 +55,8 @@ public class TimeBlockingController {
      * <pre> {
      *   date: DateString
      * }</pre>
+     * 
+     * magu1436
      * @param loginUser ログイン中のユーザー
      * @param  date 参照する日付情報.
      * <ul>
@@ -63,15 +69,13 @@ public class TimeBlockingController {
      */
     @GetMapping("timeTable/getByDate/{date}")
     public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("date") LocalDate date){
-        TimeTable table = timeTableMapper.getTimeTableByDate(loginUser.getId(), date);
-        if(table == null){
+        try {
+            TimeTable table = timeTableService.getByDate(loginUser.getId(), date);
+            return ResponseEntity.ok(table);
+        } catch (TimeTableNotFoundException e) {
+            System.err.println(e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
-        List<TimeBlock> blocks = timeBlockMapper.getTimeBlocksByTimeTableId(table.getId());
-        table.setTimeBlocks(blocks);
-
-        return ResponseEntity.ok(table);
     }
 
     /** 
