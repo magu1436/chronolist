@@ -10,9 +10,10 @@ import { toTimeBlockSource } from "./blockMapper";
  * @return 変換されたオブジェクト
  */
 export const toTimeTableSource = (api: TimeTableApi): TimeTableSource => {
+    console.log(api.timeBlocks?.map(block => toTimeBlockSource(block)))
     return {
         id: api.id,
         date: new Date(api.date),
-        blocks: api.blocks?.map(block => toTimeBlockSource(block)) || [],
+        blocks: api.timeBlocks?.map(block => toTimeBlockSource(block)) || [],
     };
 };

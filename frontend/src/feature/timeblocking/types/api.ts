@@ -30,5 +30,5 @@ export type TemplateBlockApi = {
 export type TimeTableApi = {
     id: number,
     date: string,
-    blocks: TimeBlockApi[],
+    timeBlocks: TimeBlockApi[],
 }
