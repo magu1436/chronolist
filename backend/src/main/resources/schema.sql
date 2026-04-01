@@ -93,7 +93,9 @@ CREATE TABLE time_tables (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     date DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    -- user_idとdateの組み合わせが一意であることを保証する制約
+    CONSTRAINT uq_time_tables_user_date UNIQUE (user_id, date)
 );
 
 -- time_blocksテーブルの作成
