@@ -1,5 +1,6 @@
 package com.magu1436.chronolist.timeblocking.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class TimeTable {
+public class TimeTable implements Serializable {
     private int id;
     private int userId;
     private LocalDate date;
