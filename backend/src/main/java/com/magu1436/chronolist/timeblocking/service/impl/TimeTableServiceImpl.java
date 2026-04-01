@@ -9,6 +9,7 @@ import org.springframework.util.SerializationUtils;
 
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
+import com.magu1436.chronolist.timeblocking.exception.TimeTableConflictException;
 import com.magu1436.chronolist.timeblocking.exception.TimeTableNotFoundException;
 import com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper;
 import com.magu1436.chronolist.timeblocking.service.TimeBlockService;
@@ -48,13 +49,19 @@ public class TimeTableServiceImpl implements TimeTableService{
 
     /**
      * 指定の {@link TimeTable} をDBに登録する. <br>
-     * 作成した {@link TimeTable} を返す. この {@link TimeTable} には, DB登録時に生成されたIDを持つ.
+     * 作成した {@link TimeTable} を返す. この {@link TimeTable} には, DB登録時に生成されたIDを持つ. <br>
+     * 既に同一ユーザーIDと日付の組み合わせの {@link TimeTable} が存在する場合, {@link TimeTableConflictException} 例外をスローする.
      * 
      * @param timeTable 登録する {@link TimeTable}
      * @return 作成した {@link TimeTable}
+     * @throws TimeTableConflictException 既に同一ユーザーIDと日付の組み合わせの {@link TimeTable} が存在する場合
      * @author magu1436
      */
-    public TimeTable createAt(TimeTable timeTable) {
+    public TimeTable createAt(TimeTable timeTable) throws TimeTableConflictException {
+        TimeTable checkTable = this.getByDate(timeTable.getUserId(), timeTable.getDate());
+        if (checkTable != null) {
+            throw new TimeTableConflictException("既に指定のユーザーIDと日付の組み合わせのタイムテーブルが存在します.");
+        }
         TimeTable inputTable = SerializationUtils.clone(timeTable);
         timeTableMapper.insertTimeTable(inputTable);
         return inputTable;
@@ -62,17 +69,23 @@ public class TimeTableServiceImpl implements TimeTableService{
     
     /**
      * 指定のユーザーIDと日付をもつタイムテーブルをDBに登録する.<br>
-     * 作成した {@link TimeTable} を返す. この {@link TimeTable} には, DB登録時に生成されたIDを持つ.
+     * 作成した {@link TimeTable} を返す. この {@link TimeTable} には, DB登録時に生成されたIDを持つ. <br>
+     * 既に同一ユーザーIDと日付の組み合わせの {@link TimeTable} が存在する場合, {@link TimeTableConflictException} 例外をスローする.
      * 
      * @param userId テーブルを所有するユーザーのID
      * @param date テーブルの日付
      * @return 作成した {@link TimeTable}
+     * @throws TimeTableConflictException 既に同一ユーザーIDと日付の組み合わせの {@link TimeTable} が存在する場合
      * @author magu1436
      */
-    public TimeTable createAt(int userId, LocalDate date) {
+    public TimeTable createAt(int userId, LocalDate date) throws TimeTableConflictException {
         TimeTable timeTable = new TimeTable();
         timeTable.setUserId(userId);
         timeTable.setDate(date);
-        return this.createAt(timeTable);
+        try {
+            return this.createAt(timeTable);
+        } catch (TimeTableConflictException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
