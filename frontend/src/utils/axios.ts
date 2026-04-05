@@ -6,6 +6,7 @@ if (!API_BASE_URL.endsWith("/")) API_BASE_URL += "/";
 
 const axios = Axios.create({
     baseURL: API_BASE_URL + "api/",
+    withCredentials: true,
 });
 
 export default axios;
