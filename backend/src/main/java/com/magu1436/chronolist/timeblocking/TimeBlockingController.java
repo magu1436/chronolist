@@ -15,11 +15,13 @@ import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlockTask;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
+import com.magu1436.chronolist.timeblocking.exception.TimeBlockTaskNotFound;
 import com.magu1436.chronolist.timeblocking.exception.TimeTableConflictException;
 import com.magu1436.chronolist.timeblocking.exception.TimeTableNotFoundException;
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockTaskMapper;
+import com.magu1436.chronolist.timeblocking.service.TimeBlockTaskService;
 import com.magu1436.chronolist.timeblocking.service.TimeTableService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,7 @@ public class TimeBlockingController {
     private final SchedulerMapper schedulerMapper;
 
     private final TimeTableService timeTableService;
+    private final TimeBlockTaskService timeBlockTaskService;
 
     /**
      * 指定のユーザーIDと日付をもつタイムテーブルを取得して返す.
@@ -287,6 +290,24 @@ public class TimeBlockingController {
     public ResponseEntity<Integer> registerTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
         timeBlockTaskMapper.insertTimeBlockTask(timeBlockTask);
         return ResponseEntity.status(HttpStatus.CREATED).body(timeBlockTask.getId());
+    }
+
+    /**
+     * DB上の {@code TimeBlockTask}を更新する.
+     * 
+     * @param timeBlockTask Jsonの値が保存されている{@code timeBlockTask}.
+     * @return 対応するHTTPStatusを返す.
+     * 正常終了時は{@code 204 No Content}を返す.指定するIDのデータが見つからないとき({@code 404 Not Found})
+     * @author magu1436
+     */
+    @PutMapping("timeBlockTask/update")
+    public ResponseEntity<Void> updateTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
+        try {
+            timeBlockTaskService.update(timeBlockTask);
+        } catch (TimeBlockTaskNotFound e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**

@@ -13,6 +13,15 @@
         (#{timeBlockId}, #{title})
     </insert>
 
+    <update id="updateTimeBlockTask" parameterType="com.magu1436.chronolist.timeblocking.entity.TimeBlockTask">
+        UPDATE time_block_tasks
+        SET
+            time_block_id = #{timeBlockId},
+            title = #{title}
+        WHERE
+            id = {#id}
+    </update>
+
     <delete id="deleteTimeBlockTask" parameterType="int">
         DELETE FROM time_block_tasks WHERE id = #{id}
     </delete>
