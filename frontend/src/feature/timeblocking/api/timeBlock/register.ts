@@ -3,11 +3,6 @@ import type { TimeBlockSource } from "../../types/blockSourceTypes";
 
 
 const register = async (block: TimeBlockSource) => {
-
-    // テスト用コード
-    console.log("timeblocking/timeBlock/register");
-    console.log("block: ", block);
-
     const data = {
         timeTableId: block.timeTableId,
         title: block.title,

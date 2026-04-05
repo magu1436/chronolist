@@ -4,10 +4,6 @@ import { customizedFetch } from "@/utils/fetch";
 
 const update = async (block: TimeBlockSource) => {
 
-    // テスト用コード
-    console.log("timeblocking/timeBlock/update");
-    console.log("block: ", block);
-
     const newBlock =  {
         id: block.id,
         timeTableId: block.timeTableId,

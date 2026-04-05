@@ -3,9 +3,6 @@ import { customizedFetch } from "@/utils/fetch";
 
 const deleteApi = async (id: number) => {
 
-    // テスト用コード
-    console.log("timeblocking/timeBlock");
-
     try {
         await customizedFetch<void>(
             {
