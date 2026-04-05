@@ -19,7 +19,7 @@
             time_block_id = #{timeBlockId},
             title = #{title}
         WHERE
-            id = {#id}
+            id = #{id}
     </update>
 
     <delete id="deleteTimeBlockTask" parameterType="int">
