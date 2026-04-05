@@ -254,9 +254,11 @@ public class TimeBlockingController {
     @DeleteMapping("timeBlock/delete")
     public ResponseEntity<Void> delete(@RequestBody TimeBlock timeBlock){
         if(ExistsTimeBlockById(timeBlock.getId())){
-            // relatedScheduleの削除
-            Integer scheduleId = timeBlock.getRelatedSchedule().getId();
-            schedulerMapper.deleteSchedule(scheduleId);
+            // TimeBlockのrelatedScheduleがNullでない場合はscheduleテーブルも削除する
+            if (timeBlock.getRelatedSchedule() != null){
+                Integer scheduleId = timeBlock.getRelatedSchedule().getId();
+                schedulerMapper.deleteSchedule(scheduleId);
+            }
             // TimeBlockの削除
             timeBlockMapper.deleteTimeBlock(timeBlock.getId());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
