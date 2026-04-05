@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { TimeBlockTask } from "../../types/blockSourceTypes";
 import EditableText from "@/components/EditableText";
-import { deleteApi, register } from "../../api/timeBlockTaskApi";
+import { deleteApi, register, update } from "../../api/timeBlockTaskApi";
 
 
 type TasksProps = {
@@ -26,6 +26,12 @@ const TimeBlockTasks: FC<TasksProps> = ({ tasks, blockId, setTasks }) => {
         newTask.id = id;
     }, [tasks, setTasks]);
 
+    const handleChange = useCallback((task: TimeBlockTask, newTitle: string) => {
+        const newTask: TimeBlockTask = {...task, title: newTitle};
+        setTasks(tasks.map(t => t.clientId === task.clientId ? newTask : t));
+        update(newTask);
+    }, [setTasks]);
+
     const handleCheck = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
         const taskClientId = e.target.id;
         const targetTask = tasks.find(task => task.clientId === taskClientId);
@@ -43,7 +49,7 @@ const TimeBlockTasks: FC<TasksProps> = ({ tasks, blockId, setTasks }) => {
                     {tasks.map((task) => (
                         <ListItem key={`block-task-${task.clientId}`}>
                             <Checkbox onChange={handleCheck} id={task.clientId} />
-                            <EditableText value={task.title} onChange={(value) => setTasks(tasks.map(t => t.clientId === task.clientId ? {...t, title: value} : t))} />
+                            <EditableText value={task.title} onChange={(value) => { handleChange(task, value)}} />
                         </ListItem>
                     ))}
 
