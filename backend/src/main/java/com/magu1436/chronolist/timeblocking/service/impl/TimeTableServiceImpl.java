@@ -42,7 +42,11 @@ public class TimeTableServiceImpl implements TimeTableService{
             throw new TimeTableNotFoundException(String.format("TimeTable was not found. userId: %d, date: %tF", userId, date));
         }
 
+        // DBに該当するブロックがなかった場合には, blocks には空のリストを設定
         List<TimeBlock> blocks = timeBlockService.getTimeBlocksByTimeTableId(table.getId());
+        if (blocks == null) {
+            blocks = List.of();
+        }
         table.setTimeBlocks(blocks);
         return table;
     }
@@ -59,6 +63,9 @@ public class TimeTableServiceImpl implements TimeTableService{
      */
     public TimeTable createAt(TimeTable timeTable) throws TimeTableConflictException {
         TimeTable inputTable = timeTable.clone();
+        if (inputTable.getTimeBlocks() == null) {
+            inputTable.setTimeBlocks(List.of());
+        }
         try {
             timeTableMapper.insertTimeTable(inputTable);
         } catch (DuplicateKeyException e){
@@ -82,6 +89,7 @@ public class TimeTableServiceImpl implements TimeTableService{
         TimeTable timeTable = new TimeTable();
         timeTable.setUserId(userId);
         timeTable.setDate(date);
+        timeTable.setTimeBlocks(List.of());
         try {
             return this.createAt(timeTable);
         } catch (TimeTableConflictException e) {
