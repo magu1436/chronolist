@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper">
-    <select id="getTimeBlockById" resultMap="com.magu1436.chronolist.timeblocking.mapper.TimeblockingResultMap.TimeBlockResult">
+    <select id="getTimeBlockById" resultType="com.magu1436.chronolist.timeblocking.entity.TimeBlock">
         SELECT
-            tb.id AS block_id, tb.user_id AS block_user_id, tb.table_id AS block_table_id, tb.title AS block_title, tb.status, tb.width, tb.start_at, tb.color,
-            tbt.id AS task_id, tbt.time_block_id AS task_block_id, tbt.title AS task_title,
-            s.id AS schedule_id, s.user_id AS schedule_user_id, s.kind, s.start_at, s.end_at, s.start_date, s.end_date, s.title AS schedule_title
+            tb.id,
+            tb.user_id,
+            tb.table_id AS time_table_id,
+            tb.title,
+            tb.status,
+            tb.width,
+            tb.start_at,
+            tb.color
         FROM time_blocks tb
-        LEFT JOIN time_block_tasks tbt ON tb.id = tbt.time_block_id
-        LEFT JOIN schedule s ON tb.schedule_id = s.id
         WHERE tb.id = #{id}
     </select>
 
