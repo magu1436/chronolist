@@ -1,9 +1,10 @@
 import { useContext } from "react"
 import BlockRepositories from "../contexts/BlockRepositories"
-import { Paper, Grid } from "@mui/material";
+import { Paper, Grid, Stack } from "@mui/material";
 import { useDroppable } from "@dnd-kit/core";
 import { TEMPLATE_BLOCKS_AREA_ID } from "../static/droppableId";
 import TemplateBlock from "./TemplateBlock";
+import CreateTemplateBlockButton from "./CreateTemplateBlockButton";
 
 
 const TemplateBlockArea = () => {
@@ -18,6 +19,7 @@ const TemplateBlockArea = () => {
     });
 
     return (
+        
         <Paper
             ref={setNodeRef}
             sx={{
@@ -28,13 +30,19 @@ const TemplateBlockArea = () => {
                 overflowY: "auto",
             }}
         >
-            <Grid container spacing={1}>
-                {templateBlocks.map(b => (
-                    <Grid key={b.clientId} size={6}>
-                        <TemplateBlock source={b} />
-                    </Grid>
-                ))}
-            </Grid>
+            <Stack spacing={1} sx={{width: "100%"}}>
+                <Stack alignItems={"end"}>
+                    <CreateTemplateBlockButton />
+                </Stack>
+                <Grid container spacing={1}>
+                    {templateBlocks.map(b => (
+                        <Grid key={b.clientId} size={6}>
+                            <TemplateBlock source={b} />
+                        </Grid>
+                    ))}
+                </Grid>
+            </Stack>
+            
         </Paper>
     )
 }
