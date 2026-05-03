@@ -1,15 +1,17 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import BlockRepositories from "../contexts/BlockRepositories"
 import { Paper, Grid, Stack } from "@mui/material";
 import { useDroppable } from "@dnd-kit/core";
 import { TEMPLATE_BLOCKS_AREA_ID } from "../static/droppableId";
 import TemplateBlock from "./TemplateBlock";
 import CreateTemplateBlockButton from "./CreateTemplateBlockButton";
+import { getAll } from "../api/templateBlockApi";
 
 
 const TemplateBlockArea = () => {
     const {
         templateBlocks,
+        setTemplateBlocks
     } = useContext(BlockRepositories);
 
     const {
@@ -17,6 +19,16 @@ const TemplateBlockArea = () => {
     } = useDroppable({
         id: TEMPLATE_BLOCKS_AREA_ID,
     });
+
+    useEffect(() => {
+        getAll()
+            .then(templateBlockSources => {
+                setTemplateBlocks(templateBlockSources);
+            })
+            .catch(error => {
+                throw error;
+            });
+    }, [setTemplateBlocks]);
 
     return (
         
