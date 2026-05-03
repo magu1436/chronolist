@@ -184,34 +184,6 @@ public class TimeBlockingController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
-
-    /**
-     * 対象のブロックステータスのみを更新してDBに反映する.
-     * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code status:TimeBlockStatus}のみを渡されたJsonのデータに更新する.</p>
-     * <h3>リクエストJsonの形:</h3>
-     * <pre> {
-     *   id: int,
-	 *   status: TimeBlockStatus
-     * }</pre>
-     * @param timmeBlock Jsonの値が保存されている{@code timeBlock}.
-     * <ul>
-     * <li> {@code timeBlock}:Jsonで渡される以外の情報は持っていない. 参照:{@link TimeBlock}</li>
-     * </ul>
-     * @return 対応するHTTPStatusを返す.
-     * 正常終了時は{@code 200 Ok}を返す. 指定するIDのデータが見つからないとき({@code 404 Not Found})
-     * @author milk0924
-     */
-    @PutMapping("timeBlock/update/status")
-    public ResponseEntity<Void> statusUpdate(@RequestBody TimeBlock timeBlock){
-        if(ExistsTimeBlockById(timeBlock.getId())){
-            TimeBlock updatedTimeBlock = timeBlockMapper.getTimeBlockById(timeBlock.getId());
-            updatedTimeBlock.setStatus(timeBlock.getStatus());
-            timeBlockMapper.updateTimeBlock(updatedTimeBlock);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-    }
    
     /**
      * ブロックの開始時刻のみを更新してデータベースに反映する.
