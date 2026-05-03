@@ -1,8 +1,9 @@
-import { type FC } from "react";
+import { useCallback, useContext, type FC } from "react";
 import { useDraggable } from "@dnd-kit/core";
 
 import type { TemplateBlockSource, TimeBlockSource } from "../types/blockSourceTypes"
 import TimeBlockView from "./TimeBlockView";
+import SelectedTemplateBlockClientId from "../contexts/SelectedTemplateBlockClientId";
 
 
 type TemplateBlockProps = {
@@ -30,12 +31,22 @@ const TemplateBlock: FC<TemplateBlockProps> = ({source}) => {
         data: { source: blockSource },
     });
 
+    const {
+        setSelectedTemplateBlockClientId
+    } = useContext(SelectedTemplateBlockClientId);
+
+    const handleDoubleClick = useCallback(() => {
+        setSelectedTemplateBlockClientId(source.clientId);
+        console.log(`selected ${source.clientId}`);
+    }, []);
+
     return (
         <TimeBlockView
             source={blockSource}
             ref={setNodeRef}
             {...attributes}
             {...listeners}
+            onDoubleClick={handleDoubleClick}
         />
     )
 };
