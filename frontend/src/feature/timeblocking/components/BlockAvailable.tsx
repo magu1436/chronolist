@@ -10,6 +10,7 @@ import BlockRepositories from "../contexts/BlockRepositories";
 import TimeBlockView from "./TimeBlockView";
 import { BLOCKS_AREA_ID, TEMPLATE_BLOCKS_AREA_ID, TIMETABLE_ID } from "../static/droppableId";
 import { registerTemplateBlock } from "../api/templateBlock";
+import { register as registerTimeBlock, update as updateTimeBlock } from "../api/timeBlockApi";
 
 const testBlocksAtField: TimeBlockSource[] = [{
         id: 1,
@@ -207,7 +208,16 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                     };
                     setBlocksAtField((blocks) => blocks.filter(block => block.clientId !== movedBlockSource.clientId));
                     setBlocksOnTable((blocks) => [...blocks, newBlockSource]);
-                    console.log("Placed");
+
+                    // テンプレートブロックからの移動ならば新規登録
+                    if (movedBlockSource.fromTemplateBlockSource) {
+                        registerTimeBlock(newBlockSource)
+                            .then((id) => newBlockSource.id = id)
+                            .catch((e) => {throw e});
+                    } else {
+                        updateTimeBlock(newBlockSource)
+                            .catch((e) => {throw e});
+                    }
                     break;
                 case BLOCKS_AREA_ID:
                     if (!blocksAtField.find(b => b.clientId === movedBlockSource.clientId)) {
@@ -218,9 +228,18 @@ const BlockAvailable: FC<BlockAvailableProps> = ({children}) => {
                             timeTableId: null,
                             fromTemplateBlockSource: undefined,
                         };
+                        console.log("heldBlockSource", heldBlockSource);
                         setBlocksAtField((blocks) => [...blocks, heldBlockSource]);
+                        // テンプレートブロックからの移動ならば新規登録
+                        if (movedBlockSource.fromTemplateBlockSource) {
+                            registerTimeBlock(heldBlockSource)
+                                .then((id) => heldBlockSource.id = id)
+                                .catch((e) => {throw e});
+                        } else {
+                            updateTimeBlock(heldBlockSource)
+                                .catch((e) => {throw e});
+                        }
                     };
-                    console.log("Held");
                     break;
                 case TEMPLATE_BLOCKS_AREA_ID:
                     if (movedBlockSource.fromTemplateBlockSource) return;
