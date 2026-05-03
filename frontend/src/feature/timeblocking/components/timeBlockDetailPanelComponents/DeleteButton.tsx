@@ -18,7 +18,7 @@ const DeleteButton: FC<DeleteButtonProps> = ({ onDelete }) => {
 
     return (
         <>
-            <Button onClick={handleClick} startIcon={<DeleteIcon />}>タスクを削除</Button>
+            <Button onClick={handleClick} startIcon={<DeleteIcon />}>ブロックを削除</Button>
             <DeleteDialog deleteBlock={onDelete} open={open} setOpen={setOpen} />
         </>
     );

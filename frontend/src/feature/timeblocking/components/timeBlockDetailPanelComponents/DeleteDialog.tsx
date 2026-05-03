@@ -9,7 +9,7 @@ type DeleteDialogProps = {
 };
 
 /**
- * タイムブロックを削除する確認ダイアログ
+ * ブロックを削除する確認ダイアログ
  */
 const DeleteDialog: FC<DeleteDialogProps> = ({ deleteBlock, open, setOpen }) => {
 
@@ -28,7 +28,7 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ deleteBlock, open, setOpen }) => 
                 <DialogTitle>本当に削除しますか?</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        削除したタイムブロックは復元することはできません。
+                        削除したブロックは復元することはできません。
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
