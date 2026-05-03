@@ -7,6 +7,7 @@ import SelectedTemplateBlockClientId from "../contexts/SelectedTemplateBlockClie
 import Title from "./timeBlockDetailPanelComponents/Title";
 import Width from "./timeBlockDetailPanelComponents/Width";
 import DeleteButton from "./timeBlockDetailPanelComponents/DeleteButton";
+import { deleteApi, update } from "../api/templateBlockApi";
 
 
 const style: SxProps = {
@@ -62,8 +63,7 @@ const TemplateBlockDetailPanel = () => {
         if (editedBlock === null) return;
         setTemplateBlock(editedBlock);
         reflectChangedBlockIntoRepository(editedBlock);
-        // テンプレートブロック更新API
-        // update(editedBlock);
+        update(editedBlock);
     }, [templateBlock]);
 
     const handleSetWidth = useCallback((width: number) => {
@@ -71,17 +71,15 @@ const TemplateBlockDetailPanel = () => {
         if (editedBlock === null) return;
         setTemplateBlock(editedBlock);
         reflectChangedBlockIntoRepository(editedBlock);
-        // テンプレートブロック更新API
-        // update(editedBlock);
+        update(editedBlock);
     }, [templateBlock]);
 
     const handleDelete = useCallback(() => {
         if (templateBlock === null) return;
-        if (templateBlock.id === null) throw new Error("id is not still set: waiting for server response.");
+        if (!templateBlock.id) throw new Error("id is not still set: waiting for server response.");
         setTemplateBlocks((blocks) => blocks.filter(b => b.id !== templateBlock.id));
         setSelectedTemplateBlockClientId(null);
-        // テンプレートブロック削除API
-        // delete(templateBlock.id);
+        deleteApi(templateBlock.id);
     }, [templateBlock, setTemplateBlocks, setSelectedTemplateBlockClientId]);
 
     return (
