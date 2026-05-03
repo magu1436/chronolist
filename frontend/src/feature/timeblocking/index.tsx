@@ -9,7 +9,9 @@ import BlockAvailable from "./components/BlockAvailable";
 import BlocksArea from "./components/BlocksArea";
 import TemplateBlockArea from "./components/TemplateBlockArea";
 import SelectedTimeBlockId from "./contexts/SelectedTimeBlockClientId";
+import SelectedTemplateBlockClientId from "./contexts/SelectedTemplateBlockClientId";
 import TimeBlockDetailPanel from "./components/TimeBlockDetailPanel";
+import TemplateBlockDetailPanel from "./components/TemplateBlockDetailPanel";
 
 
 const TimeBlockingPage = () => {
@@ -28,6 +30,7 @@ const TimeBlockingPage = () => {
     };
 
     const [ selectedTimeBlockId, setSelectedTimeBlockId ] = useState<string | null>(null);
+    const [ selectedTemplateBlockClientId, setSelectedTemplateBlockClientId ] = useState<string | null>(null);
 
     const mouseSensor = useSensor(MouseSensor, {activationConstraint: {distance: 10}});
     const sensors = useSensors(mouseSensor);
@@ -41,22 +44,25 @@ const TimeBlockingPage = () => {
         >
             <TimeTableConfigure value={tableConfig}>
                 <SelectedTimeBlockId value={{ selectedTimeBlockId, setSelectedTimeBlockClientId: setSelectedTimeBlockId }}>
-                    <BlockAvailable>
-                        <Stack direction={"row"} sx={{width: "100vw", height: "100vh"}}>
-                            <Box sx={{height: "100%", width: "50%"}}><TimeTable /></Box>
-                            <Stack
-                                sx={{
-                                    height: "100%",
-                                    width: "50%",
-                                    border: "1px solid red",
-                                }}
-                            >
-                                <BlocksArea />
-                                <TemplateBlockArea />
+                    <SelectedTemplateBlockClientId value={{ selectedTemplateBlockClientId, setSelectedTemplateBlockClientId }}>
+                            <BlockAvailable>
+                            <Stack direction={"row"} sx={{width: "100vw", height: "100vh"}}>
+                                <Box sx={{height: "100%", width: "50%"}}><TimeTable /></Box>
+                                <Stack
+                                    sx={{
+                                        height: "100%",
+                                        width: "50%",
+                                        border: "1px solid red",
+                                    }}
+                                >
+                                    <BlocksArea />
+                                    <TemplateBlockArea />
+                                </Stack>
                             </Stack>
-                        </Stack>
-                        <TimeBlockDetailPanel />
-                    </BlockAvailable>
+                            <TimeBlockDetailPanel />
+                            <TemplateBlockDetailPanel />
+                        </BlockAvailable>
+                    </SelectedTemplateBlockClientId>
                 </SelectedTimeBlockId>
             </TimeTableConfigure>
         </DndContext>
