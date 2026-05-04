@@ -17,19 +17,18 @@ const DeleteButton = ({ onDelete }: { onDelete: () => void }) => {
 }
 
 const Header: FC<SidePanelHeaderProps> = ({ title, setTitle, onDelete }) => {
-    
     return (
         <>
             <Stack
                 direction={"column"}
                 spacing={1}
+                sx={{alignItems: "stretch"}}
             >
-                <Stack direction={"row"} sx={{justifyContent: "right"}}>
-                    <EditableText value={title} onChange={setTitle} variant="h5" />
+                <Stack direction={"row"} sx={{justifyContent: "flex-end"}}>
+                    <DeleteButton onDelete={onDelete} />
                 </Stack>
-                <DeleteButton onDelete={onDelete} />
+                <EditableText value={title} onChange={setTitle} variant="h2" sx={{textAlign: "center"}}/>
             </Stack>
-                
         </>
     )
 }

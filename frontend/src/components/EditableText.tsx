@@ -1,5 +1,5 @@
 import { Typography, type TypographyVariant, Input, type SxProps } from "@mui/material";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 
 
 type EditableTextProps = {
@@ -14,8 +14,12 @@ const EditableText: FC<EditableTextProps> = ({ value, variant, style, sx, onChan
     const [ isEditing, setIsEditing ] = useState(false);
     const [ text, setText ] = useState<string>(value || "");
 
+    useEffect(() => {
+        setText(value || "");
+    }, [value]);
+
     const handleFinishEdit = () => {
-        onChange?.(text);
+        onChange?.(text.trim());
         setIsEditing(false);
     };
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -35,7 +39,7 @@ const EditableText: FC<EditableTextProps> = ({ value, variant, style, sx, onChan
         <Input
             value={text}
             autoFocus
-            onChange={(e) => setText(e.target.value.trim())}
+            onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {handleKeyDown(e);}}
             onBlur={handleFinishEdit}
             sx={sx}
