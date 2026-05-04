@@ -5,8 +5,8 @@ import CalendarEvent from "../../entity/calendarEvent";
 
 const CalendarEventsContext = createContext<{
     events: CalendarEvent[],
-    setEvents: (events: CalendarEvent[]) => void,
-    updateEvent: (updatedEvent: CalendarEvent, callApi?: boolean) => void
+    setEvents: (events: CalendarEvent[] | ((events: CalendarEvent[]) => CalendarEvent[])) => void,
+    updateEvent: (updatedEvent: CalendarEvent | ((updatedEvent: CalendarEvent) => CalendarEvent), callApi?: boolean) => void
 }>({
     events: [],
     setEvents: () => { },
