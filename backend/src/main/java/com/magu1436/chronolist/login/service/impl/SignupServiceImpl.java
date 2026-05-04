@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.magu1436.chronolist.login.ReservedWord;
+import com.magu1436.chronolist.login.entity.Role;
 import com.magu1436.chronolist.login.entity.Users;
 import com.magu1436.chronolist.login.exception.LoginIdAlreadyExistsException;
 import com.magu1436.chronolist.login.exception.LoginIdContainsWhitespaceException;
@@ -45,11 +46,11 @@ public class SignupServiceImpl implements SignupService{
         if (loginId.length() >= 26){
             throw new LoginIdTooLongException();
         }
+        if (loginId.contains(" ")){
+            throw new LoginIdContainsWhitespaceException();
+        }
         if (!loginId.matches("^[a-z0-9]+$")){
             throw new LoginIdInvalidCharException();
-        }
-        if (loginId.matches(" ")){
-            throw new LoginIdContainsWhitespaceException();
         }
         if (ReservedWord.contains(loginId)){
             throw new LoginIdUsesReservedWordException();
@@ -65,7 +66,7 @@ public class SignupServiceImpl implements SignupService{
     @Override
     public void checkLoginIdDuplicate(String loginId){
         Users user = loginMapper.getUsersByLoginId(loginId);
-        if (user.getLoginId() == null){
+        if (user != null){
             throw new LoginIdAlreadyExistsException();
             }
         }
@@ -88,7 +89,7 @@ public class SignupServiceImpl implements SignupService{
         if (password.length() >=64){
             throw new PasswordTooLongException();
         }
-        if (!password.matches("^[\\\\x20-\\\\x7E]+$")){
+        if (!password.matches("^[\\x20-\\x7E]+$")){
             throw new PasswordUsesNonAsciiCharException();
         }
         if (!password.matches(".*[a-zA-Z].*")){
@@ -120,6 +121,7 @@ public class SignupServiceImpl implements SignupService{
         Users register_Users = new Users();
         register_Users.setLoginId(trimed_loginId);
         register_Users.setPassword(hashedPassword);
+        register_Users.setRole(Role.GENERAL);
         loginMapper.insertUser(register_Users);
     }
 }
