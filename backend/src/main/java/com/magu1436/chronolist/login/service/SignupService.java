@@ -13,7 +13,7 @@ public interface SignupService {
      * @param loginId 重複を確認するフロントエンドから送られてきたID
      * @author milk0924
      */
-    void checkLoginIdDuplicate(String loginID);
+    void checkLoginIdDuplicate(String loginId);
 
     /**
      * パスワードのバリデーションチェックを行う
@@ -21,4 +21,12 @@ public interface SignupService {
      * @author milk0924
      */
     void validatePassword(String password);
+
+    /**
+     * パスワードをハッシュ化し、データベースにログインIDとパスワードを登録する
+     * @param loginId
+     * @param passWord
+     */
+    void register(String loginId, String passWord);
+
 } 
