@@ -61,7 +61,7 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                 // 各ページへのアクセス許可設定
-                .requestMatchers( "/login", "/public/**", "/error", "/").permitAll()
+                .requestMatchers( "/login", "/public/**", "/error", "/", "/api/signup").permitAll()
                 .requestMatchers("/general/**", "/api/**").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
