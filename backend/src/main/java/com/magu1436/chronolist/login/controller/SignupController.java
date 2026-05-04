@@ -25,7 +25,7 @@ public class SignupController {
      * @return 正常終了時 200 OK
      * @author milk0924
      */
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody String loginId, String password){
         signupService.register(loginId, password);
         return ResponseEntity.ok().build();
