@@ -12,11 +12,11 @@ const SchedulerPage = () => {
 
     const [events, setEvents] = useState<CalendarEvent[]>(getCalendarEvents("", ""));
     const updateEvent = (updatedEvent: CalendarEvent, callApi?: boolean) => {
-        setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
+        setEvents(events.map(event => event.clientId === updatedEvent.clientId ? updatedEvent : event));
         // if (callApi) updateEventApi(updatedEvent);
     };
 
-    const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+    const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
     return (
         <CalendarEventsContext value={{events, setEvents, updateEvent}} >
