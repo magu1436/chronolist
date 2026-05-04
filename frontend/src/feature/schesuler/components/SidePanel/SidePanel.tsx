@@ -67,11 +67,17 @@ const SidePanel: FC<SidePanelProps> = () => {
         updateEvent( calendarEvent.clientId, calendarEvent, true);
     };
 
+    const dividerSx = {
+        borderColor: "grey.500",
+        borderBottomWidth: 2,
+    }
+
     return (
         <>
             <Stack
                 direction={"column"}
-                divider={<Divider orientation="horizontal" flexItem />}
+                divider={<Divider orientation="horizontal" flexItem sx={dividerSx} />}
+                spacing={3}
             >
                 <Header
                     title={calendarEvent?.title || ""}
