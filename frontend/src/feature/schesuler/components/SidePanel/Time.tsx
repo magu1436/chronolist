@@ -12,10 +12,8 @@ import CalendarEvent from "../../entity/calendarEvent";
 
 type TimeProps = {
     kind: ScheduleKind,
-    startAt: Date | null,
-    endAt: Date | null,
-    startDate: Date | null,
-    endDate: Date | null,
+    start: Date,
+    end: Date,
     setCalendarEvent: ( calelendarEvent: CalendarEvent | ((calendarEvent: CalendarEvent) => void)) => void,
 }
 
@@ -32,10 +30,8 @@ type DateTimeBox = {
 
 const Time: FC<TimeProps> = ({
     kind,
-    startAt,
-    endAt,
-    startDate,
-    endDate,
+    start,
+    end,
     setCalendarEvent
 }) => {
     const handleChangeStartTime = (time: Date) => {
@@ -57,9 +53,9 @@ const Time: FC<TimeProps> = ({
         <>
             <Stack direction={"column"} alignItems={"center"}>
                 <AllDayCheckBox kind={kind} onChangeKind={handleChangeKind} />
-                <DateTimeBox kind={kind} time={startAt || startDate || new Date()} onChangeTime={handleChangeStartTime} />
+                <DateTimeBox kind={kind} time={start} onChangeTime={handleChangeStartTime} />
                 <ArrowDownwardIcon />
-                <DateTimeBox kind={kind} time={endAt || endDate || new Date()} onChangeTime={handleChangeEndTime} />
+                <DateTimeBox kind={kind} time={end} onChangeTime={handleChangeEndTime} />
             </Stack>
         </>
     )
