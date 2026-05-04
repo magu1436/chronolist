@@ -74,6 +74,7 @@ const Calendar = () => {
                 datesSet={handleDatesSet}
                 eventClick={handleEventClick}
                 eventContent={handleEventContent}
+                height={"100%"}
             />
         </Box>
     );
