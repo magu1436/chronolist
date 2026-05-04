@@ -10,6 +10,7 @@ import SelectedCalendarEventContext from "./contexts/selected-event";
 import { getCalendarEvents } from "../api/get";
 import { prevDate } from "@/utils/date";
 import { formattedTime } from "@/utils/time";
+import { Box } from "@mui/material";
 
 const Calendar = () => {
     const { events, setEvents } = useContext(CalendarEventsContext);
@@ -24,15 +25,15 @@ const Calendar = () => {
         // テスト出力
         console.log("handleDatesSet");
         console.log(start, end);
-        console.log(events);
-
-    }, []);
+    }, [setEvents]);
 
     // イベントラベル選択時に呼び出される関数
     const handleEventClick = useCallback((arg: EventClickArg) => {
         const clickedEventClientId = arg.event.id;
         const targetEvent = events.find(e => e.clientId === clickedEventClientId);
         if (!targetEvent) {
+            console.log(`Event not found: ${clickedEventClientId}`);
+            console.log(events);
             throw new Error("Event not found.");
         };
 
@@ -42,7 +43,7 @@ const Calendar = () => {
         console.log("handleEventClick");
         console.log(targetEvent);
 
-    }, [setSelectedEventId]);
+    },  [events, setSelectedEventId]);
 
     // イベントラベル表示時に呼び出される関数
     const handleEventContent = useCallback((arg: EventContentArg) => {
@@ -57,22 +58,24 @@ const Calendar = () => {
     }, []);
 
     return (
-        <FullCalendar
-            plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-            initialView="dayGridMonth"
-            headerToolbar={{
-                start: "title prev,next today",
-                center: "",
-                end: "",
-            }}
-            locale={"ja"}
-            businessHours={true}
-            dayMaxEvents={true}
-            events={events.map(e => e.toEventLabel())}
-            datesSet={handleDatesSet}
-            eventClick={handleEventClick}
-            eventContent={handleEventContent}
-        />
+        <Box sx={{height: "100%", width: "100%"}}>
+            <FullCalendar
+                plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+                initialView="dayGridMonth"
+                headerToolbar={{
+                    start: "title prev,next today",
+                    center: "",
+                    end: "",
+                }}
+                locale={"ja"}
+                businessHours={true}
+                dayMaxEvents={true}
+                events={events.map(e => e.toEventLabel())}
+                datesSet={handleDatesSet}
+                eventClick={handleEventClick}
+                eventContent={handleEventContent}
+            />
+        </Box>
     );
 }
 

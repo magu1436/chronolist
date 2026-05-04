@@ -6,6 +6,8 @@ import SelectedCalendarEventContext from "./components/contexts/selected-event"
 import Calendar from "./components/calendar";
 
 import { getCalendarEvents } from "./api/get";
+import { Box, Stack } from "@mui/material";
+import SidePanel from "./components/SidePanel/SidePanel";
 
 
 const SchedulerPage = () => {
@@ -21,14 +23,33 @@ const SchedulerPage = () => {
 
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
-    return (
-        <CalendarEventsContext value={{events, setEvents, updateEvent}} >
-            <SelectedCalendarEventContext value={{eventClientId: selectedEventId, setEventClientId: setSelectedEventId}} >
+    const DynamicCalendar = (
+        <>
+            <Box sx={{flex: (selectedEventId ? 3 : 1)}}>
                 <Calendar />
-            </SelectedCalendarEventContext>
-        </CalendarEventsContext>
+            </Box>
+        </>
+    );
+    const DynamicSidePanel = selectedEventId && (
+        <>
+            <Box sx={{flex: 1}}>
+                <SidePanel />
+            </Box>
+        </>
     )
-    
+
+    return (
+        <>
+            <CalendarEventsContext value={{events, setEvents, updateEvent}} >
+                <SelectedCalendarEventContext value={{eventClientId: selectedEventId, setEventClientId: setSelectedEventId}} >
+                    <Stack sx={{height: "100vh", width: "100vw", border: "1px solid red", alignItems: "stretch"}} direction={"row"}>
+                        {DynamicCalendar}
+                        {DynamicSidePanel}
+                    </Stack>
+                </SelectedCalendarEventContext>
+            </CalendarEventsContext>
+        </>
+    )
 }
 
 export default SchedulerPage;

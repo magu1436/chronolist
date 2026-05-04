@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { CalendarEventApi } from "../types/api";
 import type { ScheduleKind } from "../types/statics";
+import { nextDate } from "@/utils/date";
 
 /**
  * カレンダーイベントに必要な情報を持つデータクラス.  
@@ -64,7 +65,7 @@ class CalendarEvent {
         switch (kind) {
             case "DATED":
                 this._startAt = startAtOrDate;
-                this._endAt = startAtOrDate;
+                this._endAt = endAtOrDate;
                 break;
             case "ALL_DAY":
                 this._startDate = startAtOrDate;
@@ -107,7 +108,7 @@ class CalendarEvent {
                 this._startDate = this._startAt || this._startDate;
                 this._endDate = this._endAt || this._endDate;
                 this._startAt = undefined;
-                this._endDate = undefined;
+                this._endAt = undefined;
                 break;
         }
     }
@@ -126,14 +127,14 @@ class CalendarEvent {
         this._endAt = endAt;
     }
 
-    get startDate(): Date | undefined { return this.startDate }
+    get startDate(): Date | undefined { return this._startDate }
 
     set startDate(startDate: Date){
         if (this._kind != "ALL_DAY") throw new Error(`A ${this._kind} schedule cannot set 'startDate'.`);
         this._startDate = startDate;
     }
 
-    get endDate(): Date | undefined { return this.endDate }
+    get endDate(): Date | undefined { return this._endDate }
 
     set endDate(endDate: Date){
         if (this._kind != "ALL_DAY") throw new Error(`A ${this._kind} schedule cannot set 'endDate'.`);
@@ -176,10 +177,10 @@ class CalendarEvent {
             id: this.clientId,
             title: this.title,
             allDay: this.kind == "ALL_DAY",
-            startStr: s.toISOString(),
+            start: s.toISOString(),
             // Fullcalendarの終了日時は、指定日の翌日を指定する仕様
-            endStr: (new Date(e.getDate() + 1)).toISOString(),
-            bordarColor: this.color,
+            end: nextDate(e).toISOString(),
+            borderColor: this.color,
             textColor: this.color,
         }
     }
