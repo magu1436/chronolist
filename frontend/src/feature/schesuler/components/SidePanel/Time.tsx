@@ -62,7 +62,7 @@ const Time: FC<TimeProps> = ({
     }
     return (
         <>
-            <Stack direction={"column"} alignItems={"center"}>
+            <Stack direction={"column"} alignItems={"center"} spacing={2}>
                 <AllDayCheckBox kind={kind} onChangeKind={handleChangeKind} />
                 <DateTimeBox kind={kind} time={start} onChangeTime={handleChangeStartTime} />
                 <ArrowDownwardIcon />
@@ -75,7 +75,7 @@ const Time: FC<TimeProps> = ({
 const AllDayCheckBox: FC<AllDayCheckBoxProps> = ({kind, onChangeKind}) => {
     return (
         <>
-            <Stack direction={"row"} sx={{ml: "auto"}}>
+            <Stack direction={"row"} sx={{justifyContent: "flex-end", width: "100%"}}>
                 <Typography>終日</Typography>
                 <CheckBox defaultChecked={kind === "ALL_DAY"} onChange={(checked) => onChangeKind(checked ? "ALL_DAY" : "DATED")} />
             </Stack>
@@ -87,7 +87,7 @@ const DateTimeBox: FC<DateTimeBox> = ({kind, time, onChangeTime}) => {
     const isAllDay = kind === "ALL_DAY";
     const AllDayFC = <EditableDateText value={time} onChange={onChangeTime} />;
     const DatedFC = (
-        <Stack direction={"row"}>
+        <Stack direction={"row"} spacing={2}>
             <EditableDateText value={time} onChange={onChangeTime} />
             <EditableTimeText value={new MyTime(time)} onChange={(time) => onChangeTime(new Date(time.toString()))} />
         </Stack>
