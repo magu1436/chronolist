@@ -21,6 +21,7 @@ import com.magu1436.chronolist.login.JsonLoginFilter;
 import com.magu1436.chronolist.login.Handler.CustomFailureHandler;
 import com.magu1436.chronolist.login.Handler.CustomSuccessHandler;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -49,6 +50,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             // フィルターの追加
             .addFilterAt(jsonLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+
+            // 未認証の時点で認証が必要なページへのアクセスが行われた際のレスポンス
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            })
+        )
 
             .authorizeHttpRequests(auth -> auth
                 // 各ページへのアクセス許可設定
