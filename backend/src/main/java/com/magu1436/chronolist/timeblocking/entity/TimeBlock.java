@@ -17,7 +17,7 @@ import com.magu1436.chronolist.scheduler.entity.Schedule;
 public class TimeBlock {
     private int id;
     private int userId;
-    private int timeTableId;
+    private Integer timeTableId;
     private String title;
     private TimeBlockStatus status;
     private Schedule relatedSchedule;

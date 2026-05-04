@@ -17,4 +17,13 @@ public class TimeTable {
     private int userId;
     private LocalDate date;
     private List<TimeBlock> timeBlocks;
+
+    public TimeTable clone() {
+        TimeTable clone = new TimeTable();
+        clone.setId(id);
+        clone.setUserId(userId);
+        clone.setDate(date);
+        clone.setTimeBlocks(timeBlocks);
+        return clone;
+    }
 }

@@ -15,15 +15,20 @@ import com.magu1436.chronolist.timeblocking.entity.TemplateBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 import com.magu1436.chronolist.timeblocking.entity.TimeBlockTask;
 import com.magu1436.chronolist.timeblocking.entity.TimeTable;
+import com.magu1436.chronolist.timeblocking.exception.TimeBlockTaskNotFound;
+import com.magu1436.chronolist.timeblocking.exception.TimeTableConflictException;
+import com.magu1436.chronolist.timeblocking.exception.TimeTableNotFoundException;
 import com.magu1436.chronolist.timeblocking.mapper.TemplateBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockMapper;
 import com.magu1436.chronolist.timeblocking.mapper.TimeBlockTaskMapper;
-import com.magu1436.chronolist.timeblocking.mapper.TimeTableMapper;
+import com.magu1436.chronolist.timeblocking.service.TimeBlockTaskService;
+import com.magu1436.chronolist.timeblocking.service.TimeTableService;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,8 +45,10 @@ public class TimeBlockingController {
     private final TemplateBlockMapper templateBlockMapper;
     private final TimeBlockTaskMapper timeBlockTaskMapper;
     private final TimeBlockMapper timeBlockMapper;
-    private final TimeTableMapper timeTableMapper;
     private final SchedulerMapper schedulerMapper;
+
+    private final TimeTableService timeTableService;
+    private final TimeBlockTaskService timeBlockTaskService;
 
     /**
      * 指定のユーザーIDと日付をもつタイムテーブルを取得して返す.
@@ -50,6 +57,8 @@ public class TimeBlockingController {
      * <pre> {
      *   date: DateString
      * }</pre>
+     * 
+     * magu1436
      * @param loginUser ログイン中のユーザー
      * @param  date 参照する日付情報.
      * <ul>
@@ -60,15 +69,15 @@ public class TimeBlockingController {
      * 指定された日付から取得したタイムテーブルが{@code Null}だったとき.({@code 404 Not Found})
      * @author milk0924
      */
-    @GetMapping("timeTable/getByDate")
-    public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @RequestBody LocalDate date){
-        TimeTable taskGotByDate = timeTableMapper.getTimeTableByDate(loginUser.getId(), date);
-
-        if(taskGotByDate == null){
+    @GetMapping("timeTable/getByDate/{date}")
+    public ResponseEntity<TimeTable> getByDate(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("date") LocalDate date){
+        try {
+            TimeTable table = timeTableService.getByDate(loginUser.getId(), date);
+            return ResponseEntity.ok(table);
+        } catch (TimeTableNotFoundException e) {
+            System.err.println(e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
-        return ResponseEntity.ok(taskGotByDate);
     }
 
     /** 
@@ -84,16 +93,34 @@ public class TimeBlockingController {
      * <li> {@code timeTable} DB登録時に渡されたIDと日付をもつ.TimeBlockの情報に関しては無視される.詳細は{@link TimeTable}を参照.
      * </ul>
      * @return 登録の際に渡された{@code ID(int)}とHTTPStatusを返すレスポンス.
-     * 正常終了時は{@code 201 Created}を返す.
+     * 正常終了時は{@code 201 Created}を返す. 既に存在する日付の場合は{@code 409 Conflict}を返す.
      * @author milk0924 
      */
     @PostMapping("timeTable/createAt")
     public ResponseEntity<Integer> createAt(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeTable timeTable){
         // 受け取ったTimeTableにuserIdを登録
         timeTable.setUserId(loginUser.getId());
-        timeTableMapper.insertTimeTable(timeTable);
-        Integer idFromCreatedTimeTable = timeTable.getId();
+        TimeTable registeredTable;
+        try {
+            registeredTable = timeTableService.createAt(timeTable);
+        } catch (TimeTableConflictException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        Integer idFromCreatedTimeTable = registeredTable.getId();
         return ResponseEntity.status(HttpStatus.CREATED).body(idFromCreatedTimeTable);
+    }
+
+    /**
+     * HOLDブロック取得API
+     * <p>このメソッドはログイン中のユーザーがもち,かつHOLD状態の{@code TimeBlock}を全て取得する</p>
+     * @param loginUser ログイン中のユーザー
+     * @return ログイン中のユーザーがもつHOLD状態の{@code TimeBlock}とHttpStatus
+     * 正常終了時は{@code 200 ok}
+     */
+    @GetMapping("timeBlock/getHoldBlocks")
+    public ResponseEntity<List<TimeBlock>> getHoldBlocks(@AuthenticationPrincipal LoginUser loginUser){
+        List<TimeBlock> heldBlocks = timeBlockMapper.getHeldTimeBlocks(loginUser.getId());
+        return ResponseEntity.ok(heldBlocks);
     }
     
     /**
@@ -118,7 +145,7 @@ public class TimeBlockingController {
      * 正常終了時は{@code 201 Created}を返す.
      * @author milk0924
      */
-    @PostMapping("timeBlock/register")
+    @PutMapping("timeBlock/register")
     public ResponseEntity<Integer> register(@AuthenticationPrincipal LoginUser loginUser, @RequestBody TimeBlock timeBlock){
         // 受け取ったTimeBlockにuserIdを登録
         timeBlock.setUserId(loginUser.getId());
@@ -154,34 +181,6 @@ public class TimeBlockingController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-    }
-
-    /**
-     * 対象のブロックステータスのみを更新してDBに反映する.
-     * <p>このメソッドはJsonの内容を受け取り,指定するIDの{@code status:TimeBlockStatus}のみを渡されたJsonのデータに更新する.</p>
-     * <h3>リクエストJsonの形:</h3>
-     * <pre> {
-     *   id: int,
-	 *   status: TimeBlockStatus
-     * }</pre>
-     * @param timmeBlock Jsonの値が保存されている{@code timeBlock}.
-     * <ul>
-     * <li> {@code timeBlock}:Jsonで渡される以外の情報は持っていない. 参照:{@link TimeBlock}</li>
-     * </ul>
-     * @return 対応するHTTPStatusを返す.
-     * 正常終了時は{@code 200 Ok}を返す. 指定するIDのデータが見つからないとき({@code 404 Not Found})
-     * @author milk0924
-     */
-    @PutMapping("timeBlock/update/status")
-    public ResponseEntity<Void> statusUpdate(@RequestBody TimeBlock timeBlock){
-        if(ExistsTimeBlockById(timeBlock.getId())){
-            TimeBlock updatedTimeBlock = timeBlockMapper.getTimeBlockById(timeBlock.getId());
-            updatedTimeBlock.setStatus(timeBlock.getStatus());
-            timeBlockMapper.updateTimeBlock(updatedTimeBlock);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
@@ -230,9 +229,11 @@ public class TimeBlockingController {
     @DeleteMapping("timeBlock/delete")
     public ResponseEntity<Void> delete(@RequestBody TimeBlock timeBlock){
         if(ExistsTimeBlockById(timeBlock.getId())){
-            // relatedScheduleの削除
-            Integer scheduleId = timeBlock.getRelatedSchedule().getId();
-            schedulerMapper.deleteSchedule(scheduleId);
+            // TimeBlockのrelatedScheduleがNullでない場合はscheduleテーブルも削除する
+            if (timeBlock.getRelatedSchedule() != null){
+                Integer scheduleId = timeBlock.getRelatedSchedule().getId();
+                schedulerMapper.deleteSchedule(scheduleId);
+            }
             // TimeBlockの削除
             timeBlockMapper.deleteTimeBlock(timeBlock.getId());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -261,6 +262,24 @@ public class TimeBlockingController {
     public ResponseEntity<Integer> registerTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
         timeBlockTaskMapper.insertTimeBlockTask(timeBlockTask);
         return ResponseEntity.status(HttpStatus.CREATED).body(timeBlockTask.getId());
+    }
+
+    /**
+     * DB上の {@code TimeBlockTask}を更新する.
+     * 
+     * @param timeBlockTask Jsonの値が保存されている{@code timeBlockTask}.
+     * @return 対応するHTTPStatusを返す.
+     * 正常終了時は{@code 204 No Content}を返す.指定するIDのデータが見つからないとき({@code 404 Not Found})
+     * @author magu1436
+     */
+    @PutMapping("timeBlockTask/update")
+    public ResponseEntity<Void> updateTimeBlockTask(@RequestBody TimeBlockTask timeBlockTask){
+        try {
+            timeBlockTaskService.update(timeBlockTask);
+        } catch (TimeBlockTaskNotFound e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**

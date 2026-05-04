@@ -3,6 +3,7 @@ package com.magu1436.chronolist.timeblocking.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.magu1436.chronolist.timeblocking.entity.TimeBlock;
 
@@ -23,6 +24,14 @@ public interface TimeBlockMapper {
      * @return 対応する {@link TimeBlock}。存在しない場合は {@code null} を返す。
      */
     TimeBlock getTimeBlockById(int id);
+
+    /**
+     * 指定した{@code timeTableId}をもつ{@code TimeBlock}を取得する
+     * 
+     * @param timeTableId 取得対象の{@code timeTableId}
+     * @return 対応する{@link TimeBlock}。
+     */
+    List<TimeBlock> getTimeBlocksByTimeTableId(@Param("timeTableId") int timeTableId);
 
     /**
      * 指定のユーザーIDをもち, かつステータスが {@code HOLD} の {@link TimeBlock} をすべて取得する。

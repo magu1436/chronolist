@@ -10,8 +10,14 @@ export type TimeBlockApi = {
     relatedSchedle: ScheduleApi | null,
     width: number,
     startAt: string | null,
-    tasks: string[],
+    tasks: TimeBlockTaskApi[],
     color: string
+};
+
+export type TimeBlockTaskApi = {
+    id: number,
+    title: string,
+    timeBlockId: number,
 };
 
 export type TemplateBlockApi = {
@@ -24,5 +30,5 @@ export type TemplateBlockApi = {
 export type TimeTableApi = {
     id: number,
     date: string,
-    blocks: TimeBlockApi[],
+    timeBlocks: TimeBlockApi[],
 }

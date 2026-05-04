@@ -3,10 +3,21 @@ DROP TABLE IF EXISTS calendar_event;
 DROP TABLE IF EXISTS schedule;
 
 
+-- Usersテーブルの作成
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    login_id VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(60) NOT NULL,
+    role VARCHAR(8) NOT NULL,
+    -- roleがとれる値の制約
+    CONSTRAINT chk_role CHECK (role IN ('GENERAL', 'ADMIN'))
+);
+
+
 -- scheduleテーブルの作成（H2 Database Ver）
 CREATE TABLE schedule (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT NOT NULL,
+    user_id INT NOT NULL,
     kind VARCHAR(8),
     start_at TIMESTAMP,
     end_at TIMESTAMP,
@@ -14,7 +25,7 @@ CREATE TABLE schedule (
     end_date DATE,
     tz varchar(64) NOT NULL DEFAULT 'Asia/Tokyo',
     title VARCHAR(64) NOT NULL,
-    -- FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- kindが「TIMED」か「ALL_DAY」のどちらかをとるための制約
     CONSTRAINT chk_kind_str CHECK (kind IN ('DATED', 'ALL_DAY')),
@@ -51,7 +62,7 @@ CREATE TABLE calendar_event (
 -- todo_tasksテーブルの作成
 CREATE TABLE todo_tasks (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT NOT NULL,
+    user_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
     priority VARCHAR(8) NOT NULL,
     due_kind VARCHAR(16) NOT NULL,
@@ -59,7 +70,7 @@ CREATE TABLE todo_tasks (
     due_time TIME,
     is_completed BOOLEAN DEFAULT FALSE,
     memo TEXT,
-    -- FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
 
     -- priorityがとれる値の制約
     CONSTRAINT chk_priority CHECK (priority IN ('HIGH', 'MIDDLE', 'LOW')),
@@ -77,28 +88,20 @@ CREATE TABLE todo_tasks (
 );
 
 
--- Userテーブルの作成
-CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    login_id VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(60) NOT NULL,
-    role VARCHAR(8) NOT NULL,
-    -- roleがとれる値の制約
-    CONSTRAINT chk_role CHECK (role IN ('GENERAL', 'ADMIN'))
-);
-
 -- time_tablesテーブルの作成
 CREATE TABLE time_tables (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT NOT NULL,
+    user_id INT NOT NULL,
     date DATE NOT NULL,
-    -- FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    -- user_idとdateの組み合わせが一意であることを保証する制約
+    CONSTRAINT uq_time_tables_user_date UNIQUE (user_id, date)
 );
 
 -- time_blocksテーブルの作成
 CREATE TABLE time_blocks (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT NOT NULL,
+    user_id INT NOT NULL,
     table_id INT,
     title VARCHAR(64) NOT NULL,
     status VARCHAR(8) NOT NULL,
@@ -106,11 +109,11 @@ CREATE TABLE time_blocks (
     width INT NOT NULL,
     start_at TIME,
     color VARCHAR(8) NOT NULL,
-    -- FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY table_id
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (table_id)
         REFERENCES time_tables(id)
         ON DELETE CASCADE,
-    FOREIGN KEY schedule_id 
+    FOREIGN KEY (schedule_id) 
         REFERENCES schedule(id)
         ON DELETE CASCADE,
 
@@ -123,17 +126,17 @@ CREATE TABLE time_block_tasks (
     id INT PRIMARY KEY AUTO_INCREMENT,
     time_block_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
-    FOREIGN KEY time_block_id
+    FOREIGN KEY (time_block_id)
         REFERENCES time_blocks(id)
         ON DELETE CASCADE
-)
+);
 
 -- template_blocksテーブルの作成
 CREATE TABLE template_blocks (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    -- user_id INT NOT NULL,
+    user_id INT NOT NULL,
     title VARCHAR(64) NOT NULL,
     width INT NOT NULL,
     color VARCHAR(8) NOT NULL,
-    -- FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

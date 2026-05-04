@@ -1,25 +1,70 @@
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from "@dnd-kit/core";
+import { Box, Stack } from "@mui/material";
+import { useState } from "react";
 
-import TimeBlock from "./components/TimeBlock"
+import TimeTable from "./components/TimeTable";
+import TimeTableConfigure from "./contexts/TimeTableConfigure";
+import { Time } from "@/utils/time";
+import BlockAvailable from "./components/BlockAvailable";
+import BlocksArea from "./components/BlocksArea";
+import TemplateBlockArea from "./components/TemplateBlockArea";
+import SelectedTimeBlockId from "./contexts/SelectedTimeBlockClientId";
+import SelectedTemplateBlockClientId from "./contexts/SelectedTemplateBlockClientId";
+import TimeBlockDetailPanel from "./components/TimeBlockDetailPanel";
+import TemplateBlockDetailPanel from "./components/TemplateBlockDetailPanel";
 
 
 const TimeBlockingPage = () => {
+
+    const [ timeTableId, setTimeTableId ] = useState(-1);
+
+    const tableConfig = {
+        timeTableId,
+        gridSize: 1,
+        tableHeight: 2000,
+        tableWidth: "100%",
+        startTime: new Time(0, 0),
+        slotMinutes: 30,
+        slotHeight: 2000 * 30 / (24 * 60),
+        setTimeTableId,
+    };
+
+    const [ selectedTimeBlockId, setSelectedTimeBlockId ] = useState<string | null>(null);
+    const [ selectedTemplateBlockClientId, setSelectedTemplateBlockClientId ] = useState<string | null>(null);
+
+    const mouseSensor = useSensor(MouseSensor, {activationConstraint: {distance: 10}});
+    const sensors = useSensors(mouseSensor);
+
     return (
         
         <DndContext
+            collisionDetection={pointerWithin}
             onDragEnd={(event) => {console.log(event)}}
+            sensors={sensors}
         >
-            <TimeBlock source={{
-                id: 1,
-                timeTableId: 1,
-                status: "HOLD",
-                relatedSchedle: null,
-                width: 1,
-                startAt: null,
-                tasks: [],
-                color: "red",
-                title: "test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10 test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10 test block 1 test block 2 test block 3 test block 4 test block 5 test block 6 test block 7 test block 8 test block 9 test block 10",
-            }} />
+            <TimeTableConfigure value={tableConfig}>
+                <SelectedTimeBlockId value={{ selectedTimeBlockId, setSelectedTimeBlockClientId: setSelectedTimeBlockId }}>
+                    <SelectedTemplateBlockClientId value={{ selectedTemplateBlockClientId, setSelectedTemplateBlockClientId }}>
+                            <BlockAvailable>
+                            <Stack direction={"row"} sx={{width: "100vw", height: "100vh"}}>
+                                <Box sx={{height: "100%", width: "50%"}}><TimeTable /></Box>
+                                <Stack
+                                    sx={{
+                                        height: "100%",
+                                        width: "50%",
+                                        border: "1px solid red",
+                                    }}
+                                >
+                                    <BlocksArea />
+                                    <TemplateBlockArea />
+                                </Stack>
+                            </Stack>
+                            <TimeBlockDetailPanel />
+                            <TemplateBlockDetailPanel />
+                        </BlockAvailable>
+                    </SelectedTemplateBlockClientId>
+                </SelectedTimeBlockId>
+            </TimeTableConfigure>
         </DndContext>
     )
 }

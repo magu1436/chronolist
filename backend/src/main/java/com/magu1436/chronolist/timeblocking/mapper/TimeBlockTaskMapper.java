@@ -32,6 +32,12 @@ public interface TimeBlockTaskMapper {
     void insertTimeBlockTask(TimeBlockTask timeBlockTask);
 
     /**
+     * DBに登録されている {@link TimeBlockTask} を更新する
+     * @param timeBlockTask 更新する {@link TimeBlockTask}
+     */
+    void updateTimeBlockTask(TimeBlockTask timeBlockTask);
+
+    /**
      * 引数で指定した{@code id}をもつ{@link TimeBlockTask}をデータベースから削除する
      * 
      * @param id 削除する{@link TimeBlockTask}のID

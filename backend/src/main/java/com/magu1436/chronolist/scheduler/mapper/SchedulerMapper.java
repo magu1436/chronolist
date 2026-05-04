@@ -25,7 +25,7 @@ public interface SchedulerMapper {
     /** 指定のidをもつスケジュールを取得 */
     Schedule getScheduleById(int id);
     /** 指定の日にあるスケジュールを全て取得 */
-    List<Schedule> getSchedulesByDate(int userId, LocalDate date);
+    List<Schedule> getSchedulesByDate(@Param("userId") int userId, @Param("date") LocalDate date);
     /** スケジュールの新規登録 */
     int insertSchedule(Schedule schedule);
     /** スケジュールの更新 */
