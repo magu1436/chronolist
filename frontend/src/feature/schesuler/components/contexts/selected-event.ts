@@ -1,11 +1,11 @@
 import { createContext } from "react";
 
 const SelectedCalendarEventContext = createContext<{
-    eventId: number | null,
-    setEventId: (eventId: number | null) => void
+    eventClientId: string | null,
+    setEventClientId: (eventId: string | null) => void
 }>({
-    eventId: null,
-    setEventId: () => { }
+    eventClientId: null,
+    setEventClientId: () => { }
 });
 
 export default SelectedCalendarEventContext;

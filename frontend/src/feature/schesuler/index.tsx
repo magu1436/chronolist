@@ -20,7 +20,7 @@ const SchedulerPage = () => {
 
     return (
         <CalendarEventsContext value={{events, setEvents, updateEvent}} >
-            <SelectedCalendarEventContext value={{eventId: selectedEventId, setEventId: setSelectedEventId}} >
+            <SelectedCalendarEventContext value={{eventClientId: selectedEventId, setEventClientId: setSelectedEventId}} >
                 <Calendar />
             </SelectedCalendarEventContext>
         </CalendarEventsContext>

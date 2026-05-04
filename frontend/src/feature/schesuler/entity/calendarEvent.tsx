@@ -173,7 +173,7 @@ class CalendarEvent {
         if (!e) throw new Error("Both 'endAt' and 'endDate' are undefined");
         
         return {
-            id: this.id,
+            id: this.clientId,
             title: this.title,
             allDay: this.kind == "ALL_DAY",
             startStr: s.toISOString(),

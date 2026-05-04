@@ -13,7 +13,7 @@ import { formattedTime } from "@/utils/time";
 
 const Calendar = () => {
     const { events, setEvents } = useContext(CalendarEventsContext);
-    const { setEventId: setSelectedEventId } = useContext(SelectedCalendarEventContext);
+    const { setEventClientId: setSelectedEventId } = useContext(SelectedCalendarEventContext);
 
     // 初期化時や月変更時に呼び出される関数
     const handleDatesSet = useCallback((arg: DatesSetArg) => {
@@ -30,16 +30,17 @@ const Calendar = () => {
 
     // イベントラベル選択時に呼び出される関数
     const handleEventClick = useCallback((arg: EventClickArg) => {
-        const clickedEventId = Number(arg.event.id);
-        if (events.find(e => e.id === clickedEventId) === undefined) {
+        const clickedEventClientId = arg.event.id;
+        const targetEvent = events.find(e => e.clientId === clickedEventClientId);
+        if (!targetEvent) {
             throw new Error("Event not found.");
         };
 
-        setSelectedEventId(clickedEventId || null);
+        setSelectedEventId(clickedEventClientId || null);
 
         // テスト出力
         console.log("handleEventClick");
-        console.log(clickedEventId);
+        console.log(targetEvent);
 
     }, [setSelectedEventId]);
 
