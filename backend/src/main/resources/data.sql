@@ -52,6 +52,12 @@ VALUES
 INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
 VALUES
 (1, 2, '会議', 'PLACED', 1, 2, '12:00:00', 'RED');
+INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
+VALUES
+(1, null, 'ゲーム', 'HOLD', null, 180, null, 'RED');
+INSERT INTO time_blocks (user_id, table_id, title, status, schedule_id, width, start_at, color)
+VALUES
+(1, null, '読書', 'HOLD', null, 120, null, 'GREEN');
 
 -- time_block_tasksテーブルへの初期データ登録
 INSERT INTO time_block_tasks (time_block_id, title)
