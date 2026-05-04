@@ -183,6 +183,20 @@ class CalendarEvent {
             textColor: this.color,
         }
     }
+
+    clone(): CalendarEvent {
+        return new CalendarEvent(
+            this.id,
+            this.kind,
+            this.startAt || this.startDate || new Date(),
+            this.endAt || this.endDate || new Date(),
+            this.title,
+            this.color,
+            this.scheduleId,
+            this.memo,
+            this.clientId,
+        );
+    }
 }
 
 export default CalendarEvent;

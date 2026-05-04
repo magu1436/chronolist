@@ -14,7 +14,7 @@ type TimeProps = {
     kind: ScheduleKind,
     start: Date,
     end: Date,
-    setCalendarEvent: ( calelendarEvent: CalendarEvent | ((calendarEvent: CalendarEvent) => void)) => void,
+    setCalendarEvent: ( calendarEvent: (CalendarEvent | null) | ((calendarEvent: (CalendarEvent | null)) => CalendarEvent | null)) => void,
 }
 
 type AllDayCheckBoxProps = {
@@ -36,18 +36,29 @@ const Time: FC<TimeProps> = ({
 }) => {
     const handleChangeStartTime = (time: Date) => {
         setCalendarEvent((c) => {
-            if (kind === "ALL_DAY") c.startDate = time;
-            else c.startAt = time;
+            if (!c) return null;
+            const clone = c.clone();
+            if (kind === "ALL_DAY") clone.startDate = time;
+            else clone.startAt = time;
+            return clone;
         })
     };
     const handleChangeEndTime = (time: Date) => {
         setCalendarEvent((c) => {
-            if (kind === "ALL_DAY") c.endDate = time;
-            else c.endAt = time;
+            if (!c) return null;
+            const clone = c.clone();
+            if (kind === "ALL_DAY") clone.endDate = time;
+            else clone.endAt = time;
+            return clone;
         })
     }
     const handleChangeKind = (kind: ScheduleKind) => {
-        setCalendarEvent ((c) => c.kind = kind);
+        setCalendarEvent ((c) => {
+            if (!c) return null;
+            const clone = c.clone();
+            clone.kind = kind;
+            return clone;
+        });
     }
     return (
         <>
