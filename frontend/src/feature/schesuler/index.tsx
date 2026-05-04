@@ -11,8 +11,11 @@ import { getCalendarEvents } from "./api/get";
 const SchedulerPage = () => {
 
     const [events, setEvents] = useState<CalendarEvent[]>(getCalendarEvents("", ""));
-    const updateEvent = (updatedEvent: CalendarEvent, callApi?: boolean) => {
-        setEvents(events.map(event => event.clientId === updatedEvent.clientId ? updatedEvent : event));
+    const updateEvent = (clientId: string, updatedEvent: CalendarEvent | ((updatedEvent: CalendarEvent) => CalendarEvent), callApi?: boolean) => {
+        const oldEvent = events.find(e => e.clientId === clientId);
+        if (!oldEvent) throw new Error("Event not found.");
+        const newEvent = typeof updatedEvent === "function" ? updatedEvent(oldEvent) : updatedEvent;
+        setEvents(events.map(event => event.clientId === newEvent.clientId ? newEvent : event));
         // if (callApi) updateEventApi(updatedEvent);
     };
 
