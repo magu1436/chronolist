@@ -57,14 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form
-                .loginPage("/login")
-                // ログイン成功時のリダイレクト先を指定
-                .defaultSuccessUrl("/")
-                // ログイン失敗時のリダイレクト先を指定
-                .failureUrl("/login?error")
-                .permitAll()
-            )
+
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
                 .invalidateHttpSession(true)
