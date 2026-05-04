@@ -1,5 +1,5 @@
 import { nextDate } from "@/utils/date";
-import CalendarEvent from "../entity/calendar-event"
+import CalendarEvent from "../entity/calendarEvent";
 
 
 export const getCalendarEvents = (start: string | Date, end: string | Date): CalendarEvent[] => {

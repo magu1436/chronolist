@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import type CalendarEvent from "./entity/calendar-event";
+import type CalendarEvent from "./entity/calendarEvent";
 import CalendarEventsContext from "./components/contexts/calendar-events-context"
 import SelectedCalendarEventContext from "./components/contexts/selected-event"
 import Calendar from "./components/calendar";

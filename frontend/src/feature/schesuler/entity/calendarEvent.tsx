@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import type { CalendarEventApi } from "../types/api";
 import type { ScheduleKind } from "../types/statics";
 
@@ -7,6 +9,7 @@ import type { ScheduleKind } from "../types/statics";
  */
 class CalendarEvent {
     private _id: number;
+    private _clientId: string;
     private _scheduleId?: number;
     private _kind: ScheduleKind;
     private _startAt?: Date;
@@ -26,6 +29,7 @@ class CalendarEvent {
         color: string,
         scheduleId?: number,
         memo?: string | null,
+        clientId?: string,
     );
     constructor(
         id: number,
@@ -36,6 +40,7 @@ class CalendarEvent {
         color: string,
         scheduleId?: number,
         memo?: string | null,
+        clientId?: string,
     );
     constructor(
         id: number,
@@ -46,8 +51,10 @@ class CalendarEvent {
         color: string,
         scheduleId?: number,
         memo?: string | null,
+        clientId?: string
     ){
         this._id = id;
+        this._clientId = clientId || uuidv4();
         this._kind = kind;
         this.title = title;
         this.color = color;
@@ -70,6 +77,10 @@ class CalendarEvent {
 
     get id(){
         return this._id;
+    }
+
+    get clientId(){
+        return this._clientId;
     }
 
     get scheduleId(){

@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import CalendarEvent from "@/feature/schesuler/entity/calendar-event";
+import CalendarEvent from "../../entity/calendarEvent";
 
 
 const CalendarEventsContext = createContext<{
